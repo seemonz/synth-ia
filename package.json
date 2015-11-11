@@ -1,0 +1,23 @@
+{
+  "name": "synth-ia",
+  "version": "1.0.0",
+  "description": "Multiplayer Music Game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/seemonz/synth-ia.git"
+  },
+  "author": "Cody, Sam, Simon, Vince",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/seemonz/synth-ia/issues"
+  },
+  "homepage": "https://github.com/seemonz/synth-ia#readme",
+  "dependencies": {
+    "handlebars": "^4.0.4",
+    "socket.io": "^1.3.7"
+  }
+}
