@@ -4,7 +4,8 @@
   "description": "Multiplayer Music Game",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/seemonz/synth-ia#readme",
   "dependencies": {
+    "express": "^4.13.3",
     "fs": "0.0.2",
     "handlebars": "^4.0.4",
     "http": "0.0.0",
