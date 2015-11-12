@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Synth-ia</title>
+
+    <link rel="stylesheet" href="public/css/main.css" >
+    <link rel="text/javascript" href="public/js/application.js" >
+</head
+
+<body>
+
+<p>Sythn-ia</p>
+
+<script src="socket.io/socket.io.js">
+
+  var socket = io('http://localhost');
+  socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
+  });
+</script>
+
+
+</body>
+</html>
