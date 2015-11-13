@@ -5,6 +5,8 @@ var io = require('socket.io')(server);
 
 server.listen(8080);
 app.use(express.static('public'));
+app.use(express.static('./bundle.js'));
+
 
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
@@ -17,6 +19,15 @@ var players = [];
 var playerOneNotes = [];
 var playerTwoNotes = [];
 
+function getRandomRhythm(){
+  return Math.floor(Math.random() * 8) + 1;
+}
+
+// defining random rhythm on refresh
+var rhythm1 = getRandomRhythm();
+var rhythm2 = getRandomRhythm();
+var rhythm3 = getRandomRhythm();
+
 // socket io
 io.on('connection', function (socket) {
 
@@ -25,7 +36,7 @@ io.on('connection', function (socket) {
     console.log('user disconnected');
   });
 
-  var tempo = 500;
+  var tempo = 1000;
   players.push(socket);
   if (players.length === 1) {
     startTempo(tempo);
@@ -36,6 +47,7 @@ io.on('connection', function (socket) {
   function startTempo(tempo) {
     setInterval(function(){
       io.emit('tempo');
+      rhythmGen(tempo, rhythm1, rhythm2, rhythm3);
       if (playerOneNotes.length > 0) {
         io.emit('playerOnePlay', { note: playerOneNotes[0] });
         playerOneNotes = [];
@@ -46,6 +58,23 @@ io.on('connection', function (socket) {
       }
     }, tempo);
   }
+
+
+  // rhythm
+  function rhythmGen(tempo, rhythm1, rhythm2, rhythm3){
+    // io.emit('rhythm1');
+    io.emit('rhythm2');
+    setTimeout(function(){
+      io.emit('rhythm1');
+    }, (rhythm1 / 8 ) * tempo);
+    setTimeout(function(){
+      io.emit('rhythm2');
+    }, (rhythm2 / 8 ) * tempo);
+    setTimeout(function(){
+      io.emit('rhythm2');
+    }, (rhythm3 / 8 ) * tempo);
+  }
+
 
   // syncs button clicks to activating each second
   socket.on('playerOnePlay', function(note){
