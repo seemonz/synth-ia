@@ -6,5 +6,3 @@
     audio.play();
     console.log(note);
   }
-  
-

@@ -26,7 +26,7 @@ io.on('connection', function (socket) {
   if (players.length === 1) {
     startMusic();
   }
-  
+
   socket.on('disconnect', function(socket) {
     console.log('user disconnected');
   });
@@ -43,7 +43,7 @@ io.on('connection', function (socket) {
         io.emit('play2')
         musicEvents2 = [];
       }
-    }, 1000);
+    }, 500);
   }
 
   // syncs button clicks to activating each second
@@ -57,5 +57,3 @@ io.on('connection', function (socket) {
     musicEvents2.push(1);
   });
 });
-
-

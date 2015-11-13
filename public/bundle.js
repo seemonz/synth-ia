@@ -42,9 +42,25 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	(__webpack_require__(1));
+
+
+/***/ },
+/* 1 */
 /***/ function(module, exports) {
 
-	document.write("It works.");
+	
+	  function playNote(actualNote) {
+	    var note = ('audio/piano1/note'+actualNote+'.wav')
+	    var audio = new Audio(note);
+	    audio.volume = 0.1;
+	    audio.play();
+	    console.log(note);
+	  }
+
 
 /***/ }
 /******/ ]);
