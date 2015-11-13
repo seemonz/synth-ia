@@ -9,13 +9,34 @@
   background-color: blue;
 }
 
-#play {
+#note-1 {
+  width: 300px;
+}
+
+#note-2 {
+  width: 300px;
+}
+
+#note-box-1 {
   width: 300px;
   height: 200px;
   border-radius: 10%;
   background-color: black;
+  display: inline-block;
 }
 
-#play.set-on {
+#note-box-1.set-on {
   background-color: green;
+}
+
+#note-box-2 {
+  width: 300px;
+  height: 200px;
+  border-radius: 10%;
+  background-color: black;
+  display: inline-block;
+}
+
+#note-box-2.set-on {
+  background-color: red;
 }

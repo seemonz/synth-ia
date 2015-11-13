@@ -8,27 +8,33 @@ $(function(){
     socket.emit('button click');
   });
   // receives the button broadcast back from the server
-  socket.on('button click', function(timeZero){
-    // console.log(timeZero);
-    // console.log(Date.now());
-    setInterval(function() {
-      if (Date.now() >= timeZero + 100){
-        console.log(timeZero);
-        console.log(Date.now());
-        $('#timer').toggleClass('set-on');
-        setTimeout(function(){
-          $('#timer').toggleClass('set-on');
-        }, 100);
-      }
-    }, 1);
+  socket.on('button click', function(){
+    $('#timer').toggleClass('set-on');
+    setTimeout(function(){
+      $('#timer').toggleClass('set-on');
+    }, 100);
   });
 
-  $('#play-button').on('click', function(){
-    socket.emit('play');
+  $('#note-1').on('click', function(){
+    socket.emit('play1');
   });
 
-  socket.on('play', function(){
-    $('#play').toggleClass('set-on');
+  socket.on('play1', function(){
+    $('#note-box-1').toggleClass('set-on');
+    setTimeout(function(){
+      $('#note-box-1').toggleClass('set-on');
+    }, 100);
+  });
+
+  $('#note-2').on('click', function(){
+    socket.emit('play2');
+  });
+
+  socket.on('play2', function(){
+    $('#note-box-2').toggleClass('set-on');
+    setTimeout(function(){
+      $('#note-box-2').toggleClass('set-on');
+    }, 100);
   });
 
 });
