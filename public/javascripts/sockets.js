@@ -23,16 +23,16 @@ $(function(){
   // grab mouse x mouse y and current instrument to pass as object
   $('#note-1').on('click', function(){
     var randomNote = getRandomNote();
-    socket.emit('note1', { note: randomNote });
+    socket.emit('playerOnePlay', { note: randomNote });
   });
 
   $('#note-2').on('click', function(){
     var randomNote = getRandomNote();
-    socket.emit('note2', { note: randomNote });
+    socket.emit('playerTwoPlay', { note: randomNote });
   });
 
   // get notes from server for all players to play on next beat
-  socket.on('note1', function(data){
+  socket.on('playerOnePlay', function(data){
     $('#note-box-1').toggleClass('set-on');
     setTimeout(function(){
       $('#note-box-1').toggleClass('set-on');
@@ -44,7 +44,7 @@ $(function(){
     // should become playNote(data.note.x, data.note.y, data.note.instrument)
   });
 
-  socket.on('note2', function(data){
+  socket.on('playerTwoPlay', function(data){
     $('#note-box-2').toggleClass('set-on');
     setTimeout(function(){
       $('#note-box-2').toggleClass('set-on');

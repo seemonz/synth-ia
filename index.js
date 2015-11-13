@@ -14,8 +14,8 @@ app.get('/', function (req, res) {
 var players = [];
 
 // arr of player's note presses
-var playerNotes1 = [];
-var playerNotes2 = [];
+var playerOneNotes = [];
+var playerTwoNotes = [];
 
 // socket io
 io.on('connection', function (socket) {
@@ -36,24 +36,24 @@ io.on('connection', function (socket) {
   function startTempo(tempo) {
     setInterval(function(){
       io.emit('tempo');
-      if (playerNotes1.length > 0) {
-        io.emit('note1', { note: playerNotes1[0] });
-        playerNotes1 = [];
+      if (playerOneNotes.length > 0) {
+        io.emit('playerOnePlay', { note: playerOneNotes[0] });
+        playerOneNotes = [];
       }
-      if (playerNotes2.length > 0) {
-        io.emit('note2', { note: playerNotes2[0] });
-        playerNotes2 = [];
+      if (playerTwoNotes.length > 0) {
+        io.emit('playerTwoPlay', { note: playerTwoNotes[0] });
+        playerTwoNotes = [];
       }
     }, tempo);
   }
 
   // syncs button clicks to activating each second
-  socket.on('note1', function(note){
+  socket.on('playerOnePlay', function(note){
     console.log('clicked play');
-    playerNotes1.push(note);
+    playerOneNotes.push(note);
   });
 
-  socket.on('note2', function(note){
-    playerNotes2.push(note);
+  socket.on('playerTwoPlay', function(note){
+    playerTwoNotes.push(note);
   });
 });
