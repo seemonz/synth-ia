@@ -43,7 +43,7 @@ io.on('connection', function (socket) {
         io.emit('play2')
         musicEvents2 = [];
       }
-    }, 1000);
+    }, 200);
   }
 
   // syncs button clicks to activating each second
