@@ -26,7 +26,7 @@ io.on('connection', function (socket) {
   if (players.length === 1) {
     startMusic();
   }
-  
+
   socket.on('disconnect', function(socket) {
     console.log('user disconnected');
   });
@@ -57,5 +57,3 @@ io.on('connection', function (socket) {
     musicEvents2.push(1);
   });
 });
-
-

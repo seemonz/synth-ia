@@ -41,3 +41,4 @@ function playNote(note_number) {
   console.log(note_number);
   piano[note_number].start(0);
 }
+
