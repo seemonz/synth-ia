@@ -21,10 +21,14 @@ io.on('connection', function (socket) {
   // gets the the button click from the user and echos it back out to everyone
   socket.on('button click', function(){
     console.log('click');
+    var timeZero = Date.now();
     setInterval(function() {
-      io.emit('button click');
-      console.log(Date.now())
-    }, 1000);
+      if (Date.now() >= timeZero + 1000){
+        timeZero = Date.now();
+        io.emit('button click', timeZero);
+        console.log(timeZero);
+      }
+    }, 1);
   });
 
   // syncs button clicks to activating each second
