@@ -1,7 +1,5 @@
-console.info('Loaded Sockets.js')
 $(function(){
   var socket = io();
-
 
   // sends the button click down to the server
   $('#synth').on('click', function() {
@@ -24,6 +22,8 @@ $(function(){
     setTimeout(function(){
       $('#note-box-1').toggleClass('set-on');
     }, 100);
+    var randomNote = Math.floor(Math.random() * 11) + 1;
+    playNote(randomNote);
   });
 
   $('#note-2').on('click', function(){
@@ -35,6 +35,8 @@ $(function(){
     setTimeout(function(){
       $('#note-box-2').toggleClass('set-on');
     }, 100);
+    var randomNote = Math.floor(Math.random() * 11) + 1;
+    playNote(randomNote);
   });
 
 });

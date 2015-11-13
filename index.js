@@ -31,20 +31,6 @@ io.on('connection', function (socket) {
     console.log('user disconnected');
   });
 
-  
-
-  // gets the the button click from the user and echos it back out to everyone
-  // socket.on('button click', function(){
-  //   console.log('click');
-  //   setInterval(function(){
-  //     io.emit('button click');
-  //     if (musicEvents.length > 0) {
-  //       io.emit('play')
-  //       musicEvents = [];
-  //     }
-  //   }, 1000);
-  // });
-
   // play tempo
   function startMusic() {
     setInterval(function(){
