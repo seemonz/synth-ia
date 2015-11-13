@@ -1,2 +1,2 @@
 
-(require("./javascripts/piano1.js"));
+(require("./javascripts/instruments/piano1.js"));

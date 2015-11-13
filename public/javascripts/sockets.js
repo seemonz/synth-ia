@@ -1,42 +1,55 @@
 $(function(){
   var socket = io();
+  function getRandomNote(){
+    return Math.floor(Math.random() * 11) + 1; 
+  }
 
-  // sends the button click down to the server
-  $('#synth').on('click', function() {
-    socket.emit('button click');
-  });
-  // receives the button broadcast back from the server
-  socket.on('button click', function(){
+  // function playNote(x, y, instrument){}
+  // function playNote(randomNote, instrument){
+  //   play{instrument}(randomNote);
+  // use switch? instrument === piano1
+  // playPiano1(randomNote);
+  // }
+
+  // gets tempo from server to keep syncopation
+  socket.on('tempo', function(){
     $('#timer').toggleClass('set-on');
     setTimeout(function(){
       $('#timer').toggleClass('set-on');
     }, 100);
   });
 
+  // on button press, trigger musical note based on instrument
+  // grab mouse x mouse y and current instrument to pass as object
   $('#note-1').on('click', function(){
-    socket.emit('play1');
+    var randomNote = getRandomNote();
+    socket.emit('note1', { note: randomNote });
   });
 
-  socket.on('play1', function(){
+  $('#note-2').on('click', function(){
+    var randomNote = getRandomNote();
+    socket.emit('note2', { note: randomNote });
+  });
+
+  // get notes from server for all players to play on next beat
+  socket.on('note1', function(data){
     $('#note-box-1').toggleClass('set-on');
     setTimeout(function(){
       $('#note-box-1').toggleClass('set-on');
     }, 100);
-    var randomNote = Math.floor(Math.random() * 11) + 1;
-    playNote(randomNote);
+    console.log(data);
+    // data.note.note is temporary
+    // data = { note: { note: 'number'} }, eventually becomes data = { note: { x: 'number', y: 'number' } }
+    playNote(data.note.note);
+    // should become playNote(data.note.x, data.note.y, data.note.instrument)
   });
 
-  $('#note-2').on('click', function(){
-    socket.emit('play2');
-  });
-
-  socket.on('play2', function(){
+  socket.on('note2', function(data){
     $('#note-box-2').toggleClass('set-on');
     setTimeout(function(){
       $('#note-box-2').toggleClass('set-on');
     }, 100);
-    var randomNote = Math.floor(Math.random() * 11) + 1;
-    playNote(randomNote);
+    playNote(data.note.note);
   });
 
 });

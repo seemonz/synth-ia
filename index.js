@@ -13,47 +13,47 @@ app.get('/', function (req, res) {
 // array of players in session
 var players = [];
 
-// arr of player 1's note presses
-var musicEvents1 = [];
-
-// arr of player 2's note presses
-var musicEvents2 = [];
+// arr of player's note presses
+var playerNotes1 = [];
+var playerNotes2 = [];
 
 // socket io
 io.on('connection', function (socket) {
-  console.log('user connected');
-  players.push(socket);
-  if (players.length === 1) {
-    startMusic();
-  }
 
+  console.log('user connected');
   socket.on('disconnect', function(socket) {
     console.log('user disconnected');
   });
 
-  // play tempo
-  function startMusic() {
+  var tempo = 500;
+  players.push(socket);
+  if (players.length === 1) {
+    startTempo(tempo);
+  }
+
+  // Synth-ia starts the tempo all players are syncopated to, where the tempo is set by tempo.
+  // Sends play note event, bound by tempo, to all players if a player has played a note
+  function startTempo(tempo) {
     setInterval(function(){
-      io.emit('button click');
-      if (musicEvents1.length > 0) {
-        io.emit('play1')
-        musicEvents1 = [];
+      io.emit('tempo');
+      if (playerNotes1.length > 0) {
+        io.emit('note1', { note: playerNotes1[0] });
+        playerNotes1 = [];
       }
-      if (musicEvents2.length > 0) {
-        io.emit('play2')
-        musicEvents2 = [];
+      if (playerNotes2.length > 0) {
+        io.emit('note2', { note: playerNotes2[0] });
+        playerNotes2 = [];
       }
-    }, 500);
+    }, tempo);
   }
 
   // syncs button clicks to activating each second
-  socket.on('play1', function(){
+  socket.on('note1', function(note){
     console.log('clicked play');
-    musicEvents1.push(1);
-    console.log(musicEvents1);
+    playerNotes1.push(note);
   });
 
-  socket.on('play2', function(){
-    musicEvents2.push(1);
+  socket.on('note2', function(note){
+    playerNotes2.push(note);
   });
 });

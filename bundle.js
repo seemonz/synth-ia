@@ -44,8 +44,22 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	document.write("It works.");
-	document.write(__webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./javascripts/piano1.js\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+	
+	(__webpack_require__(1));
+
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	function playNote(actualNote) {
+	  var note = ('audio/piano1/note'+actualNote+'.wav')
+	  var audio = new Audio(note);
+	  audio.volume = 0.1;
+	  audio.play();
+	  console.log(note);
+	}
+
 
 /***/ }
 /******/ ]);
