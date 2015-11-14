@@ -1,9 +1,6 @@
 $(function(){
   var socket = io();
 
-  window.AudioContext = window.AudioContext || window.webkitAudioContext;
-  context = new AudioContext();
-
   function getRandomNote(){
     return Math.floor(Math.random() * 11) + 1;
   }
