@@ -36,7 +36,7 @@ io.on('connection', function (socket) {
     console.log('user disconnected');
   });
 
-  var tempo = 1000;
+  var tempo = 125;
   players.push(socket);
   if (players.length === 1) {
     startTempo(tempo);
@@ -44,10 +44,16 @@ io.on('connection', function (socket) {
 
   // Synth-ia starts the tempo all players are syncopated to, where the tempo is set by tempo.
   // Sends play note event, bound by tempo, to all players if a player has played a note
+  var rhythmCounter = 0;
   function startTempo(tempo) {
     setInterval(function(){
       io.emit('tempo');
-      rhythmGen(tempo, rhythm1, rhythm2, rhythm3);
+      console.log(Date.now());
+      rhythmCounter += 0.125;
+      if (rhythmCounter === 1) {
+        rhythmGen(tempo, rhythm1, rhythm2, rhythm3);
+        rhythmCounter = 0;
+      }
       if (playerOneNotes.length > 0) {
         io.emit('playerOnePlay', { note: playerOneNotes[0] });
         playerOneNotes = [];
@@ -63,16 +69,17 @@ io.on('connection', function (socket) {
   // rhythm
   function rhythmGen(tempo, rhythm1, rhythm2, rhythm3){
     // io.emit('rhythm1');
+    console.log('rhythm' + Date.now());
     io.emit('rhythm2');
     setTimeout(function(){
       io.emit('rhythm1');
-    }, (rhythm1 / 8 ) * tempo);
+    }, rhythm1 * tempo);
+    // setTimeout(function(){
+    //   io.emit('rhythm2');
+    // }, rhythm2 * tempo);
     setTimeout(function(){
       io.emit('rhythm2');
-    }, (rhythm2 / 8 ) * tempo);
-    setTimeout(function(){
-      io.emit('rhythm2');
-    }, (rhythm3 / 8 ) * tempo);
+    }, rhythm3 * tempo);
   }
 
 

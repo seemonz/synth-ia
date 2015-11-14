@@ -67,7 +67,7 @@ $(function(){
     setTimeout(function(){
       $('#note-box-2').toggleClass('set-on');
     }, 100);
-    triggerNote(data.note.note, 'piano');
+    triggerNote(3, 'drumkit');
   });
 
 });
