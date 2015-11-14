@@ -17,19 +17,12 @@ $(function(){
 
   // gets tempo from server to keep syncopation
   socket.on('tempo', function(){
-    $('#timer').toggleClass('set-on');
-    setTimeout(function(){
-      $('#timer').toggleClass('set-on');
-    }, 100);
+    
   });
 
   // plays rhythm 1
   socket.on('rhythm1', function(){
     triggerNote(1, 'drumkit');
-    $('#rhythm').toggleClass('set-on');
-    setTimeout(function(){
-      $('#rhythm').toggleClass('set-on');
-    }, 100);
   });
 
   // plays rhythm 2
@@ -37,37 +30,39 @@ $(function(){
     triggerNote(2, 'drumkit');
   });
 
-  // on button press, trigger musical note based on instrument
-  // grab mouse x mouse y and current instrument to pass as object
-  $('#note-1').on('click', function(){
-    var randomNote = getRandomNote();
-    socket.emit('playerOnePlay', { note: randomNote });
+  var currentKey = 1;
+
+  $('.notes').on('mouseover', function(){
+    currentKey = $(this).data('key');
+  }); 
+
+  // note trigger on spacebar
+  $('body').on('keydown', function(event){
+      if (event.keyCode == 32) {
+        socket.emit('currentPlayer', { note: currentKey });
+      }
   });
 
-  $('#note-2').on('click', function(){
-    var randomNote = getRandomNote();
-    socket.emit('playerTwoPlay', { note: randomNote });
-  });
 
   // get notes from server for all players to play on next beat
-  socket.on('playerOnePlay', function(data){
-    $('#note-box-1').toggleClass('set-on');
-    setTimeout(function(){
-      $('#note-box-1').toggleClass('set-on');
-    }, 100);
+  socket.on('currentPlayer', function(data){
     console.log(data);
     // data.note.note is temporary
     // data = { note: { note: 'number'} }, eventually becomes data = { note: { x: 'number', y: 'number' } }
-    triggerNote(data.note.note, 'piano');
+    triggerNote(data.note.note, 'drumkit');
     // should become triggerNote(data.note.x, data.note.y, data.note.instrument)
   });
 
   socket.on('playerTwoPlay', function(data){
-    $('#note-box-2').toggleClass('set-on');
-    setTimeout(function(){
-      $('#note-box-2').toggleClass('set-on');
-    }, 100);
-    triggerNote(3, 'drumkit');
+    triggerNote(data.note.note, 'drumkit');
+  });
+
+  socket.on('playerThreePlay', function(data){
+    triggerNote(data.note.note, 'drumkit');
+  });
+
+  socket.on('playerFourPlay', function(data){
+    triggerNote(data.note.note, 'drumkit');
   });
 
 });

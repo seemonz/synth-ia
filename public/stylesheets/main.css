@@ -2,73 +2,21 @@
   width: 1200px;
 }
 
-#timer {
-  width: 300px;
-  height: 200px;
-  border-radius: 10%;
-  background-color: black;
+* {
+  border: solid black 1px;
 }
 
-#timer.set-on {
-  background-color: blue;
-}
-
-#rhythm {
-  width: 100px;
-  height: 100px;
-  border-radius: 10%;
-  background-color: black;
-}
-
-#rhythm.set-on {
-  background-color: cyan;
-}
-
-#note-1 {
-  width: 300px;
-}
-
-#note-2 {
-  width: 300px;
-}
-
-#note-box-1 {
-  width: 300px;
-  height: 200px;
-  border-radius: 10%;
-  background-color: black;
-  display: inline-block;
-}
-
-#note-box-1.set-on {
-  background-color: green;
-}
-
-#note-box-2 {
-  width: 300px;
-  height: 200px;
-  border-radius: 10%;
-  background-color: black;
-  display: inline-block;
-}
-
-#note-box-2.set-on {
-  background-color: red;
-}
-
-/* fret board styling */
-.notes {
+#note-wrapper {
+  position: absolute;
+  right: 400px;
   width: 1000px;
-  height: 50px;
-  border-top: solid black 1px;
-  border-bottom: solid black 1px;
 }
 
 /* fret board visualization */
-.note-lights {
-  width: 50px;
+.notes {
+  width: 1000px;
   height: 50px;
-  display: inline-block;
   background-color: grey;
   border-radius: 5px;
+  margin-top: 2px;
 }
