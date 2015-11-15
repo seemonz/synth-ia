@@ -55,7 +55,7 @@ io.on('connection', function (socket) {
       io.emit('tempo');
       rhythmCounter += (tempo/1000);
       if (rhythmCounter === 1) {
-        triggerRhythms(tempo, rDelay1, rDelay2, rDelay3);
+        // triggerRhythms(tempo, rDelay1, rDelay2, rDelay3);
         rhythmCounter = 0;
       }
       if (playerOneNotes.length > 0) {
@@ -79,11 +79,11 @@ io.on('connection', function (socket) {
 
   // rhythm randomizer
   function triggerRhythms(tempo, r1, r2, r3) {
-    
+
     io.emit('rhythm2');
     rhythmGenerator('rhythm1', r1 * tempo);
     rhythmGenerator('rhythm2', r3 * tempo);
-   
+
   }
 
   function rhythmGenerator(eventName, timeoutDuration) {

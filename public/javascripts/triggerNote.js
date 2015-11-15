@@ -9,7 +9,7 @@
   context = new AudioContext();
 // triggerNote will have note = number, instrument
 function triggerNote(note, instrument) {
-  var soundfile = ['audio/' +instrument+ '/note' +note+ '.wav']
+  var soundfile = ['audio/' +instrument+ '/note' +note+ '.mp3']
   bufferLoader = new BufferLoader(context, soundfile, startNote);
   bufferLoader.load();
 }
