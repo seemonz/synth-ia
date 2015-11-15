@@ -5,27 +5,11 @@ $(function(){
   // currentPlayers current intrument
   var currentInstrument = 'space-bass';
 
-  function getRandomNote(){
-    return Math.floor(Math.random() * 11) + 1;
-  }
-
-  // function playNote(x, y, instrument){}
-  // function playNote(randomNote, instrument){
-  //   play{instrument}(randomNote);
-  // use switch? instrument === piano1
-  // playPiano1(randomNote);
-  // }
-
   // receive playerId from server
   socket.on('assignPlayerId', function(data){
     if (playerId === 0){
       playerId = data.id;
     }
-  });
-
-  // gets tempo from server to keep syncopation
-  socket.on('tempo', function(){
-
   });
 
   // plays rhythm 1

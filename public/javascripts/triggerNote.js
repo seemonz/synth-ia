@@ -1,3 +1,4 @@
+// A basis play note function without buffers or compression
 // function triggerNote(note, instrument) {
 //   var note = ('audio/' +instrument+ '/note' +note+ '.wav')
 //   var audio = new Audio(note);
