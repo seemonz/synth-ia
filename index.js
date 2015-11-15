@@ -23,15 +23,11 @@ var playerNotes = {};
 
 // tempo
 var tempo = 125;
-
-function getRandomRhythm(){
-  return Math.floor(Math.random() * 8) + 1;
-}
-
-// defining random rhythm on refresh
-var rDelay1 = getRandomRhythm();
-var rDelay2 = getRandomRhythm();
-var rDelay3 = getRandomRhythm();
+//
+// // defining random rhythm on refresh
+// var rDelay1 = getRandomRhythm();
+// var rDelay2 = getRandomRhythm();
+// var rDelay3 = getRandomRhythm();
 
 // socket io
 io.on('connection', function (socket) {
@@ -61,36 +57,30 @@ io.on('connection', function (socket) {
   function startTempo(tempo) {
     setInterval(function(){
       io.emit('tempo');
-      rhythmCounter += (tempo/1000);
-      if (rhythmCounter === 1) {
-        // triggerRhythms(tempo, rDelay1, rDelay2, rDelay3);
-        rhythmCounter = 0;
-      }
       io.emit('notesPerTempo', playerNotes);
       playerNotes = {};
-
+      // synthia's rhythm !
+      rhythmGenerator('space-cymbals', tempo, 10, 1);
+      // rhythmGenerator('space-leed', tempo, 12, 0.1);
     }, tempo);
   }
 
   // rhythm randomizer
-  function triggerRhythms(tempo, r1, r2, r3) {
-
-    io.emit('rhythm2');
-    rhythmGenerator('rhythm1', r1 * tempo);
-    rhythmGenerator('rhythm2', r3 * tempo);
+  function triggerRhythms(tempo) {
 
   }
 
-  function rhythmGenerator(eventName, timeoutDuration) {
-    return setTimeout(function() {
-      io.emit(eventName);
+  function rhythmGenerator(instrument, timeoutDuration, noteNum, volume) {
+    var randNote = Math.floor(Math.random() * noteNum) + 1;
+    setTimeout(function() {
+      io.emit('rhythmPerTempo', { note: randNote, instrument: instrument, volume: volume });
     }, timeoutDuration);
   }
 
   // syncs button clicks to activating each second
   socket.on('playedNote', function(data){
     var transitId = data.id
-    playerNotes[transitId] = { note: data.note, instrument: data.instrument };
+    playerNotes[transitId] = { note: data.note, instrument: data.instrument, volume: data.volume };
   });
 
 });

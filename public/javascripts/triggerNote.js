@@ -7,8 +7,10 @@
 // }
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   context = new AudioContext();
+  var volume = 0;
 // triggerNote will have note = number, instrument
-function triggerNote(note, instrument) {
+function triggerNote(note, instrument, setVolume) {
+  volume = setVolume;
   var soundfile = ['audio/' +instrument+ '/note' +note+ '.mp3']
   bufferLoader = new BufferLoader(context, soundfile, startNote);
   bufferLoader.load();
@@ -16,14 +18,14 @@ function triggerNote(note, instrument) {
 
 function startNote(bufferList) {
   var source = context.createBufferSource();
+  var gainNode = context.createGain();
   source.buffer = bufferList[0];
-  gainNode.gain.value = .5;
+  gainNode.gain.value = volume;
   source.connect(gainNode);
   gainNode.connect(compressor);
   compressor.connect(context.destination);
   source.start(0);
 }
-var gainNode = context.createGain();
 
 var compressor = context.createDynamicsCompressor();
 compressor.threshold.value = -20;
