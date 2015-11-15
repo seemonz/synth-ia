@@ -3,5 +3,7 @@
 Multiplayer Music Game
 
   npm install
+  
+  npm run bundle
 
   npm start
