@@ -13,13 +13,13 @@ app.get('/', function (req, res) {
 });
 
 // array of players in session
-var players = [];
+var players = {};
+var playerIdSequence = 0;
+var playerInstruments ={};
+var tempoInitiationArr = [];
 
-// arr of player's note presses
-var playerOneNotes = [];
-var playerTwoNotes = [];
-var playerThreeNotes = [];
-var playerFourNotes = [];
+// arr of player's note presses, obj {note: int, id: int, instrument: folderName}
+var playerNotes = {};
 
 // tempo
 var tempo = 125;
@@ -35,15 +35,23 @@ var rDelay3 = getRandomRhythm();
 
 // socket io
 io.on('connection', function (socket) {
+  var playerId = ++playerIdSequence;
+  players[playerId] = socket.id;
+  tempoInitiationArr.push(socket.id);
 
-  console.log('user connected');
+  console.log('player:' + playerId + ' connected, with socket.id of ' + socket.id);
+
+  // send out player ID to client
+  io.emit('assignPlayerId', { id: playerId });
+
   socket.on('disconnect', function(socket) {
     console.log('user disconnected');
+    delete players[playerId];
+    console.log(players);
   });
 
   // detect player, start music
-  players.push(socket);
-  if (players.length === 1) {
+  if (tempoInitiationArr.length === 1) {
     startTempo(tempo);
   }
 
@@ -58,22 +66,9 @@ io.on('connection', function (socket) {
         // triggerRhythms(tempo, rDelay1, rDelay2, rDelay3);
         rhythmCounter = 0;
       }
-      if (playerOneNotes.length > 0) {
-        io.emit('currentPlayer', { note: playerOneNotes[0] });
-        playerOneNotes = [];
-      }
-      if (playerTwoNotes.length > 0) {
-        io.emit('playerTwoPlay', { note: playerTwoNotes[0] });
-        playerTwoNotes = [];
-      }
-      if (playerThreeNotes.length > 0) {
-        io.emit('playerThreePlay', { note: playerThreeNotes[0] });
-        playerThreeNotes = [];
-      }
-      if (playerFourNotes.length > 0) {
-        io.emit('playerFourPlay', { note: playerFourNotes[0] });
-        playerFourNotes = [];
-      }
+      io.emit('notesPerTempo', playerNotes);
+      playerNotes = {};
+
     }, tempo);
   }
 
@@ -93,20 +88,9 @@ io.on('connection', function (socket) {
   }
 
   // syncs button clicks to activating each second
-  socket.on('currentPlayer', function(note){
-    playerOneNotes.push(note);
-  });
-
-  socket.on('playerTwoPlay', function(note){
-    playerTwoNotes.push(note);
-  });
-
-  socket.on('playerThreePlay', function(note){
-      playerThreeNotes.push(note);
-    });
-
-  socket.on('playerFourPlay', function(note){
-    playerFourNotes.push(note);
+  socket.on('playedNote', function(data){
+    var transitId = data.id
+    playerNotes[transitId] = { note: data.note, instrument: data.instrument };
   });
 
 });
