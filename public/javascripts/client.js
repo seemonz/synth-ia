@@ -54,6 +54,7 @@ $(function(){
   $('body').on('keydown', function(event){
       if (event.keyCode == 32) {
         socket.emit('playedNote', { note: currentKey, id: playerId, instrument: currentInstrument, volume: 0.5 });
+        console.log(currentNote);
       }
   });
 

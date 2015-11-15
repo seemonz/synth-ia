@@ -1,22 +1,10 @@
-#main-container {
-  width: 1200px;
-}
 
-* {
-  border: solid black 1px;
-}
-
-#note-wrapper {
+/* visualization */
+#main-frame{
+  border: solid red;
+  height: 500px;
+  width: 1150px;
+  top: 50px;
   position: absolute;
-  right: 400px;
-  width: 1000px;
-}
-
-/* fret board visualization */
-.notes {
-  width: 1000px;
-  height: 50px;
-  background-color: grey;
-  border-radius: 5px;
-  margin-top: 2px;
+  left: 50px;
 }
