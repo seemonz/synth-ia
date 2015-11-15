@@ -1,6 +1,9 @@
 $(function(){
   var socket = io();
 
+  // currentPlayers current intrument
+  var currentInstrument = 0;
+
   function getRandomNote(){
     return Math.floor(Math.random() * 11) + 1;
   }
@@ -32,6 +35,12 @@ $(function(){
   $('.notes').on('mouseover', function(){
     currentKey = $(this).data('key');
   });
+
+  // instrument change
+  $('.instruments').on('click', function(){
+    currentInstrument = $(this).data('instrument');
+  });
+
 
   // note trigger on spacebar
   $('body').on('keydown', function(event){
@@ -97,7 +106,7 @@ $(function(){
     console.log(data);
     // data.note.note is temporary
     // data = { note: { note: 'number'} }, eventually becomes data = { note: { x: 'number', y: 'number' } }
-    triggerNote(data.note.note, 'space-leed');
+    triggerNote(data.note.note, currentInstrument);
     // should become triggerNote(data.note.x, data.note.y, data.note.instrument)
   });
 

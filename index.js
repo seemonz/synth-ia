@@ -94,7 +94,6 @@ io.on('connection', function (socket) {
 
   // syncs button clicks to activating each second
   socket.on('currentPlayer', function(note){
-    console.log('clicked play');
     playerOneNotes.push(note);
   });
 
