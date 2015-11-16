@@ -14,7 +14,7 @@ app.get('/', function (req, res) {
 
 // array of players in session
 var players = [];
-
+var game = {}
 // arr of player's note presses
 var playerOneNotes = [];
 var playerTwoNotes = [];
@@ -22,7 +22,7 @@ var playerThreeNotes = [];
 var playerFourNotes = [];
 
 // tempo
-var tempo = 125;
+var tempo = 250;
 
 function getRandomRhythm(){
   return Math.floor(Math.random() * 8) + 1;
@@ -35,7 +35,7 @@ var rDelay3 = getRandomRhythm();
 
 // socket io
 io.on('connection', function (socket) {
-
+  game[socket.id] = { key: "",instrument:"" }
   console.log('user connected');
   socket.on('disconnect', function(socket) {
     console.log('user disconnected');
@@ -51,30 +51,54 @@ io.on('connection', function (socket) {
   // Sends play note event, bound by tempo, to all players if a player has played a note
   var rhythmCounter = 0;
   function startTempo(tempo) {
-    setInterval(function(){
-      io.emit('tempo');
-      rhythmCounter += (tempo/1000);
-      if (rhythmCounter === 1) {
-        // triggerRhythms(tempo, rDelay1, rDelay2, rDelay3);
-        rhythmCounter = 0;
-      }
-      if (playerOneNotes.length > 0) {
-        io.emit('currentPlayer', { note: playerOneNotes[0] });
-        playerOneNotes = [];
-      }
-      if (playerTwoNotes.length > 0) {
-        io.emit('playerTwoPlay', { note: playerTwoNotes[0] });
-        playerTwoNotes = [];
-      }
-      if (playerThreeNotes.length > 0) {
-        io.emit('playerThreePlay', { note: playerThreeNotes[0] });
-        playerThreeNotes = [];
-      }
-      if (playerFourNotes.length > 0) {
-        io.emit('playerFourPlay', { note: playerFourNotes[0] });
-        playerFourNotes = [];
-      }
-    }, tempo);
+    var start = new Date().getTime(),
+    time = tempo,
+    elapsed = '0.0';
+
+    function instance()
+    {
+        Object.keys(game).forEach(function(key){
+          game[key].key = ''
+        });         
+        time += tempo;
+
+        elapsed = Math.floor(time / tempo) / 10;
+        if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
+        var diff = (new Date().getTime() - start) - time;
+        console.log((tempo-diff),new Date().getTime())
+        setTimeout(instance, (tempo - diff));
+        io.emit('tempo',[new Date().getTime(),tempo]) // send
+
+        //io.emit('data', game)
+        
+
+    }
+
+    setTimeout(instance, tempo);
+    // setInterval(function(){
+    //   io.emit('tempo');
+    //   rhythmCounter += (tempo/1000);
+    //   if (rhythmCounter === 1) {
+    //     // triggerRhythms(tempo, rDelay1, rDelay2, rDelay3);
+    //     rhythmCounter = 0;
+    //   }
+    //   if (playerOneNotes.length > 0) {
+    //     io.emit('currentPlayer', { note: playerOneNotes[0] });
+    //     playerOneNotes = [];
+    //   }
+    //   if (playerTwoNotes.length > 0) {
+    //     io.emit('playerTwoPlay', { note: playerTwoNotes[0] });
+    //     playerTwoNotes = [];
+    //   }
+    //   if (playerThreeNotes.length > 0) {
+    //     io.emit('playerThreePlay', { note: playerThreeNotes[0] });
+    //     playerThreeNotes = [];
+    //   }
+    //   if (playerFourNotes.length > 0) {
+    //     io.emit('playerFourPlay', { note: playerFourNotes[0] });
+    //     playerFourNotes = [];
+    //   }
+    // }, tempo);
   }
 
   // rhythm randomizer
@@ -93,10 +117,10 @@ io.on('connection', function (socket) {
   }
 
   // syncs button clicks to activating each second
-  socket.on('currentPlayer', function(note){
-    console.log('clicked play');
-    playerOneNotes.push(note);
-  });
+  // socket.on('currentPlayer', function(note){
+  //   console.log('clicked play');
+  //   playerOneNotes.push(note);
+  // });
 
   socket.on('playerTwoPlay', function(note){
     playerTwoNotes.push(note);
@@ -109,5 +133,11 @@ io.on('connection', function (socket) {
   socket.on('playerFourPlay', function(note){
     playerFourNotes.push(note);
   });
+  
+  socket.on('input', function(input){
+    game[input.player] = input
+    console.log(input)
+    io.emit('data',game)
+  })
 
 });

@@ -1,6 +1,7 @@
+var game
 $(function(){
   var socket = io();
-
+  
   function getRandomNote(){
     return Math.floor(Math.random() * 11) + 1;
   }
@@ -13,20 +14,21 @@ $(function(){
   // }
 
   // gets tempo from server to keep syncopation
-  socket.on('tempo', function(){
+  var init = true
+  socket.on('tempo', function(data){
+    
+    if(init){
 
+      startMetronome(data[0],data[1])
+      init = false
+    }else{
+
+    }
   });
-
-  // plays rhythm 1
-  socket.on('rhythm1', function(){
-    triggerNote(1, 'drumkit');
-  });
-
-  // plays rhythm 2
-  socket.on('rhythm2', function(){
-    triggerNote(2, 'drumkit');
-  });
-
+  socket.on('data', function(x){
+    game = x
+  })
+ 
   var currentKey = 1;
 
   $('.notes').on('mouseover', function(){
@@ -34,9 +36,21 @@ $(function(){
   });
 
   // note trigger on spacebar
-  $('body').on('keydown', function(event){
+  // only one that works (use as example)
+  
+  $('body').on('keypress', function(event){
       if (event.keyCode == 32) {
-        socket.emit('currentPlayer', { note: currentKey });
+        if(!package){
+          package = { key: 3 ,instrument:'space-leed', player: socket.id, volume: .5 }
+          socket.emit('input', package );
+        }else{
+          if(package.key != 3){
+            package = { key: 3 ,instrument:'space-leed', player: socket.id, volume: .5 }
+            socket.emit('input', package ); 
+          }
+        }
+
+        
       }
   });
 
@@ -93,24 +107,12 @@ $(function(){
   });
 
   // get notes from server for all players to play on next beat
-  socket.on('currentPlayer', function(data){
-    console.log(data);
-    // data.note.note is temporary
-    // data = { note: { note: 'number'} }, eventually becomes data = { note: { x: 'number', y: 'number' } }
-    triggerNote(data.note.note, 'space-leed');
-    // should become triggerNote(data.note.x, data.note.y, data.note.instrument)
-  });
-
-  socket.on('playerTwoPlay', function(data){
-    triggerNote(data.note.note, 'drumkit');
-  });
-
-  socket.on('playerThreePlay', function(data){
-    triggerNote(data.note.note, 'drumkit');
-  });
-
-  socket.on('playerFourPlay', function(data){
-    triggerNote(data.note.note, 'drumkit');
-  });
+  // socket.on('currentPlayer', function(data){
+  //   console.log(data);
+  //   // data.note.note is temporary
+  //   // data = { note: { note: 'number'} }, eventually becomes data = { note: { x: 'number', y: 'number' } }
+  //   triggerNote(data.note.note, 'space-leed');
+  //   // should become triggerNote(data.note.x, data.note.y, data.note.instrument)
+  // });
 
 });
