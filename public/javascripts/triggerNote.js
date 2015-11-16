@@ -10,18 +10,18 @@ $(function(){
 
 function initInstrument(instrument) {
   var files = [
-        'audio/earth/'+instrument+'/note1.wav',
-        'audio/earth/'+instrument+'/note2.wav',
-        'audio/earth/'+instrument+'/note3.wav',
-        'audio/earth/'+instrument+'/note4.wav',
-        'audio/earth/'+instrument+'/note5.wav',
-        'audio/earth/'+instrument+'/note6.wav',
-        'audio/earth/'+instrument+'/note7.wav',
-        'audio/earth/'+instrument+'/note8.wav',
-        'audio/earth/'+instrument+'/note9.wav',
-        'audio/earth/'+instrument+'/note10.wav',
-        'audio/earth/'+instrument+'/note11.wav',
-        'audio/earth/'+instrument+'/note12.wav'
+        'audio/'+instrument+'/note1.mp3',
+        'audio/'+instrument+'/note2.mp3',
+        'audio/'+instrument+'/note3.mp3',
+        'audio/'+instrument+'/note4.mp3',
+        'audio/'+instrument+'/note5.mp3',
+        'audio/'+instrument+'/note6.mp3',
+        'audio/'+instrument+'/note7.mp3',
+        'audio/'+instrument+'/note8.mp3',
+        'audio/'+instrument+'/note9.mp3',
+        'audio/'+instrument+'/note10.mp3',
+        'audio/'+instrument+'/note11.mp3',
+        'audio/'+instrument+'/note12.mp3'
   ]
   bufferLoader = new BufferLoader(context, files, function(bufferlist){
     sounds[instrument] = bufferlist
