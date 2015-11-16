@@ -15,23 +15,10 @@ app.get('/', function (req, res) {
 // array of players in session
 var players = [];
 var game = {}
-// arr of player's note presses
-var playerOneNotes = [];
-var playerTwoNotes = [];
-var playerThreeNotes = [];
-var playerFourNotes = [];
+
 
 // tempo
 var tempo = 250;
-
-function getRandomRhythm(){
-  return Math.floor(Math.random() * 8) + 1;
-}
-
-// defining random rhythm on refresh
-var rDelay1 = getRandomRhythm();
-var rDelay2 = getRandomRhythm();
-var rDelay3 = getRandomRhythm();
 
 // socket io
 io.on('connection', function (socket) {
@@ -54,7 +41,6 @@ io.on('connection', function (socket) {
     var start = new Date().getTime(),
     time = tempo,
     elapsed = '0.0';
-
     function instance()
     {
         Object.keys(game).forEach(function(key){
@@ -65,13 +51,9 @@ io.on('connection', function (socket) {
         elapsed = Math.floor(time / tempo) / 10;
         if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
         var diff = (new Date().getTime() - start) - time;
-        console.log((tempo-diff),new Date().getTime())
+        // console.log((tempo-diff),new Date().getTime())
         setTimeout(instance, (tempo - diff));
         io.emit('tempo',[new Date().getTime(),tempo]) // send
-
-        //io.emit('data', game)
-        
-
     }
 
     setTimeout(instance, tempo);
@@ -102,19 +84,19 @@ io.on('connection', function (socket) {
   }
 
   // rhythm randomizer
-  function triggerRhythms(tempo, r1, r2, r3) {
+  // function triggerRhythms(tempo, r1, r2, r3) {
 
-    io.emit('rhythm2');
-    rhythmGenerator('rhythm1', r1 * tempo);
-    rhythmGenerator('rhythm2', r3 * tempo);
+  //   io.emit('rhythm2');
+  //   rhythmGenerator('rhythm1', r1 * tempo);
+  //   rhythmGenerator('rhythm2', r3 * tempo);
 
-  }
+  // }
 
-  function rhythmGenerator(eventName, timeoutDuration) {
-    return setTimeout(function() {
-      io.emit(eventName);
-    }, timeoutDuration);
-  }
+  // function rhythmGenerator(eventName, timeoutDuration) {
+  //   return setTimeout(function() {
+  //     io.emit(eventName);
+  //   }, timeoutDuration);
+  // }
 
   // syncs button clicks to activating each second
   // socket.on('currentPlayer', function(note){
@@ -122,17 +104,17 @@ io.on('connection', function (socket) {
   //   playerOneNotes.push(note);
   // });
 
-  socket.on('playerTwoPlay', function(note){
-    playerTwoNotes.push(note);
-  });
+  // socket.on('playerTwoPlay', function(note){
+  //   playerTwoNotes.push(note);
+  // });
 
-  socket.on('playerThreePlay', function(note){
-      playerThreeNotes.push(note);
-    });
+  // socket.on('playerThreePlay', function(note){
+  //     playerThreeNotes.push(note);
+  //   });
 
-  socket.on('playerFourPlay', function(note){
-    playerFourNotes.push(note);
-  });
+  // socket.on('playerFourPlay', function(note){
+  //   playerFourNotes.push(note);
+  // });
   
   socket.on('input', function(input){
     game[input.player] = input

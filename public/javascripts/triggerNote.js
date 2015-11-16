@@ -2,35 +2,37 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
 context = new AudioContext();
 var package
 $(function(){
-  initSpaceLeeds();
+  initInstrument('earth-harp');
+  initInstrument('earth-piano');
+  initInstrument('earth-rhode');
+  initInstrument('earth-glock');
 })
 
-function initSpaceLeeds() {
-  var leed = [
-        'audio/space-leed/note1.mp3',
-        'audio/space-leed/note2.mp3',
-        'audio/space-leed/note3.mp3',
-        'audio/space-leed/note4.mp3',
-        'audio/space-leed/note5.mp3',
-        'audio/space-leed/note6.mp3',
-        'audio/space-leed/note7.mp3',
-        'audio/space-leed/note8.mp3',
-        'audio/space-leed/note9.mp3',
-        'audio/space-leed/note10.mp3',
-        'audio/space-leed/note11.mp3',
-        'audio/space-leed/note12.mp3'
+function initInstrument(instrument) {
+  var files = [
+        'audio/earth/'+instrument+'/note1.wav',
+        'audio/earth/'+instrument+'/note2.wav',
+        'audio/earth/'+instrument+'/note3.wav',
+        'audio/earth/'+instrument+'/note4.wav',
+        'audio/earth/'+instrument+'/note5.wav',
+        'audio/earth/'+instrument+'/note6.wav',
+        'audio/earth/'+instrument+'/note7.wav',
+        'audio/earth/'+instrument+'/note8.wav',
+        'audio/earth/'+instrument+'/note9.wav',
+        'audio/earth/'+instrument+'/note10.wav',
+        'audio/earth/'+instrument+'/note11.wav',
+        'audio/earth/'+instrument+'/note12.wav'
   ]
-  bufferLoader = new BufferLoader(context, leed, saveLeeds);
-  bufferLoader.load();
+  bufferLoader = new BufferLoader(context, files, function(bufferlist){
+    sounds[instrument] = bufferlist
+
+  });
+  bufferLoader.load()
 }
 
 var sounds = {}
 
-function saveLeeds(bufferlist){
-  sounds['space-leed'] = bufferlist
-}
-
-function triggerNote(note, instrument, volume,player) {
+function triggerNote(note, instrument, volume, player) {
   var source = context.createBufferSource();
   var gainNode = context.createGain();
   source.buffer = sounds[instrument][note];
@@ -51,7 +53,6 @@ compressor.attack.value = 0;
 compressor.release.value = .2;
 
 var triggerNotes = function () {
-  
   if(game)
   Object.keys(game).forEach(function(key){
     var player = game[key]
@@ -63,7 +64,6 @@ var triggerNotes = function () {
 }
 
 var startMetronome = function(start,tempo){
-
       time = 0,
       elapsed = '0.0';
   function instance() {
@@ -72,7 +72,7 @@ var startMetronome = function(start,tempo){
       if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
       var diff = (new Date().getTime() - start) - time;
       window.setTimeout(instance, (tempo - diff));
-      triggerNotes()
+      triggerNotes();
   } 
   window.setTimeout(instance, tempo);
 }
