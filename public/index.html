@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8" />
-    <title>Synth-ia</title>
+  <meta charset="UTF-8" />
+  <title>Synth-ia</title>
 
-    <!-- CSS Styling -->
-    <link rel="stylesheet" href="stylesheets/main.css" >
+  <!-- CSS Styling -->
+  <link rel="stylesheet" href="stylesheets/main.css">
 
-    <!-- JavaScript Libraries -->
-    <script type="text/javascript" src="/javascripts/jquery-2.1.4.js"></script>
-    <script type="text/javascript" src="/javascripts/socket.io-1.3.7.js"></script>
+  <!-- JavaScript Libraries -->
+  <script type="text/javascript" src="/javascripts/jquery-2.1.4.js"></script>
+  <script type="text/javascript" src="/javascripts/socket.io-1.3.7.js"></script>
 
-    <!-- Webkit bundler -->
-    <script type="text/javascript" src="bundle.js"></script>
+  <!-- Webkit bundler -->
+  <script type="text/javascript" src="bundle.js"></script>
 
-    <!-- Instruments -->
-    <script type="text/javascript" src="/javascripts/triggerNote.js"></script>
+  <!-- Instruments -->
+  <script type="text/javascript" src="/javascripts/triggerNote.js"></script>
 
-    <!-- Visualization -->
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script type="text/javascript" src="/javascripts/visualization.js"></script>
+  <!-- Visualization -->
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script type="text/javascript" src="/javascripts/visualization.js"></script>
 
-    <!-- Client and Server JS -->
-    <script type="text/javascript" src="/javascripts/bufferLoader.js"></script>
-    <script type="text/javascript" src="/javascripts/client.js"></script>
+  <!-- Client and Server JS -->
+  <script type="text/javascript" src="/javascripts/bufferLoader.js"></script>
+  <!-- <script type="text/javascript" src="/javascripts/client.js"></script> -->
 
 </head>
 
@@ -31,14 +32,34 @@
 
   <div id="main-container">
 
-  <button class="instruments" id="space-leed" data-instrument="space-leed">space leed</button>
-  <button class="instruments" id="space-bass" data-instrument="space-bass">space bass</button>
-  <button class="instruments" id="space-accordian" data-instrument="space-accordian">space accordian</button>
-  <button class="instruments" id="space-pad" data-instrument="space-pad">space pad</button>
+    <div id="main-frame">
 
-  <div id="main-frame">
+    </div>
 
-  </div>
+    <div id="instrument-container">
+      <button class="instruments" id="space-leed" data-instrument="space-leed">space leed</button>
+      <button class="instruments" id="space-bass" data-instrument="space-bass">space bass</button>
+      <button class="instruments" id="space-accordian" data-instrument="space-accordian">space accordian</button>
+      <button class="instruments" id="space-pad" data-instrument="space-pad">space pad</button>
+    </div>
+
+    <div id="synthia-container">
+
+      <div class="name">Synth-ia</div>
+
+      <div id="synthia-instruments">
+        <button class="instruments" id="space-leed" data-instrument="space-leed">leed</button>
+        <button class="instruments" id="space-bass" data-instrument="space-bass">bass</button>
+        <button class="instruments" id="space-accordian" data-instrument="space-accordian">accordian</button>
+        <button class="instruments" id="space-pad" data-instrument="space-pad">pad</button>
+      </div>
+
+      <div class="synthia-state">
+        <div id="on">ON</div>
+        <div id="off">OFF</div>
+      </div>
+
+    </div>
 
   </div>
 

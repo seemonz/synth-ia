@@ -28,7 +28,7 @@ $(function() {
   //music ladder
   for (var i = 1; i < 12; i++) {
     mainSVG.append("line")
-      .style("stroke", "black")
+      .style("stroke", "gray")
       .style("stroke-width", 3)
       .attr("x1", 0)
       .attr("y1", frameHeight / 12 * i)
@@ -38,14 +38,14 @@ $(function() {
 
   //upper & lower limit lines
   mainSVG.append("line")
-    .style("stroke", "black")
+    .style("stroke", "gray")
     .attr("x1", lowerLimit)
     .attr("y1", 0)
     .attr("x2", lowerLimit)
     .attr("y2", frameHeight);
 
   mainSVG.append("line")
-    .style("stroke", "black")
+    .style("stroke", "gray")
     .attr("x1", upperLimit)
     .attr("y1", 0)
     .attr("x2", upperLimit)
