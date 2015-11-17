@@ -4,6 +4,15 @@
   border: solid white 1px;
 }*/
 
+/* fonts */
+body {
+  font-family: 'Audiowide', cursive;
+}
+
+button {
+  font-family: 'Audiowide', cursive;
+}
+
 body {
   background-color: lightgray;
 }
@@ -18,19 +27,21 @@ body {
   background-color: #333333;
   border-radius: 20px;
   border: solid darkgray 5px;
+  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 /* visualization */
 #main-frame {
   display: inline-block;
   box-sizing: border-box;
-  border: solid grayblack;
+  border: solid gray; 
   border-radius: 10px;
   background-color: black;
   height: 70%;
   width: 70%;
   margin-top: 5%;
   margin-left: 5%;
+  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 #instrument-container {
@@ -60,6 +71,7 @@ body {
   background-color: lightgray;
   font-size: 18px;
   text-align: center;
+  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 .synthia-state {
@@ -78,6 +90,7 @@ body {
   width: 45%;
   height: 15%;
   text-align: center;
+  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 #off {
@@ -88,11 +101,12 @@ body {
   width: 45%;
   height: 15%;
   text-align: center;
+  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 #synthia-instruments {
   display: inline-block;
-  width: 68%;
+  width: 70%;
   margin-left: 5%;
   top: 10px;
 }
@@ -102,33 +116,79 @@ body {
   height: 5%;
   margin: 10px;
   border-radius: 5px;
-  background-color: lightgray;
+  background-color: gray;
   text-align: center;
   font-size: 16px;
+
 }
 
+#synthia-instruments > button.instruments {
+  width: 20%;
+  height: 5%;
+  margin: 10px;
+  border-radius: 5px;
+  background-color: gray;
+  text-align: center;
+  font-size: 16px;
+  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+}
+
+#synthia-instruments > button.instruments:active {
+  /*border-color: black;*/
+}
+
+#synthia-instruments > button.instruments:focus {
+  background-color: gray;
+  transition: background-color 200ms linear, text-shadow 500ms linear;
+  background-image: linear-gradient(#212121, #424242);
+  color: #9E9E9E;
+  outline: 0;
+}
+
+
+
+#synthia-instruments > button.instruments:hover {
+  color: #E0E0E0;
+  transition: color 200ms linear, text-shadow 500ms linear;
+}
+
+
+/* player instrument buttons */
 button.instruments {
   width: 160px;
   height: 60px;
   margin: 10px;
   border-radius: 5px;
-  background-color: lightgray;
+  background-color: gray;
   text-align: center;
   font-size: 16px;
+  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 button.instruments:active {
-  border-color: black;
+  /*border-color: black;*/
 }
 
 button.instruments:focus {
   background-color: gray;
   transition: background-color 200ms linear, text-shadow 500ms linear;
+  background-image: linear-gradient(#212121, #424242);
+  color: #9E9E9E;
+  outline: 0;
 }
 
 button.instruments:hover {
-  border-color: #e6e6e6;
-  transition: border-color 200ms linear, text-shadow 500ms linear;
+  color: #E0E0E0;
+  transition: color 200ms linear, text-shadow 500ms linear;
 }
+
+
+
+
+
+
+
+
+
 
 
