@@ -1,6 +1,7 @@
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 context = new AudioContext();
-var package
+var package;
+
 $(function(){
   initInstrument('earth-harp');
   initInstrument('earth-piano');
@@ -32,16 +33,16 @@ function initInstrument(instrument) {
 
 var sounds = {}
 
-function triggerNote(note, instrument, volume, player) {
+function playNote(note, instrument, volume, player) {
   var source = context.createBufferSource();
   var gainNode = context.createGain();
-  source.buffer = sounds[instrument][note];
+  source.buffer = sounds[instrument][note - 1];
   gainNode.gain.value = volume;
   source.connect(gainNode);
   gainNode.connect(compressor);
   compressor.connect(context.destination);
   source.start(0);
-  game[player].key = ""
+  game[player].sound = ""
 }
 
 var compressor = context.createDynamicsCompressor();
@@ -53,26 +54,28 @@ compressor.attack.value = 0;
 compressor.release.value = .2;
 
 var triggerNotes = function () {
-  if(game)
-  Object.keys(game).forEach(function(key){
-    var player = game[key]
-    if(player.key){
-      triggerNote(player.key,player.instrument,player.volume,player.player)
-    }
-  })
-  package = null
+  if(game) {
+    console.log(); 
+    Object.keys(game).forEach(function(key){
+      var player = game[key]
+      if(player.sound){
+        playNote(player.sound, player.instrument, player.volume, player.player)
+      }
+    })
+    package = null;
+  }
 }
 
 var startMetronome = function(start,tempo){
       time = 0,
       elapsed = '0.0';
   function instance() {
-      time += tempo;
-      elapsed = Math.floor(time / tempo) / 10;
-      if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
-      var diff = (new Date().getTime() - start) - time;
-      window.setTimeout(instance, (tempo - diff));
-      triggerNotes();
+    time += tempo;
+    elapsed = Math.floor(time / tempo) / 10;
+    if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
+    var diff = (new Date().getTime() - start) - time;
+    window.setTimeout(instance, (tempo - diff));
+    triggerNotes();
   } 
   window.setTimeout(instance, tempo);
 }
