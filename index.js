@@ -28,7 +28,7 @@ var synthia = {};
 
 function randomizeSynthia(tempo, instrument, volume){
   synthiaRhythms += 1;
-  return { tempo: tempo, instrument: instrument, volume: volume };
+  return { tempo: tempo, instrument: instrument, volume: volume, state: true };
 }
 
 // socket io
@@ -97,4 +97,23 @@ io.on('connection', function (socket) {
     console.log(game)
     io.emit('currentAudio', game)
   })
+
+  // synthia on/off
+  socket.on('synthiaOn', function(data){
+    synthia = data;
+    io.emit('synthiaNotes', synthia);
+  });
+  socket.on('synthiaOff', function(data){
+    synthia = data;
+    io.emit('synthiaNotes', synthia);
+  });
+
+  // synthia instrument control
+  socket.on('synthiaInstrumentControl', function(data){
+    synthia = data;
+    io.emit('synthiaNotes', synthia);
+  });
+
 });
+
+

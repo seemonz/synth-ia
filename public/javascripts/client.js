@@ -30,7 +30,30 @@ $(function(){
 
   socket.on('synthiaNotes', function(data){
     synthia = data;
-    // console.log(synthia);
+  });
+
+  // turn synthia on/off
+  $('#on').on('click', function(){
+    for (var key in synthia) {
+      synthia[key].state = true;
+    }
+    socket.emit('synthiaOn', synthia);
+  });
+
+
+  $('#off').on('click', function(){
+    for (var key in synthia) {
+      synthia[key].state = false;
+    }
+    socket.emit('synthiaOff', synthia);
+  });
+
+  // synthia instrument control
+  $('#synthia-instruments').delegate('button', 'click', function(){
+    for (var key in synthia) {
+      synthia[key].instrument = $(this).text();
+    }
+    socket.emit('synthiaIntrumentControl', synthia);
   });
 
   // gets public id from server
@@ -47,7 +70,6 @@ $(function(){
   // $('.notes').on('mouseover', function(){
   //   currentKey = $(this).data('key');
   // });
-
 
   $('body').on('keypress', function(event){
       if (event.keyCode == 32) {

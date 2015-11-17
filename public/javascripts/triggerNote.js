@@ -74,14 +74,16 @@ function playSynthia(tempo){
       var randNote = Math.floor(Math.random() * 12);
 
       // synthia playNote function
-      var source = context.createBufferSource();
-      var gainNode = context.createGain();
-      source.buffer = sounds[synthia[key].instrument][randNote];
-      gainNode.gain.value = synthia[key].volume;
-      source.connect(gainNode);
-      gainNode.connect(compressor);
-      compressor.connect(context.destination);
-      source.start(0);
+      if (synthia[key].state) {
+        var source = context.createBufferSource();
+        var gainNode = context.createGain();
+        source.buffer = sounds[synthia[key].instrument][randNote];
+        gainNode.gain.value = synthia[key].volume;
+        source.connect(gainNode);
+        gainNode.connect(compressor);
+        compressor.connect(context.destination);
+        source.start(0);
+      }
     }
   }
 }
