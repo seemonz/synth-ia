@@ -49,9 +49,19 @@ $(function(){
   });
 
   // synthia instrument control
-  $('#synthia-instruments').delegate('button', 'click', function(){
-    for (var key in synthia) {
-      synthia[key].instrument = $(this).text();
+  $('#synthia-instruments button').on('click', function(){
+    if ($(this).hasClass('focus')) {
+      for (var key in synthia) {
+      if ($(this).text() === synthia[key].instrument) {
+        synthia[key].state = true;
+      }
+    }
+    } else {
+      for (var key in synthia) {
+        if ($(this).text() === synthia[key].instrument) {
+          synthia[key].state = false;
+        }
+      }
     }
     socket.emit('synthiaIntrumentControl', synthia);
   });

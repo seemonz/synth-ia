@@ -59,10 +59,10 @@ io.on('connection', function (socket) {
 
   // detect first player, generate synthia's notes
   if (synthiaInit) {
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 4, 'earth-harp', 0.1);
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 128, 'earth-piano', 0.1);
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 128, 'earth-rhode', 0.5);
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 256, 'earth-glock', 1);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 2, 'earth-harp', 0.1);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 64, 'earth-piano', 0.1);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 64, 'earth-rhode', 0.5);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 128, 'earth-glock', 1);
     synthiaInit = false;
   }
 

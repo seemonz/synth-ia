@@ -24,7 +24,6 @@ $(function(){
   synthiaInstrumentButtons.delegate('button', 'click', function(){
     var el = $(this);
     var buttons = $('#synthia-instruments > button');
-    buttons.removeClass('focus');
-    el.addClass('focus');
+    el.toggleClass('focus');
   });
 });
