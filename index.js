@@ -32,12 +32,13 @@ io.on('connection', function (socket) {
   startSynthia = true;
 
   // send out player ID to client
-  io.emit('assignPlayerId', { id: playerId });
+  io.emit('assignPlayerId', { id: publicId });
 
   // server messages for connection and disconnection
   console.log('player:' + publicId + ' connected, with socket.id of ' + socket.id);
   socket.on('disconnect', function(socket) {
-    console.log('player:' + playerId + ' disconnected');
+    console.log('player:' + publicId + ' disconnected');
+    delete game[publicId];
   });
 
   // detect player, start music
@@ -52,32 +53,31 @@ io.on('connection', function (socket) {
     var start = new Date().getTime(),
     time = tempo,
     elapsed = '0.0';
-    function instance()
-    {
-        Object.keys(game).forEach(function(key){
-          game[key].sound = ''
-        });         
-        time += tempo;
+    function instance() {
+      Object.keys(game).forEach(function(key){
+        game[key].sound = ''
+      });         
+      time += tempo;
 
-        elapsed = Math.floor(time / tempo) / 10;
-        if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
-        var diff = (new Date().getTime() - start) - time;
-        // console.log((tempo-diff),new Date().getTime())
-        setTimeout(instance, (tempo - diff));
-        io.emit('tempo',[new Date().getTime(),tempo]) // send server time to clients' metronome
+      elapsed = Math.floor(time / tempo) / 10;
+      if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
+      var diff = (new Date().getTime() - start) - time;
+      // console.log((tempo-diff),new Date().getTime())
+      setTimeout(instance, (tempo - diff));
+      io.emit('tempo',[new Date().getTime(),tempo]) // send server time to clients' metronome
     }
     setTimeout(instance, tempo);
   }
 
   // players can turn on/off synthia who is recorded in the game obj like other players
   if (startSynthia){
-    game['synthia'] = {};
+    game['synthia'] = { sound: 1, instrument: 'earth-harp', volume: 0.1, player: 'synthia' };
   } 
   
   // on player input, stash the info associated with the note played and emit it back to all players
   socket.on('playerInput', function(input){
     game[input.player] = input
-    console.log(input)
+    console.log(game)
     io.emit('data', game)
   })
 

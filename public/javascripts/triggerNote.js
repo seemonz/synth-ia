@@ -54,8 +54,8 @@ compressor.attack.value = 0;
 compressor.release.value = .2;
 
 var triggerNotes = function () {
-  if(game) {
-    console.log(); 
+  if (game) {
+    // console.log(game); 
     Object.keys(game).forEach(function(key){
       var player = game[key]
       if(player.sound){

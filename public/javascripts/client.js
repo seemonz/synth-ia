@@ -1,15 +1,15 @@
 var game;
-var player;
+var currentInstrument;
 
 $(function(){
   var socket = io();
   var playerId = 0;
-  var currentInstrument = 'earth-harp';
+  currentInstrument = 'earth-harp';
 
   // gets tempo from server to keep syncopation
   var init = true
   socket.on('tempo', function(data){
-    if(init){
+    if (init) {
       startMetronome(data[0],data[1])
       init = false
     }
