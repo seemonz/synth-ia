@@ -1,5 +1,7 @@
-var game;
+var currentAudio;
+var playerAudio;
 var currentInstrument;
+var synthia;
 
 $(function(){
   var socket = io();
@@ -17,9 +19,14 @@ $(function(){
   var init = true
   socket.on('tempo', function(data){
     if (init) {
-      startMetronome(data[0],data[1])
-      init = false
+      startMetronome(data[0],data[1]);
+      init = false;
     }
+  });
+
+  socket.on('synthiaNotes', function(data){
+    synthia = data;
+    // console.log(synthia);
   });
 
   // gets public id from server
@@ -29,8 +36,8 @@ $(function(){
     }
   });
 
-  socket.on('data', function(x){
-    game = x
+  socket.on('currentAudio', function(data){
+    currentAudio = data;
   });
 
   // $('.notes').on('mouseover', function(){
@@ -40,7 +47,7 @@ $(function(){
 
   $('body').on('keypress', function(event){
       if (event.keyCode == 32) {
-        console.log("spacebar'd")
+        console.log("spacebar'd");
       }
   });
 
@@ -51,13 +58,13 @@ $(function(){
     var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
     if (keycodes.indexOf(event.keyCode) != -1){
       var note = keycodes.indexOf(event.keyCode) + 1;
-      if (!package){
-        package = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
-        socket.emit('playerInput', package );
+      if (!playerAudio){
+        playerAudio = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
+        socket.emit('playerInput', playerAudio );
       } else {
-        if (package.sound != note){
-          package = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
-          socket.emit('playerInput', package ); 
+        if (playerAudio.sound != note){
+          playerAudio = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
+          socket.emit('playerInput', playerAudio ); 
         }
       }
     }

@@ -13,7 +13,7 @@ app.get('/', function (req, res) {
 });
 
 // game is object of players in session
-var tempoInitiationArr = [];
+var tempoInit = true;
 var game = {};
 var playerId = {};
 var playerIdSequence = 0;
@@ -22,12 +22,13 @@ var playerIdSequence = 0;
 var tempo = 125;
 
 // synth-ia is on/off
-// var startSynthia = false;
-var synthia;
+var synthiaInit = true;
+var synthiaRhythms = 0;
+var synthia = {};
 
 function randomizeSynthia(tempo, instrument, volume){
-  var randNote = Math.floor(Math.random() * 12) + 1;
-  return { sound: randNote, instrument: instrument, player: 'synthia', volume: volume };
+  synthiaRhythms += 1;
+  return { tempo: tempo, instrument: instrument, volume: volume };
 }
 
 // socket io
@@ -40,6 +41,9 @@ io.on('connection', function (socket) {
   // send out player ID to client
   io.emit('assignPlayerId', { id: publicId });
 
+  // Sends synthia's notes so players have access
+  io.emit('synthiaNotes', synthia);
+
   // server messages for connection and disconnection
   console.log('player:' + publicId + ' connected, with socket.id of ' + socket.id);
   socket.on('disconnect', function(socket) {
@@ -47,27 +51,31 @@ io.on('connection', function (socket) {
     delete game[publicId];
   });
 
-  // detect player, start music, and generate synthia's notes
-  tempoInitiationArr.push(socket);
-  if (tempoInitiationArr.length === 1) {
+  // detect first player, start music
+  if (tempoInit) {
     startTempo(tempo);
-    // if statement to change her instrments depending on scene
-    synthia = {
-      'first': randomizeSynthia(tempo * 4, 'earth-harp', 0.1),
-      'second': randomizeSynthia(tempo * 128, 'earth-piano', 0.1),
-      'third': randomizeSynthia(tempo * 128, 'earth-rhode', 0.5),
-      'four': randomizeSynthia(tempo * 256, 'earth-glock', 1)
-    }
+    tempoInit = false;
+  }
+
+  // detect first player, generate synthia's notes
+  if (synthiaInit) {
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 4, 'earth-harp', 0.1);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 128, 'earth-piano', 0.1);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 128, 'earth-rhode', 0.5);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 256, 'earth-glock', 1);
+    synthiaInit = false;
   }
 
   // Synth-ia starts the tempo all players are syncopated to, where the tempo is set by tempo.
   // Sends play note event, bound by tempo, to all players if a player has played a note
-  // Sends synthia's notes so players have access
   function startTempo(tempo) {
     var start = new Date().getTime(),
     time = tempo,
     elapsed = '0.0';
     function instance() {
+      for (var key in game){
+        key.sound = '';
+      }
       Object.keys(game).forEach(function(key){
         game[key].sound = ''
       });         
@@ -80,19 +88,13 @@ io.on('connection', function (socket) {
       setTimeout(instance, (tempo - diff));
       io.emit('tempo',[new Date().getTime(),tempo]) // send server time to clients' metronome
     }
-    io.emit('synthiaNotes', synthia);
     setTimeout(instance, tempo);
   }
-
-  // players can turn on/off synthia who is recorded in the game obj like other players
-  // if (startSynthia){
-  //   game['synthia'] = { sound: 1, instrument: 'earth-harp', volume: 0.1, player: 'synthia' };
-  // } 
   
   // on player input, stash the info associated with the note played and emit it back to all players
   socket.on('playerInput', function(input){
     game[input.player] = input
     console.log(game)
-    io.emit('data', game)
+    io.emit('currentAudio', game)
   })
 });

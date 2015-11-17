@@ -1,7 +1,5 @@
-
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 context = new AudioContext();
-var package;
 
 $(function(){
   initInstrument('earth-harp');
@@ -43,7 +41,7 @@ function playNote(note, instrument, volume, player) {
   gainNode.connect(compressor);
   compressor.connect(context.destination);
   source.start(0);
-  game[player].sound = ""
+  currentAudio[player].sound = ""
 }
 
 var compressor = context.createDynamicsCompressor();
@@ -54,22 +52,47 @@ compressor.reduction.value = -30;
 compressor.attack.value = 0;
 compressor.release.value = .2;
 
-var triggerNotes = function () {
-  if (game) {
-    // console.log(game); 
-    Object.keys(game).forEach(function(key){
-      var player = game[key]
+function triggerNotes () {
+  if (currentAudio) {
+    // console.log(currentAudio); 
+    Object.keys(currentAudio).forEach(function(key){
+      var player = currentAudio[key]
       if (player.sound){
         playNote(player.sound, player.instrument, player.volume, player.player)
       }
     })
-    package = null;
+    playerAudio = null;
   }
 }
 
-var startMetronome = function(start,tempo){
-      time = 0,
-      elapsed = '0.0';
+var rhythmCounter = {};
+function playSynthia(tempo){
+  for (var key in rhythmCounter) {
+    rhythmCounter[key] += tempo;
+    if (rhythmCounter[key] >= synthia[key].tempo) {
+      rhythmCounter[key] = 0;
+      var randNote = Math.floor(Math.random() * 12);
+
+      // synthia playNote function
+      var source = context.createBufferSource();
+      var gainNode = context.createGain();
+      source.buffer = sounds[synthia[key].instrument][randNote];
+      gainNode.gain.value = synthia[key].volume;
+      source.connect(gainNode);
+      gainNode.connect(compressor);
+      compressor.connect(context.destination);
+      source.start(0);
+    }
+  }
+}
+
+function startMetronome(start,tempo){
+  // init synthia's rhythmCounter
+  for (var key in synthia) {
+    rhythmCounter[key] = -tempo;
+  }
+  time = 0,
+  elapsed = '0.0';
   function instance() {
     time += tempo;
     elapsed = Math.floor(time / tempo) / 10;
@@ -77,6 +100,7 @@ var startMetronome = function(start,tempo){
     var diff = (new Date().getTime() - start) - time;
     window.setTimeout(instance, (tempo - diff));
     triggerNotes();
+    playSynthia(tempo);
   } 
   window.setTimeout(instance, tempo);
 }

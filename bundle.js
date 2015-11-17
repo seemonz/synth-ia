@@ -106,33 +106,50 @@
 /* 2 */
 /***/ function(module, exports) {
 
-	// function triggerNote(note, instrument) {
-	//   var note = ('audio/' +instrument+ '/note' +note+ '.wav')
-	//   var audio = new Audio(note);
-	//   audio.volume = 0.1;
-	//   audio.play();
-	//   // console.log(note);
-	// }
-	  window.AudioContext = window.AudioContext || window.webkitAudioContext;
-	  context = new AudioContext();
-	  var volume = 0;
-	// triggerNote will have note = number, instrument
-	function triggerNote(note, instrument, setVolume) {
-	  volume = setVolume;
-	  var soundfile = ['audio/' +instrument+ '/note' +note+ '.mp3']
-	  bufferLoader = new BufferLoader(context, soundfile, startNote);
-	  bufferLoader.load();
+	window.AudioContext = window.AudioContext || window.webkitAudioContext;
+	context = new AudioContext();
+
+	$(function(){
+	  initInstrument('earth-harp');
+	  initInstrument('earth-piano');
+	  initInstrument('earth-rhode');
+	  initInstrument('earth-glock');
+	})
+
+	function initInstrument(instrument) {
+	  var files = [
+	        'audio/'+instrument+'/note1.mp3',
+	        'audio/'+instrument+'/note2.mp3',
+	        'audio/'+instrument+'/note3.mp3',
+	        'audio/'+instrument+'/note4.mp3',
+	        'audio/'+instrument+'/note5.mp3',
+	        'audio/'+instrument+'/note6.mp3',
+	        'audio/'+instrument+'/note7.mp3',
+	        'audio/'+instrument+'/note8.mp3',
+	        'audio/'+instrument+'/note9.mp3',
+	        'audio/'+instrument+'/note10.mp3',
+	        'audio/'+instrument+'/note11.mp3',
+	        'audio/'+instrument+'/note12.mp3'
+	  ]
+	  bufferLoader = new BufferLoader(context, files, function(bufferlist){
+	    sounds[instrument] = bufferlist
+
+	  });
+	  bufferLoader.load()
 	}
 
-	function startNote(bufferList) {
+	var sounds = {}
+
+	function playNote(note, instrument, volume, player) {
 	  var source = context.createBufferSource();
 	  var gainNode = context.createGain();
-	  source.buffer = bufferList[0];
+	  source.buffer = sounds[instrument][note - 1];
 	  gainNode.gain.value = volume;
 	  source.connect(gainNode);
 	  gainNode.connect(compressor);
 	  compressor.connect(context.destination);
 	  source.start(0);
+	  currentAudio[player].sound = ""
 	}
 
 	var compressor = context.createDynamicsCompressor();
@@ -143,6 +160,43 @@
 	compressor.attack.value = 0;
 	compressor.release.value = .2;
 
+	function triggerNotes () {
+	  if (currentAudio) {
+	    // console.log(currentAudio); 
+	    Object.keys(currentAudio).forEach(function(key){
+	      var player = currentAudio[key]
+	      if (player.sound){
+	        playNote(player.sound, player.instrument, player.volume, player.player)
+	      }
+	    })
+	    playerAudio = null;
+	  }
+	}
+
+	var rhythmCounter = {};
+	for (var key in synthia) {
+	  rhythmCounter[key] = 0;
+	}
+
+	// function playSynthia(tempo){
+	//   for (rhythmCounter)
+	// }
+
+	function startMetronome(start,tempo){
+	  console.log(rhythmCounter)
+	  time = 0,
+	  elapsed = '0.0';
+	  function instance() {
+	    time += tempo;
+	    elapsed = Math.floor(time / tempo) / 10;
+	    if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
+	    var diff = (new Date().getTime() - start) - time;
+	    window.setTimeout(instance, (tempo - diff));
+	    triggerNotes();
+	    // playSynthia(tempo);
+	  } 
+	  window.setTimeout(instance, tempo);
+	}
 
 /***/ },
 /* 3 */
@@ -178,7 +232,7 @@
 	  //music ladder
 	  for (var i = 1; i < 12; i++) {
 	    mainSVG.append("line")
-	      .style("stroke", "black")
+	      .style("stroke", "gray")
 	      .style("stroke-width", 3)
 	      .attr("x1", 0)
 	      .attr("y1", frameHeight / 12 * i)
@@ -188,14 +242,14 @@
 
 	  //upper & lower limit lines
 	  mainSVG.append("line")
-	    .style("stroke", "black")
+	    .style("stroke", "gray")
 	    .attr("x1", lowerLimit)
 	    .attr("y1", 0)
 	    .attr("x2", lowerLimit)
 	    .attr("y2", frameHeight);
 
 	  mainSVG.append("line")
-	    .style("stroke", "black")
+	    .style("stroke", "gray")
 	    .attr("x1", upperLimit)
 	    .attr("y1", 0)
 	    .attr("x2", upperLimit)
@@ -309,23 +363,15 @@
 /* 4 */
 /***/ function(module, exports) {
 
+	var currentAudio;
+	var playerAudio;
+	var currentInstrument;
+	var synthia;
+
 	$(function(){
 	  var socket = io();
 	  var playerId = 0;
-
-	  // currentPlayers current intrument
-	  var currentInstrument = 'space-bass';
-
-	  function getRandomNote(){
-	    return Math.floor(Math.random() * 11) + 1;
-	  }
-
-	  // function playNote(x, y, instrument){}
-	  // function playNote(randomNote, instrument){
-	  //   play{instrument}(randomNote);
-	  // use switch? instrument === piano1
-	  // playPiano1(randomNote);
-	  // }
+	  currentInstrument = 'earth-harp';
 
 	  // receive playerId from server
 	  socket.on('assignPlayerId', function(data){
@@ -335,103 +381,59 @@
 	  });
 
 	  // gets tempo from server to keep syncopation
-	  socket.on('tempo', function(){
-
+	  var init = true
+	  socket.on('tempo', function(data){
+	    if (init) {
+	      startMetronome(data[0],data[1]);
+	      init = false;
+	    }
 	  });
 
-	  // plays rhythm 1
-	  socket.on('rhythm1', function(){
-	    triggerNote(1, 'drumkit');
+	  socket.on('synthiaNotes', function(data){
+	    synthia = data;
+	    console.log(synthia);
 	  });
 
-	  // plays rhythm 2
-	  socket.on('rhythm2', function(){
-	    triggerNote(2, 'drumkit');
+	  // gets public id from server
+	  socket.on('assignPlayerId', function(data){
+	    if (playerId === 0){
+	      playerId = data.id;
+	    }
 	  });
 
-	  var currentKey = 1;
-
-	  $('.notes').on('mouseover', function(){
-	    currentKey = $(this).data('key');
+	  socket.on('currentAudio', function(data){
+	    currentAudio = data;
 	  });
 
-	  // instrument change
-	  $('.instruments').on('click', function(){
-	    currentInstrument = $(this).data('instrument');
-	  });
+	  // $('.notes').on('mouseover', function(){
+	  //   currentKey = $(this).data('key');
+	  // });
 
 
-	  // note trigger on spacebar
-	  $('body').on('keydown', function(event){
+	  $('body').on('keypress', function(event){
 	      if (event.keyCode == 32) {
-	        socket.emit('playedNote', { note: currentKey, id: playerId, instrument: currentInstrument, volume: 0.5 });
-	        console.log(currentNote);
+	        console.log("spacebar'd");
 	      }
 	  });
 
-	  // 12 notes for 12 keys o the board
+	  // 12 notes for 12 keys on the board
 	  $('body').on('keydown', function(event){
-	    // Q
-	    if (event.keyCode == 81) {
-	      socket.emit('playedNote', { note: 12, id: playerId, instrument: currentInstrument, volume: 0.5 });
-	    }
-	    // W
-	    if (event.keyCode == 87) {
-	      socket.emit('playedNote', { note: 11, id: playerId, instrument: currentInstrument, volume: 0.5 });
-	    }
-	    // E
-	    if (event.keyCode == 69) {
-	      socket.emit('playedNote', { note: 10, id: playerId, instrument: currentInstrument, volume: 0.5 });
-	    }
-	    // R
-	    if (event.keyCode == 82) {
-	      socket.emit('playedNote', { note: 9, id: playerId, instrument: currentInstrument, volume: 0.5 });
-	    }
-	    // A
-	    if (event.keyCode == 65) {
-	      socket.emit('playedNote', { note: 8, id: playerId, instrument: currentInstrument, volume: 0.5 });
-	    }
-	    // S
-	    if (event.keyCode == 83) {
-	      socket.emit('playedNote', { note: 7, id: playerId, instrument: currentInstrument, volume: 0.5 });
-	    }
-	    // D
-	    if (event.keyCode == 68) {
-	      socket.emit('playedNote', { note: 6, id: playerId, instrument: currentInstrument, volume: 0.5 });
-	    }
-	    // F
-	    if (event.keyCode == 70) {
-	      socket.emit('playedNote', { note: 5, id: playerId, instrument: currentInstrument, volume: 0.5 });
-	    }
-	    // Z
-	    if (event.keyCode == 90) {
-	      socket.emit('playedNote', { note: 4, id: playerId, instrument: currentInstrument, volume: 0.5 });
-	    }
-	    // X
-	    if (event.keyCode == 88) {
-	      socket.emit('playedNote', { note: 3, id: playerId, instrument: currentInstrument, volume: 0.5 });
-	    }
-	    // C
-	    if (event.keyCode == 67) {
-	      socket.emit('playedNote', { note: 2, id: playerId, instrument: currentInstrument, volume: 0.5 });
-	    }
-	    // V
-	    if (event.keyCode == 86) {
-	      socket.emit('playedNote', { note: 1, id: playerId, instrument: currentInstrument, volume: 0.5 });
+	    console.log(event.keyCode)
+	    // the keys are / Z X C V / A S D F / Q W E R / 
+	    var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
+	    if (keycodes.indexOf(event.keyCode) != -1){
+	      var note = keycodes.indexOf(event.keyCode) + 1;
+	      if (!playerAudio){
+	        playerAudio = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
+	        socket.emit('playerInput', playerAudio );
+	      } else {
+	        if (playerAudio.sound != note){
+	          playerAudio = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
+	          socket.emit('playerInput', playerAudio ); 
+	        }
+	      }
 	    }
 	  });
-
-	  // get notes from server for all players to play on next beat
-	  socket.on('notesPerTempo', function(data){
-	    for (var player in data){
-	      triggerNote(data[player].note, data[player].instrument, data[player].volume);
-	    }
-	  });
-
-	  socket.on('rhythmPerTempo', function(data){
-	    triggerNote(data.note, data.instrument, data.volume);
-	  });
-
 	});
 
 
