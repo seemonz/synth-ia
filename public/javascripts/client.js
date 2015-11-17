@@ -1,20 +1,10 @@
+var game;
+var currentInstrument;
+
 $(function(){
   var socket = io();
   var playerId = 0;
-
-  // currentPlayers current intrument
-  var currentInstrument = 'space-bass';
-
-  function getRandomNote(){
-    return Math.floor(Math.random() * 11) + 1;
-  }
-
-  // function playNote(x, y, instrument){}
-  // function playNote(randomNote, instrument){
-  //   play{instrument}(randomNote);
-  // use switch? instrument === piano1
-  // playPiano1(randomNote);
-  // }
+  currentInstrument = 'earth-harp';
 
   // receive playerId from server
   socket.on('assignPlayerId', function(data){
@@ -24,101 +14,52 @@ $(function(){
   });
 
   // gets tempo from server to keep syncopation
-  socket.on('tempo', function(){
-
+  var init = true
+  socket.on('tempo', function(data){
+    if (init) {
+      startMetronome(data[0],data[1])
+      init = false
+    }
   });
 
-  // plays rhythm 1
-  socket.on('rhythm1', function(){
-    triggerNote(1, 'drumkit');
+  // gets public id from server
+  socket.on('assignPlayerId', function(data){
+    if (playerId === 0){
+      playerId = data.id;
+    }
   });
 
-  // plays rhythm 2
-  socket.on('rhythm2', function(){
-    triggerNote(2, 'drumkit');
+  socket.on('data', function(x){
+    game = x
   });
 
-  var currentKey = 1;
-
-  $('.notes').on('mouseover', function(){
-    currentKey = $(this).data('key');
-  });
-
-  // instrument change
-  $('.instruments').on('click', function(){
-    currentInstrument = $(this).data('instrument');
-  });
+  // $('.notes').on('mouseover', function(){
+  //   currentKey = $(this).data('key');
+  // });
 
 
-  // note trigger on spacebar
-  $('body').on('keydown', function(event){
+  $('body').on('keypress', function(event){
       if (event.keyCode == 32) {
-        socket.emit('playedNote', { note: currentKey, id: playerId, instrument: currentInstrument, volume: 0.5 });
-        console.log(currentNote);
+        console.log("spacebar'd")
       }
   });
 
-  // 12 notes for 12 keys o the board
+  // 12 notes for 12 keys on the board
   $('body').on('keydown', function(event){
-    // Q
-    if (event.keyCode == 81) {
-      socket.emit('playedNote', { note: 12, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // W
-    if (event.keyCode == 87) {
-      socket.emit('playedNote', { note: 11, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // E
-    if (event.keyCode == 69) {
-      socket.emit('playedNote', { note: 10, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // R
-    if (event.keyCode == 82) {
-      socket.emit('playedNote', { note: 9, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // A
-    if (event.keyCode == 65) {
-      socket.emit('playedNote', { note: 8, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // S
-    if (event.keyCode == 83) {
-      socket.emit('playedNote', { note: 7, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // D
-    if (event.keyCode == 68) {
-      socket.emit('playedNote', { note: 6, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // F
-    if (event.keyCode == 70) {
-      socket.emit('playedNote', { note: 5, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // Z
-    if (event.keyCode == 90) {
-      socket.emit('playedNote', { note: 4, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // X
-    if (event.keyCode == 88) {
-      socket.emit('playedNote', { note: 3, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // C
-    if (event.keyCode == 67) {
-      socket.emit('playedNote', { note: 2, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // V
-    if (event.keyCode == 86) {
-      socket.emit('playedNote', { note: 1, id: playerId, instrument: currentInstrument, volume: 0.5 });
+    console.log(event.keyCode)
+    // the keys are / Z X C V / A S D F / Q W E R / 
+    var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
+    if (keycodes.indexOf(event.keyCode) != -1){
+      var note = keycodes.indexOf(event.keyCode) + 1;
+      if (!package){
+        package = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
+        socket.emit('playerInput', package );
+      } else {
+        if (package.sound != note){
+          package = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
+          socket.emit('playerInput', package ); 
+        }
+      }
     }
   });
-
-  // get notes from server for all players to play on next beat
-  socket.on('notesPerTempo', function(data){
-    for (var player in data){
-      triggerNote(data[player].note, data[player].instrument, data[player].volume);
-    }
-  });
-
-  socket.on('rhythmPerTempo', function(data){
-    triggerNote(data.note, data.instrument, data.volume);
-  });
-
 });
