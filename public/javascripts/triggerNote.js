@@ -58,7 +58,7 @@ var triggerNotes = function () {
     // console.log(game); 
     Object.keys(game).forEach(function(key){
       var player = game[key]
-      if(player.sound){
+      if (player.sound){
         playNote(player.sound, player.instrument, player.volume, player.player)
       }
     })
