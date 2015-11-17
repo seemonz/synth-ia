@@ -14,7 +14,15 @@ button {
 }
 
 body {
-  background-color: lightgray;
+  /*background-color: lightgray;*/
+  background: radial-gradient(ellipse,  #000000 0%,#263238 100%);
+}
+
+button {
+background  : none;
+cursor  : pointer;
+margin      : 0px;
+padding     : 0px;
 }
 
 #main-container {
@@ -25,9 +33,13 @@ body {
   margin: 0 auto;
   margin-top: 50px;
   background-color: #333333;
-  border-radius: 20px;
-  border: solid darkgray 5px;
-  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+  border-radius: 10px;
+  border-top: solid #717171 20px;
+  border-left: solid #717171 20px;
+  border-right: solid #4E4D4D 20px;
+  border-bottom: solid #4E4D4D 20px;
+  border: linear-gradient( to left top, #7B7B7B, #4E4D4D);  
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 /* visualization */
@@ -41,7 +53,7 @@ body {
   width: 70%;
   margin-top: 5%;
   margin-left: 5%;
-  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+  box-shadow:  inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 #instrument-container {
@@ -56,9 +68,9 @@ body {
 
 #synthia-container {
   box-sizing: border-box;
-  width: 70%;
+  width: 75%;
   height: 20%;
-  margin-left: 8%;
+  margin-left: 3%;
   margin-top: 1%;
 }
 
@@ -71,7 +83,7 @@ body {
   background-color: lightgray;
   font-size: 18px;
   text-align: center;
-  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 .synthia-state {
@@ -82,6 +94,7 @@ body {
   width: 16%;
 }
 
+
 #on {
   display: inline-block;
   border-top-left-radius: 5px;
@@ -90,7 +103,7 @@ body {
   width: 45%;
   height: 15%;
   text-align: center;
-  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+  box-shadow:  inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 #off {
@@ -101,8 +114,28 @@ body {
   width: 45%;
   height: 15%;
   text-align: center;
-  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
+
+.synthia-state > button:active {
+  /*border-color: black;*/
+}
+
+.synthia-state > button:focus {
+  background-color: gray;
+  transition: background-color 200ms linear, text-shadow 500ms linear;
+  background-image: linear-gradient(#212121, #424242);
+  color: #9E9E9E;
+  outline: 0;
+}
+
+
+
+.synthia-state > button:hover {
+  color: #E0E0E0;
+  transition: color 200ms linear, text-shadow 500ms linear;
+}
+
 
 #synthia-instruments {
   display: inline-block;
@@ -130,7 +163,7 @@ body {
   background-color: gray;
   text-align: center;
   font-size: 16px;
-  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 #synthia-instruments > button.instruments:active {
@@ -162,7 +195,7 @@ button.instruments {
   background-color: gray;
   text-align: center;
   font-size: 16px;
-  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 button.instruments:active {
