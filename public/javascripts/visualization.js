@@ -104,8 +104,8 @@ $(function() {
           .attr("xlink:href", "../images/nyan_cat.gif")
           .attr("height", 100)
           .attr("width", 100)
-          .attr("x", lowerLimit + (upperLimit - lowerLimit)/2)
-          .attr("y", frameHeight/2)
+          .attr("x", frameWidth * 0.7)
+          .attr("y", frameHeight * 0.35)
 
 
 
@@ -153,7 +153,7 @@ $(function() {
       // barIndex = (barIndex + 1) % NUM_BARS;
   };
 
-  var mouseX = 0;
+  var mouseX = frameWidth * 0.8;
   var mouseY = frameHeight / 2 ;
   var percent = 1;
   var down = false;
@@ -205,7 +205,7 @@ $(function() {
     down = false;
     clickAndReleased = true;
     fadeOutCounter = 10;
-    console.log("released")
+    // console.log("released")
   });
 
   // $(document).on('keyup', function(e){
@@ -232,29 +232,28 @@ $(function() {
 
 
 
-    setInterval(function() {
+  setInterval(function() {
 
     if (!down) {
       clickAndReleased = false;
     }
 
     function setBarHeight(){
-        if (down){
-          if ((minBarHeight * Math.pow(2.5,fadeInCounter)) < (maxBarHeight * percent)){
-            return minBarHeight * Math.pow(2.5,fadeInCounter);
-          } else {
-            return maxBarHeight * percent;
-          }
-        } else if (fadeOutCounter>0) {
-          return maxBarHeight * percent* Math.pow(0.80, -(fadeOutCounter-10));
+      if (down){
+        if ((minBarHeight * Math.pow(2.5,fadeInCounter)) < (maxBarHeight * percent)){
+          return minBarHeight * Math.pow(2.5,fadeInCounter);
         } else {
-          return minBarHeight ;
+          return maxBarHeight * percent;
         }
+      } else if (fadeOutCounter>0) {
+        return maxBarHeight * percent* Math.pow(0.80, -(fadeOutCounter-10));
+      } else {
+        return minBarHeight ;
       }
-
-    // var x = lowerLimit - 2 * 10;
+    }
 
     generateTrail(mouseX - 50, mouseY - setBarHeight()/2, setBarHeight());
+
 
     if (down){
     }
@@ -274,9 +273,14 @@ $(function() {
 $('body').on('keydown', function(event){
     // the keys are / Z X C V / A S D F / Q W E R / 
     var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
-    if (keycodes.indexOf(event.keyCode) != -1){
+    var noteAreaHeight = (frameHeight/12); 
+    for (var i=0; i<=12; i++){
+      if (keycodes.indexOf(event.keyCode) === (-1*(i-12))){
+        mouseY = noteAreaHeight/2 * (2*i - 1);
+        mainSVG.select('#nyan-cat').attr("y", mouseY - 50)
         down = true;
         fadeInCounter = 0;
+      }
     }
 })
 
@@ -367,7 +371,7 @@ function update(){
 
 function createNewStars(){
   // n+=incrementStars;
-  console.log(n);
+  // console.log(n);
   for (var i = 0; i < incrementStars; i++){
     stars.push({
       x: +Math.floor(Math.random() * secondFrameWidth),
