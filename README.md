@@ -7,3 +7,5 @@ Multiplayer Music Game
   npm run bundle
 
   npm start
+
+  localhost:8080
