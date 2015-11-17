@@ -121,7 +121,7 @@ padding     : 0px;
   /*border-color: black;*/
 }
 
-.synthia-state > button:focus {
+.synthia-state > button.focus {
   background-color: gray;
   transition: background-color 200ms linear, text-shadow 500ms linear;
   background-image: linear-gradient(#212121, #424242);
@@ -170,7 +170,7 @@ padding     : 0px;
   /*border-color: black;*/
 }
 
-#synthia-instruments > button.instruments:focus {
+#synthia-instruments > button.instruments.focus {
   background-color: gray;
   transition: background-color 200ms linear, text-shadow 500ms linear;
   background-image: linear-gradient(#212121, #424242);
@@ -202,7 +202,7 @@ button.instruments:active {
   /*border-color: black;*/
 }
 
-button.instruments:focus {
+button.instruments.focus {
   background-color: gray;
   transition: background-color 200ms linear, text-shadow 500ms linear;
   background-image: linear-gradient(#212121, #424242);
