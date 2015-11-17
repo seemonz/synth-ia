@@ -2,11 +2,15 @@ var currentAudio;
 var playerAudio;
 var currentInstrument;
 var synthia;
+var scenes = {
+  earth: ['earth-harp', 'earth-piano', 'earth-rhode', 'earth-glock'],
+  space: ['space-leed', 'space-bass', 'space-accordian', 'space-pad']
+};
 
 $(function(){
   var socket = io();
   var playerId = 0;
-  currentInstrument = 'earth-harp';
+  currentInstrument = '';
 
   // receive playerId from server
   socket.on('assignPlayerId', function(data){
