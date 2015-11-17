@@ -7,7 +7,7 @@ $(function() {
   var circleRadius = frameHeight * 0.05;
   var maxBarHeight = frameHeight * 0.25;
   var minBarHeight = frameHeight * 0.01;
-  var barWidth = frameHeight * 0.01;
+  var barWidth = frameHeight * 0.005;
   var lowerLimit = frameWidth * 0.6;
   var upperLimit = frameWidth * 0.8;
   var dataset = [1]
@@ -30,23 +30,23 @@ $(function() {
   }
 
   //upper & lower limit lines
-  mainSVG.append("line")
-    .style("stroke", "white")
-    .style("stroke-width", 4)
-    .attr("x1", lowerLimit)
-    .attr("y1", 0)
-    .attr("x2", lowerLimit)
-    .attr("y2", frameHeight)
-    .attr("stroke-dasharray", "1,10");
+  // mainSVG.append("line")
+  //   .style("stroke", "white")
+  //   .style("stroke-width", 4)
+  //   .attr("x1", lowerLimit)
+  //   .attr("y1", 0)
+  //   .attr("x2", lowerLimit)
+  //   .attr("y2", frameHeight)
+  //   .attr("stroke-dasharray", "1,10");
 
-  mainSVG.append("line")
-    .style("stroke", "white")
-    .style("stroke-width", 4)
-    .attr("x1", upperLimit)
-    .attr("y1", 0)
-    .attr("x2", upperLimit)
-    .attr("y2", frameHeight)
-    .attr("stroke-dasharray", "1,10");
+  // mainSVG.append("line")
+  //   .style("stroke", "white")
+  //   .style("stroke-width", 4)
+  //   .attr("x1", upperLimit)
+  //   .attr("y1", 0)
+  //   .attr("x2", upperLimit)
+  //   .attr("y2", frameHeight)
+  //   .attr("stroke-dasharray", "1,10");
 
 
   var defs = mainSVG.append("defs");
@@ -87,13 +87,26 @@ $(function() {
 
 
   //main controller circle
-  mainSVG.append("circle")
-    .style("stroke", "none" )
-    .style("fill", "red")
-    .attr("r", circleRadius)
-    .attr("cx", lowerLimit + (upperLimit - lowerLimit)/2)
-    .attr("cy", frameHeight/2)
-    .attr("filter", "url(#drop-shadow)")
+  // mainSVG.append("circle")
+  //   .style("stroke", "none" )
+  //   .style("fill", "red")
+  //   .attr("r", circleRadius)
+  //   .attr("cx", lowerLimit + (upperLimit - lowerLimit)/2)
+  //   .attr("cy", frameHeight/2)
+  //   .attr("filter", "url(#drop-shadow)")
+
+
+    var imgs = mainSVG.selectAll("image").data([0]);
+
+          imgs.enter()
+          .append("svg:image")
+          .attr("id", "nyan-cat")
+          .attr("xlink:href", "../images/nyan_cat.gif")
+          .attr("height", 100)
+          .attr("width", 100)
+          .attr("x", lowerLimit + (upperLimit - lowerLimit)/2)
+          .attr("y", frameHeight/2)
+
 
 
   // mainSVG.append("rect")
@@ -142,7 +155,7 @@ $(function() {
 
   var mouseX = 0;
   var mouseY = frameHeight / 2 ;
-  var percent = 0.5;
+  var percent = 1;
   var down = false;
   var clickAndReleased = false;
   var fadeOutCounter = 0;
@@ -155,10 +168,10 @@ $(function() {
     mouseX = e.pageX - $('#main-frame').offset().left;
     mouseY = e.pageY - $('#main-frame').offset().top;
 
-    mainSVG.select('circle').attr("cy", snappyTransition(mouseY))
-                              .attr("cx", withinBoundaries(mouseX));
+    mainSVG.select('#nyan-cat').attr("y", snappyTransition(mouseY) - 50)
+                              .attr("x", mouseX - 50);
 
-    percent = (mainSVG.select('circle').attr("cx") - lowerLimit)/(upperLimit - lowerLimit);
+    // percent = (mainSVG.select('circle').attr("cx") - lowerLimit)/(upperLimit - lowerLimit);
     setCurrentNote(mouseY);
   });
 
@@ -239,9 +252,9 @@ $(function() {
         }
       }
 
-    var x = lowerLimit - 2 * 10;
+    // var x = lowerLimit - 2 * 10;
 
-    generateTrail(x, mouseY - setBarHeight()/2, setBarHeight());
+    generateTrail(mouseX - 50, mouseY - setBarHeight()/2, setBarHeight());
 
     if (down){
     }
@@ -257,6 +270,25 @@ $(function() {
   }, 20);
 
   
+
+$('body').on('keydown', function(event){
+    // the keys are / Z X C V / A S D F / Q W E R / 
+    var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
+    if (keycodes.indexOf(event.keyCode) != -1){
+        down = true;
+        fadeInCounter = 0;
+    }
+})
+
+$('body').on('keyup', function(event){
+  var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
+  if (keycodes.indexOf(event.keyCode) != -1){
+    down = false;
+    clickAndReleased = true;
+    fadeOutCounter = 10;
+  }
+})
+
 
 /* =============== space shit ================== */
 
