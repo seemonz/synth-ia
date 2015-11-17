@@ -23,6 +23,7 @@ background  : none;
 cursor  : pointer;
 margin      : 0px;
 padding     : 0px;
+outline: none;
 }
 
 #main-container {

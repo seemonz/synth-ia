@@ -8,6 +8,7 @@ $(function(){
     var el = $(this);
     var buttons = $('.synthia-state > button');
     buttons.removeClass('focus');
+    $('#synthia-instruments > button').removeClass('focus');
     el.addClass('focus');
   });
 
