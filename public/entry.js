@@ -1,3 +1,4 @@
 (require("./javascripts/bufferLoader.js"));
 (require("./javascripts/triggerNote.js"));
-(require("./javascripts/instruments/rhythm.js"));
+(require("./javascripts/visualization.js"));
+(require("./javascripts/client.js"));

@@ -6,6 +6,13 @@ $(function(){
   var playerId = 0;
   currentInstrument = 'earth-harp';
 
+  // receive playerId from server
+  socket.on('assignPlayerId', function(data){
+    if (playerId === 0){
+      playerId = data.id;
+    }
+  });
+
   // gets tempo from server to keep syncopation
   var init = true
   socket.on('tempo', function(data){
@@ -29,6 +36,7 @@ $(function(){
   // $('.notes').on('mouseover', function(){
   //   currentKey = $(this).data('key');
   // });
+
 
   $('body').on('keypress', function(event){
       if (event.keyCode == 32) {
@@ -54,5 +62,4 @@ $(function(){
       }
     }
   });
-
 });

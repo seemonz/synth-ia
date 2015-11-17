@@ -19,7 +19,7 @@ var playerId = {};
 var playerIdSequence = 0;
 
 // tempo
-var tempo = 250;
+var tempo = 125;
 
 // synth-ia is on/off
 // var startSynthia = false;
@@ -95,5 +95,4 @@ io.on('connection', function (socket) {
     console.log(game)
     io.emit('data', game)
   })
-
 });
