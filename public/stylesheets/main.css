@@ -13,17 +13,26 @@ button {
   font-family: 'Audiowide', cursive;
 }
 
-body {
-  /*background-color: lightgray;*/
-  background: radial-gradient(ellipse,  #000000 0%,#263238 100%);
-}
-
 button {
 background  : none;
 cursor  : pointer;
 margin      : 0px;
 padding     : 0px;
 outline: none;
+}
+
+/* no selection */
+body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+body {
+  background: radial-gradient(ellipse,  #000000 0%,#263238 100%);
 }
 
 #main-container {
