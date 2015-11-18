@@ -1,5 +1,4 @@
-
-    
+var currentNote;
 $(function() {
 
   var frameWidth = document.getElementById('main-frame').clientWidth;
@@ -19,14 +18,14 @@ $(function() {
     .attr("color", "yellow");
 
   //music ladder
-  for (var i =1; i<12; i++){
+  for (var i = 1; i < 12; i++) {
     mainSVG.append("line")
       .style("stroke", "gray")
       .style("stroke-width", 2)
       .attr("x1", 0)
-      .attr("y1", frameHeight/12 * i)
+      .attr("y1", frameHeight / 12 * i)
       .attr("x2", frameWidth)
-      .attr("y2", frameHeight/12 * i);
+      .attr("y2", frameHeight / 12 * i);
   }
 
   //upper & lower limit lines
@@ -52,20 +51,20 @@ $(function() {
   var defs = mainSVG.append("defs");
 
   var filter = defs.append("filter")
-        .attr("id", "drop-shadow")
-        .attr("height", "100")
-        .attr("width", "100")
- 
+    .attr("id", "drop-shadow")
+    .attr("height", "100")
+    .attr("width", "100")
+
   filter.append("feGaussianBlur")
-      .attr("in", "SourceGraphic")
-      .attr("stdDeviation", 5)
+    .attr("in", "SourceGraphic")
+    .attr("stdDeviation", 5)
 
 
   var blurFilter = defs.append("filter")
-      .attr("id", "blur")
-      .append("feGaussianBlur")
-      .attr("in", "SourceGraphic")
-      .attr("stdDeviation", 2)
+    .attr("id", "blur")
+    .append("feGaussianBlur")
+    .attr("in", "SourceGraphic")
+    .attr("stdDeviation", 2)
 
 
 
@@ -74,16 +73,16 @@ $(function() {
   //     .attr("dx", 1)
   //     .attr("dy", 1)
   //     .attr("result", "offsetBlur")
-      
+
   var feMerge = filter.append("feMerge")
 
-    feMerge.append("feMergeNode")
+  feMerge.append("feMergeNode")
     .attr("in", "offsetBlur")
 
-    feMerge.append("feMergeNode")
+  feMerge.append("feMergeNode")
     .attr("in", "SourceGraphic")
 
-     
+
 
 
   //main controller circle
@@ -96,16 +95,16 @@ $(function() {
   //   .attr("filter", "url(#drop-shadow)")
 
 
-    var imgs = mainSVG.selectAll("image").data([0]);
+  var imgs = mainSVG.selectAll("image").data([0]);
 
-          imgs.enter()
-          .append("svg:image")
-          .attr("id", "nyan-cat")
-          .attr("xlink:href", "../images/nyan_cat.gif")
-          .attr("height", 100)
-          .attr("width", 100)
-          .attr("x", frameWidth * 0.7)
-          .attr("y", frameHeight * 0.35)
+  imgs.enter()
+    .append("svg:image")
+    .attr("id", "nyan-cat")
+    .attr("xlink:href", "../images/nyan_cat.gif")
+    .attr("height", 100)
+    .attr("width", 100)
+    .attr("x", frameWidth * 0.7)
+    .attr("y", frameHeight * 0.35)
 
 
 
@@ -122,13 +121,13 @@ $(function() {
   //   .attr("filter", "url(#drop-shadow)")
 
 
-  function generateTrail(x,y, height) {
+  function generateTrail(x, y, height) {
 
     var rect = mainSVG.append("rect");
     // var rect = rects[barIndex];
 
     rect.style("fill", function() {
-      if (down ||  fadeOutCounter > 0) { 
+        if (down || fadeOutCounter > 0) {
           return "green";
         } else {
           return "white";
@@ -137,24 +136,24 @@ $(function() {
       .style("stroke", "green")
       // .attr("filter", "url(#drop-shadow)")
 
-      .style("stroke-width", 3)
+    .style("stroke-width", 3)
       .attr("width", barWidth)
       .attr("height", height)
       .attr("x", x)
       .attr("y", y)
       .attr("ry", 5)
 
-      .transition()
+    .transition()
       .ease("linear")
       .duration(2000)
       .attr("x", -50)
       .remove()
 
-      // barIndex = (barIndex + 1) % NUM_BARS;
+    // barIndex = (barIndex + 1) % NUM_BARS;
   };
 
   var mouseX = frameWidth * 0.8;
-  var mouseY = frameHeight / 2 ;
+  var mouseY = frameHeight / 2;
   var percent = 1;
   var down = false;
   var clickAndReleased = false;
@@ -162,35 +161,33 @@ $(function() {
   var fadeInCounter = 0;
   var fadeOut;
 
-  var currentNote;
-
   $(document).on("mousemove", function(e) {
     mouseX = e.pageX - $('#main-frame').offset().left;
     mouseY = e.pageY - $('#main-frame').offset().top;
 
     mainSVG.select('#nyan-cat').attr("y", snappyTransition(mouseY) - 50)
-                              .attr("x", mouseX - 50);
+      .attr("x", mouseX - 50);
 
     // percent = (mainSVG.select('circle').attr("cx") - lowerLimit)/(upperLimit - lowerLimit);
     setCurrentNote(mouseY);
   });
 
 
-  function snappyTransition(y){
-    var noteAreaHeight = (frameHeight/12); 
+  function snappyTransition(y) {
+    var noteAreaHeight = (frameHeight / 12);
 
-    for (var i=1; i<=12; i++){
-      if (y <= noteAreaHeight *i){
-        return noteAreaHeight/2 * (2*i - 1); 
+    for (var i = 1; i <= 12; i++) {
+      if (y <= noteAreaHeight * i) {
+        return noteAreaHeight / 2 * (2 * i - 1);
       }
     }
   }
 
   function setCurrentNote(y) {
-    currentNote = Math.round(-1 *((y-circleRadius)/(frameHeight/12)-12));
+    currentNote = Math.round(-1 * ((y - circleRadius) / (frameHeight / 12) - 12));
   }
 
-  $(document).on('mousedown', function(e){
+  $(document).on('mousedown', function(e) {
     down = true;
     fadeInCounter = 0;
   });
@@ -201,7 +198,7 @@ $(function() {
   //   }
   // });
 
-  $(document).on('mouseup', function(e){
+  $(document).on('mouseup', function(e) {
     down = false;
     clickAndReleased = true;
     fadeOutCounter = 10;
@@ -220,11 +217,11 @@ $(function() {
 
   function withinBoundaries(x) {
     return function() {
-      if (x < (upperLimit - circleRadius) && x>(lowerLimit + circleRadius)) {
+      if (x < (upperLimit - circleRadius) && x > (lowerLimit + circleRadius)) {
         return x;
-      } else if (x>=(upperLimit - circleRadius)) {
+      } else if (x >= (upperLimit - circleRadius)) {
         return upperLimit - circleRadius;
-      } else if (x <=(lowerLimit + circleRadius)) {
+      } else if (x <= (lowerLimit + circleRadius)) {
         return lowerLimit + circleRadius;
       }
     }
@@ -238,72 +235,71 @@ $(function() {
       clickAndReleased = false;
     }
 
-    function setBarHeight(){
-      if (down){
-        if ((minBarHeight * Math.pow(2.5,fadeInCounter)) < (maxBarHeight * percent)){
-          return minBarHeight * Math.pow(2.5,fadeInCounter);
+    function setBarHeight() {
+      if (down) {
+        if ((minBarHeight * Math.pow(2.5, fadeInCounter)) < (maxBarHeight * percent)) {
+          return minBarHeight * Math.pow(2.5, fadeInCounter);
         } else {
           return maxBarHeight * percent;
         }
-      } else if (fadeOutCounter>0) {
-        return maxBarHeight * percent* Math.pow(0.80, -(fadeOutCounter-10));
+      } else if (fadeOutCounter > 0) {
+        return maxBarHeight * percent * Math.pow(0.80, -(fadeOutCounter - 10));
       } else {
-        return minBarHeight ;
+        return minBarHeight;
       }
     }
 
-    generateTrail(mouseX - 50, mouseY - setBarHeight()/2, setBarHeight());
+    generateTrail(mouseX - 50, mouseY - setBarHeight() / 2, setBarHeight());
 
 
-    if (down){
+    if (down) {}
+
+    if (fadeOutCounter > 0) {
+      fadeOutCounter -= 1;
     }
 
-    if (fadeOutCounter>0){
-      fadeOutCounter -=1;
+    if (fadeInCounter < 10) {
+      fadeInCounter += 1;
     }
 
-    if (fadeInCounter<10){
-      fadeInCounter +=1;
-    }
-    
   }, 20);
 
-  
 
-$('body').on('keydown', function(event){
-    // the keys are / Z X C V / A S D F / Q W E R / 
-    var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
-    var noteAreaHeight = (frameHeight/12); 
-    for (var i=0; i<=12; i++){
-      if (keycodes.indexOf(event.keyCode) === (-1*(i-12))){
-        mouseY = noteAreaHeight/2 * (2*i - 1);
+
+  $('body').on('keydown', function(event) {
+    // the keys are / Z X C V / A S D F / Q W E R /
+    var keycodes = [90, 88, 67, 86, 65, 83, 68, 70, 81, 87, 69, 82];
+    var noteAreaHeight = (frameHeight / 12);
+    for (var i = 0; i <= 12; i++) {
+      if (keycodes.indexOf(event.keyCode) === (-1 * (i - 12))) {
+        mouseY = noteAreaHeight / 2 * (2 * i - 1);
         mainSVG.select('#nyan-cat').attr("y", mouseY - 50)
         down = true;
         fadeInCounter = 0;
       }
     }
-})
+  })
 
-$('body').on('keyup', function(event){
-  var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
-  if (keycodes.indexOf(event.keyCode) != -1){
-    down = false;
-    clickAndReleased = true;
-    fadeOutCounter = 10;
-  }
-})
+  $('body').on('keyup', function(event) {
+    var keycodes = [90, 88, 67, 86, 65, 83, 68, 70, 81, 87, 69, 82];
+    if (keycodes.indexOf(event.keyCode) != -1) {
+      down = false;
+      clickAndReleased = true;
+      fadeOutCounter = 10;
+    }
+  })
 
 
-/* =============== space shit ================== */
+  /* =============== space shit ================== */
 
-// var ctx = c.getContext("2d");
-var stars = [];
-var initialStars = 50;
-var n = initialStars;
-var incrementStars = 5;
-var maxSize = 5;
-    // mouse = false,
-var i;
+  // var ctx = c.getContext("2d");
+  var stars = [];
+  var initialStars = 50;
+  var n = initialStars;
+  var incrementStars = 5;
+  var maxSize = 5;
+  // mouse = false,
+  var i;
 
   var secondFrameWidth = document.getElementById('second-frame').clientWidth;
   var secondFrameHeight = document.getElementById('second-frame').clientHeight;
@@ -312,88 +308,87 @@ var i;
     .append("svg")
     .attr("width", secondFrameWidth)
     .attr("height", secondFrameHeight)
-  
 
-function init() {
-  for (i = 0; i < initialStars; i++){
-    stars.push({
-      x: Math.floor(Math.random() * secondFrameWidth),
-      y: Math.floor(Math.random() * secondFrameHeight),
-      size: Math.random()*maxSize,
-      speed: undefined
-    });
+
+  function init() {
+    for (i = 0; i < initialStars; i++) {
+      stars.push({
+        x: Math.floor(Math.random() * secondFrameWidth),
+        y: Math.floor(Math.random() * secondFrameHeight),
+        size: Math.random() * maxSize,
+        speed: undefined
+      });
+    }
+
+    draw();
   }
-  
-  draw();
-}
 
 
 
-function draw(){
-  // ctx.clearRect(0,0,c.width,c.height);
-  // $("#mainFrame").empty();
-  // svg.selectAll("*").remove();
+  function draw() {
+    // ctx.clearRect(0,0,c.width,c.height);
+    // $("#mainFrame").empty();
+    // svg.selectAll("*").remove();
 
-  secondSVG.selectAll("*").remove();
-  for (var i = 0; i < n; i++){
-    star = stars[i];
-    secondSVG.append("circle")
-    // .style("stroke", "none" )
-    .style("fill", "white")
-    .attr("r", star.size/2)
-    .attr("cx", star.x)
-    .attr("cy", star.y)
-   
-
-  }
-}
+    secondSVG.selectAll("*").remove();
+    for (var i = 0; i < n; i++) {
+      star = stars[i];
+      secondSVG.append("circle")
+        // .style("stroke", "none" )
+        .style("fill", "white")
+        .attr("r", star.size / 2)
+        .attr("cx", star.x)
+        .attr("cy", star.y)
 
 
-function update(){
-  for (var i = 0; i < n; i++){
-    star = stars[i];
-    star.speed = star.size;
-    
-    // if (mouse)
-    //   star.x-=star.speed*10;
-    // else
-      star.x-=star.speed;
-    
-    if (star.x < 0){
-      // delete star;
-      // console.log("must delete!!");
-      // secondSVG.select('circle')
-      star.x += secondFrameWidth;
     }
   }
-}
 
 
-function createNewStars(){
-  // n+=incrementStars;
-  // console.log(n);
-  for (var i = 0; i < incrementStars; i++){
-    stars.push({
-      x: +Math.floor(Math.random() * secondFrameWidth),
-      y: Math.floor(Math.random() * secondFrameHeight),
-      size: Math.random()*maxSize,
-      speed: undefined
-    });
+  function update() {
+    for (var i = 0; i < n; i++) {
+      star = stars[i];
+      star.speed = star.size;
+
+      // if (mouse)
+      //   star.x-=star.speed*10;
+      // else
+      star.x -= star.speed;
+
+      if (star.x < 0) {
+        // delete star;
+        // console.log("must delete!!");
+        // secondSVG.select('circle')
+        star.x += secondFrameWidth;
+      }
+    }
   }
-}
 
 
-function main(){
-  draw();
-  update();
-  requestAnimationFrame(main);
-}
+  function createNewStars() {
+    // n+=incrementStars;
+    // console.log(n);
+    for (var i = 0; i < incrementStars; i++) {
+      stars.push({
+        x: +Math.floor(Math.random() * secondFrameWidth),
+        y: Math.floor(Math.random() * secondFrameHeight),
+        size: Math.random() * maxSize,
+        speed: undefined
+      });
+    }
+  }
 
-setInterval(createNewStars,500);
-init();
-main();
+
+  function main() {
+    draw();
+    update();
+    requestAnimationFrame(main);
+  }
+
+  setInterval(createNewStars, 500);
+  init();
+  main();
 
 
 
 });
-

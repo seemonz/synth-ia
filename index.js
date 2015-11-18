@@ -78,7 +78,7 @@ io.on('connection', function (socket) {
       }
       Object.keys(game).forEach(function(key){
         game[key].sound = ''
-      });         
+      });
       time += tempo;
 
       elapsed = Math.floor(time / tempo) / 10;
@@ -90,7 +90,7 @@ io.on('connection', function (socket) {
     }
     setTimeout(instance, tempo);
   }
-  
+
   // on player input, stash the info associated with the note played and emit it back to all players
   socket.on('playerInput', function(input){
     game[input.player] = input
@@ -115,5 +115,3 @@ io.on('connection', function (socket) {
   });
 
 });
-
-
