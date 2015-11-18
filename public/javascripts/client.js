@@ -29,6 +29,23 @@ $(function(){
   socket.on('sceneData', function(data){
     scene = data;
     currentInstrument = data[0];
+
+    // set player instrument names
+    var playerButtons = $('.player-instruments');
+    var count = 0;
+    for(var i=0; i<playerButtons.length; i++){
+      var element = playerButtons.eq(i);
+      element.text(data[count]);
+      count += 1;
+    }
+
+    var synthiaButtons = $('.synthia-instruments');
+    var count = 0;
+    for(var i=0; i<synthiaButtons.length; i++){
+      var element = synthiaButtons.eq(i);
+      element.text(data[count]);
+      count += 1;
+    }
   });
 
   // gets tempo from server to keep syncopation

@@ -18,7 +18,7 @@ var game = {};
 var playerId = {};
 var playerIdSequence = 0;
 
-var currentScene = 'earth';
+var currentScene = 'space';
 var scene = {
   'earth': ['earth-harp', 'earth-piano', 'earth-rhode', 'earth-glock'],
   'space': ['space-leed', 'space-bass', 'space-accordian', 'space-pad']
@@ -62,13 +62,17 @@ io.on('connection', function (socket) {
     startTempo(tempo);
     tempoInit = false;
   }
+  scene[currentScene][0]
+  scene[currentScene][1]
+  scene[currentScene][2]
+  scene[currentScene][3]
 
   // detect first player, generate synthia's notes
   if (synthiaInit) {
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 2, 'earth-harp', 0.1);
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 64, 'earth-piano', 0.1);
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 64, 'earth-rhode', 0.5);
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 128, 'earth-glock', 1);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 2, scene[currentScene][0], 0.1);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 64, scene[currentScene][1], 0.1);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 64, scene[currentScene][2], 0.5);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 128, scene[currentScene][3], 1);
     synthiaInit = false;
     io.emit('synthiaNotes', synthia);
   }
