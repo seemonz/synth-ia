@@ -18,6 +18,12 @@ var game = {};
 var playerId = {};
 var playerIdSequence = 0;
 
+var currentScene = 'earth';
+var scene = {
+  'earth': ['earth-harp', 'earth-piano', 'earth-rhode', 'earth-glock'],
+  'space': ['space-leed', 'space-bass', 'space-accordian', 'space-pad']
+};
+
 // tempo
 var tempo = 125;
 
@@ -36,10 +42,10 @@ io.on('connection', function (socket) {
   var publicId = ++playerIdSequence;
   playerId[publicId] = socket.id;
   game[publicId] = { key: '', instrument: '' }
-  startSynthia = true;
 
-  // send out player ID to client
+  // send out player ID to client and current scene
   io.emit('assignPlayerId', { id: publicId });
+  io.emit('sceneData', scene[currentScene])
 
   // Sends synthia's notes so players have access
   io.emit('synthiaNotes', synthia);
@@ -64,6 +70,7 @@ io.on('connection', function (socket) {
     synthia[synthiaRhythms] = randomizeSynthia(tempo * 64, 'earth-rhode', 0.5);
     synthia[synthiaRhythms] = randomizeSynthia(tempo * 128, 'earth-glock', 1);
     synthiaInit = false;
+    io.emit('synthiaNotes', synthia);
   }
 
   // Synth-ia starts the tempo all players are syncopated to, where the tempo is set by tempo.

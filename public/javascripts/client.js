@@ -2,21 +2,33 @@ var currentAudio;
 var playerAudio;
 var currentInstrument;
 var synthia;
-var scenes = {
-  earth: ['earth-harp', 'earth-piano', 'earth-rhode', 'earth-glock'],
-  space: ['space-leed', 'space-bass', 'space-accordian', 'space-pad']
-};
+var scene;
+var currentX;
+var currentY;
 
 $(function(){
   var socket = io();
   var playerId = 0;
-  currentInstrument = 'earth-harp';
+  currentInstrument = '';
+
+  // update current mouse X, Y to pass for visualization
+  // $('#main-frame').on("mousemove", function(e) {
+  //   currentX = e.clientX - $('#main-frame').offset().left;
+  //   currentY = e.clientY - $('#main-frame').offset().top;
+  //   console.log(currentX + ',' + currentY)
+  // });
 
   // receive playerId from server
   socket.on('assignPlayerId', function(data){
     if (playerId === 0){
       playerId = data.id;
     }
+  });
+
+  // gets scene info
+  socket.on('sceneData', function(data){
+    scene = data;
+    currentInstrument = data[0];
   });
 
   // gets tempo from server to keep syncopation
@@ -28,6 +40,12 @@ $(function(){
     }
   });
 
+  // gets current game state of all notes in queue
+  socket.on('currentAudio', function(data){
+    currentAudio = data;
+  });
+
+  // gets synthia's notes when joining
   socket.on('synthiaNotes', function(data){
     synthia = data;
   });
@@ -39,7 +57,6 @@ $(function(){
     }
     socket.emit('synthiaOn', synthia);
   });
-
 
   $('#off').on('click', function(){
     for (var key in synthia) {
@@ -66,17 +83,6 @@ $(function(){
     socket.emit('synthiaIntrumentControl', synthia);
   });
 
-  // gets public id from server
-  socket.on('assignPlayerId', function(data){
-    if (playerId === 0){
-      playerId = data.id;
-    }
-  });
-
-  socket.on('currentAudio', function(data){
-    currentAudio = data;
-  });
-
   // mouse position
   $('#main-frame').on('click', function(){
     var note = currentNote;
@@ -86,7 +92,7 @@ $(function(){
 
   $('body').on('keypress', function(event){
       if (event.keyCode == 32) {
-        console.log("spacebar'd");
+        console.log(event.clientX);
       }
   });
 

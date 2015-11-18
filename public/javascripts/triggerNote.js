@@ -6,28 +6,27 @@ $(function(){
   initInstrument('earth-piano');
   initInstrument('earth-rhode');
   initInstrument('earth-glock');
-})
+});
 
 function initInstrument(instrument) {
   var files = [
-        'audio/'+instrument+'/note1.mp3',
-        'audio/'+instrument+'/note2.mp3',
-        'audio/'+instrument+'/note3.mp3',
-        'audio/'+instrument+'/note4.mp3',
-        'audio/'+instrument+'/note5.mp3',
-        'audio/'+instrument+'/note6.mp3',
-        'audio/'+instrument+'/note7.mp3',
-        'audio/'+instrument+'/note8.mp3',
-        'audio/'+instrument+'/note9.mp3',
-        'audio/'+instrument+'/note10.mp3',
-        'audio/'+instrument+'/note11.mp3',
-        'audio/'+instrument+'/note12.mp3'
+    'audio/'+instrument+'/note1.mp3',
+    'audio/'+instrument+'/note2.mp3',
+    'audio/'+instrument+'/note3.mp3',
+    'audio/'+instrument+'/note4.mp3',
+    'audio/'+instrument+'/note5.mp3',
+    'audio/'+instrument+'/note6.mp3',
+    'audio/'+instrument+'/note7.mp3',
+    'audio/'+instrument+'/note8.mp3',
+    'audio/'+instrument+'/note9.mp3',
+    'audio/'+instrument+'/note10.mp3',
+    'audio/'+instrument+'/note11.mp3',
+    'audio/'+instrument+'/note12.mp3'
   ]
   bufferLoader = new BufferLoader(context, files, function(bufferlist){
-    sounds[instrument] = bufferlist
-
+    sounds[instrument] = bufferlist;
   });
-  bufferLoader.load()
+  bufferLoader.load();
 }
 
 var sounds = {}
@@ -52,15 +51,13 @@ compressor.reduction.value = -30;
 compressor.attack.value = 0;
 compressor.release.value = .2;
 
-function triggerNotes () {
+function triggerNotes() {
   if (currentAudio) {
-    // console.log(currentAudio); 
-    Object.keys(currentAudio).forEach(function(key){
-      var player = currentAudio[key]
-      if (player.sound){
-        playNote(player.sound, player.instrument, player.volume, player.player)
+    for (var player in currentAudio){
+      if (currentAudio[player].sound){
+        playNote(currentAudio[player].sound, currentAudio[player].instrument, currentAudio[player].volume, currentAudio[player].player);
       }
-    })
+    }
     playerAudio = null;
   }
 }
@@ -101,8 +98,10 @@ function startMetronome(start,tempo){
     if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
     var diff = (new Date().getTime() - start) - time;
     window.setTimeout(instance, (tempo - diff));
-    triggerNotes();
-    playSynthia(tempo);
+    if (Object.keys(sounds).length === 4) {
+      triggerNotes();
+      playSynthia(tempo);
+    }
   } 
   window.setTimeout(instance, tempo);
 }
