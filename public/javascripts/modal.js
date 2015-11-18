@@ -1,0 +1,11 @@
+$( function(){
+  // bring up modal box
+  $('body').append('<div id="overlay"></div>');
+  $('body').append('<div id="modal"><h1>Choose your Scene!</h1><button class="scenes">earth</button><button class="scenes">space</button><button class="scenes">Deigo</button><button class="scenes">Synth</button></div>');
+
+  // scene selection close
+  $('.scenes').on('click', function(){
+    $('#modal').remove();
+    $('#overlay').remove();
+  });
+});

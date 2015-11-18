@@ -56,6 +56,50 @@ body {
   box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
+/* modal */
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+
+#modal {
+    position:absolute;
+    box-sizing: border-box;
+    top: 50%;
+    left: 50%;
+    margin-top: -200px;
+    margin-left: -300px;
+    width: 600px;
+    height: 400px;
+    background: gray;
+    border-radius:14px;
+    padding: 50px;
+}
+
+#modal > button.scenes {
+  width: 20%;
+  height: 15%;
+  margin: 10px;
+  border-radius: 5px;
+  background-color: gray;
+  text-align: center;
+  font-size: 16px;
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+}
+
+#modal > button.scenes:active {
+  background-color: gray;
+  transition: background-color 200ms linear, text-shadow 500ms linear;
+  background-image: linear-gradient(#212121, #424242);
+  color: #9E9E9E;
+  outline: 0;
+}
 /* visualization */
 
 #visuals {
@@ -93,6 +137,7 @@ body {
   width: 100%;
 ​}
 
+/* player controler */
 #instrument-container {
   display: inline-block;
   box-sizing: border-box;
@@ -240,12 +285,10 @@ button.player-instruments:hover {
 }
 
 /* visualization styling */
-
-
 /*svg {
 /*  background-color: #262626;*/
-  background-image: linear-gradient(#404040, #000);
-}*/
+  /*background-image: linear-gradient(#404040, #000);
+}*/*/
 ​
 rect {
   stroke-dasharray: 800;
