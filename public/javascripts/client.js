@@ -3,21 +3,13 @@ var playerAudio;
 var currentInstrument;
 var synthia;
 var scene;
-var currentX;
-var currentY;
 var noteArray;
+
 
 $(function(){
   var socket = io();
   var playerId = 0;
   currentInstrument = '';
-
-  // update current mouse X, Y to pass for visualization
-  // $('#main-frame').on("mousemove", function(e) {
-  //   currentX = e.clientX - $('#main-frame').offset().left;
-  //   currentY = e.clientY - $('#main-frame').offset().top;
-  //   console.log(currentX + ',' + currentY)
-  // });
 
   // receive playerId from server
   socket.on('assignPlayerId', function(data){
@@ -26,10 +18,33 @@ $(function(){
     }
   });
 
+  // receive scene modal if first player
+  socket.on('modalRender', function(){
+    modalRender();
+  });
+
   // gets scene info
   socket.on('sceneData', function(data){
+    console.log(data);
     scene = data;
     currentInstrument = data[0];
+
+    // set player instrument names
+    var playerButtons = $('.player-instruments');
+    var count = 0;
+    for(var i=0; i<playerButtons.length; i++){
+      var element = playerButtons.eq(i);
+      element.text(data[count]);
+      count += 1;
+    }
+
+    var synthiaButtons = $('.synthia-instruments');
+    var count = 0;
+    for(var i=0; i<synthiaButtons.length; i++){
+      var element = synthiaButtons.eq(i);
+      element.text(data[count]);
+      count += 1;
+    }
   });
 
   // gets tempo from server to keep syncopation
@@ -45,6 +60,16 @@ $(function(){
   socket.on('changeSynthia', function(data){
     noteArray = data;
   });
+
+  // sends scene selection to server
+  setTimeout( function(){
+    $(document).on('click', '.scenes', function(){
+      data = $(this).text();
+      console.log(data);
+      socket.emit('selectScene', data);
+    });
+  }, 50);
+
 
   // gets current game state of all notes in queue
   socket.on('currentAudio', function(data){

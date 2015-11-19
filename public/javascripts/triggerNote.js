@@ -6,7 +6,11 @@ $(function(){
   initInstrument('earth-piano');
   initInstrument('earth-rhode');
   initInstrument('earth-glock');
-})
+  initInstrument('space-leed');
+  initInstrument('space-bass');
+  initInstrument('space-accordian');
+  initInstrument('space-pad');
+});
 
 function initInstrument(instrument) {
   var files = [
@@ -65,20 +69,19 @@ function triggerNotes () {
   }
 }
 var changeCount = 0
-var instrumentcounter = {'earth-harp': 0, 'earth-piano': 0, 'earth-glock': 0,'earth-rhode': 0}
+var instrumentcounter = {}
 var rhythmCounter = {};
+
 function playSynthia(tempo){
   for (var key in rhythmCounter) {
     rhythmCounter[key] += tempo;
     if (rhythmCounter[key] >= synthia[key].tempo) {
       rhythmCounter[key] = 0;
-      
       var count = instrumentcounter[synthia[key].instrument]
       count > 7 ? count = 0 : null
       var note = noteArray[count]
       count++
       instrumentcounter[synthia[key].instrument] = count
-      console.log(changeCount)
       changeCount++
       if (changeCount === 512) {
         changeCount = 0;
@@ -111,10 +114,17 @@ function startMetronome(start,tempo,noteArray){
     if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
     var diff = (new Date().getTime() - start) - time;
     window.setTimeout(instance, (tempo - diff));
-    if (Object.keys(sounds).length === 4) {
+    if (Object.keys(sounds).length === 8) {
       triggerNotes();
       playSynthia(tempo);
     }
+    // requestAnimationFrame(playerLoop)
+    // clearInterval(playerLoop);
+    // playerLoop = setInterval(startTrail, 25);
   } 
   window.setTimeout(instance, tempo);
+  scene.forEach(function(instrument) {
+    instrumentcounter[instrument] = 0;
+    console.log(instrumentcounter);
+  });
 }
