@@ -102,6 +102,9 @@ function startMetronome(start,tempo){
       triggerNotes();
       playSynthia(tempo);
     }
+    // requestAnimationFrame(playerLoop)
+    // clearInterval(playerLoop);
+    // playerLoop = setInterval(startTrail, 25);
   } 
   window.setTimeout(instance, tempo);
 }

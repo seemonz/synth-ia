@@ -77,10 +77,8 @@ body {
   box-sizing: border-box;
   border: solid gray; 
   border-radius: 10px;
-  background-color: black;
   height: 100%;
   width: 100%;
-  opacity: 0.5;
 }
 
 #second-frame {

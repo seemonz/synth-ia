@@ -3,20 +3,11 @@ var playerAudio;
 var currentInstrument;
 var synthia;
 var scene;
-var currentX;
-var currentY;
 
 $(function(){
   var socket = io();
   var playerId = 0;
   currentInstrument = '';
-
-  // update current mouse X, Y to pass for visualization
-  // $('#main-frame').on("mousemove", function(e) {
-  //   currentX = e.clientX - $('#main-frame').offset().left;
-  //   currentY = e.clientY - $('#main-frame').offset().top;
-  //   console.log(currentX + ',' + currentY)
-  // });
 
   // receive playerId from server
   socket.on('assignPlayerId', function(data){
