@@ -58,7 +58,7 @@ compressor.release.value = .2;
 
 function triggerNotes () {
   if (currentAudio) {
-    // console.log(currentAudio); 
+    // console.log(currentAudio);
     Object.keys(currentAudio).forEach(function(key){
       var player = currentAudio[key]
       if (player.sound){
@@ -92,7 +92,7 @@ function playSynthia(tempo){
         var gainNode = context.createGain();
         source.buffer = sounds[synthia[key].instrument][note];
         gainNode.gain.value = synthia[key].volume;
-        source.connect(gainNode); 
+        source.connect(gainNode);
         gainNode.connect(compressor);
         compressor.connect(context.destination);
         source.start(0);
@@ -121,10 +121,9 @@ function startMetronome(start,tempo,noteArray){
     // requestAnimationFrame(playerLoop)
     // clearInterval(playerLoop);
     // playerLoop = setInterval(startTrail, 25);
-  } 
+  }
   window.setTimeout(instance, tempo);
   scene.forEach(function(instrument) {
     instrumentcounter[instrument] = 0;
-    console.log(instrumentcounter);
   });
 }

@@ -16,6 +16,7 @@ app.get('/', function (req, res) {
 // game is object of players in session
 var tempoInit = true;
 var game = {};
+var playerInputCollection = [];
 var playerId = {};
 var playerIdSequence = 0;
 
@@ -53,7 +54,6 @@ io.on('connection', function (socket) {
 
   // Sends synthia's notes so players have access
   io.emit('synthiaNotes', synthia);
-  console.log(('synthiaNotes', synthia))
 
   // server messages for connection and disconnection
   console.log('player:' + publicId + ' connected, with socket.id of ' + socket.id);
@@ -100,6 +100,7 @@ io.on('connection', function (socket) {
     time = tempo,
     elapsed = '0.0';
     function instance() {
+      playerInputCollection = [];
       for (var key in game){
         key.sound = '';
       }
@@ -120,7 +121,6 @@ io.on('connection', function (socket) {
         ]
         metroCount = 0
         noteArray = newNoteArray
-        console.log(newNoteArray)
       }
       elapsed = Math.floor(time / tempo) / 10;
       if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
@@ -129,16 +129,19 @@ io.on('connection', function (socket) {
       setTimeout(instance, (tempo - diff));
       io.emit('tempo',[new Date().getTime(),tempo]) // send server time to clients' metronome
       io.emit('changeSynthia', noteArray)
-      console.log(metroCount)
       metroCount++
-      console.log(noteArray)
     }
     setTimeout(instance, tempo);
   }
 
   // on player input, stash the info associated with the note played and emit it back to all players
   socket.on('playerInput', function(input){
-    game[input.player] = input
+    playerInputCollection.push(input);
+    // game[input.player] = input
+    playerInputCollection.forEach(function(input){
+      game[input.player] = input;
+    });
+    console.log(game);
     io.emit('currentAudio', game)
   })
 
