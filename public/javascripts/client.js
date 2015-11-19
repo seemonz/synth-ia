@@ -27,7 +27,8 @@ $(function(){
   // gets scene info
   socket.on('sceneData', function(data){
     scene = data;
-    currentInstrument = data[0];
+    var randNum = Math.floor(Math.random() * data.length);
+    currentInstrument = data[randNum];
 
     // buffer intruments
     startBuffer(scene);
@@ -40,6 +41,8 @@ $(function(){
       element.text(data[count]);
       count += 1;
     }
+    // set random current instrument element's focus
+    $('.player-instruments:contains('+ currentInstrument +')').addClass('focus');
 
     var synthiaButtons = $('.synthia-instruments');
     var count = 0;
@@ -67,7 +70,16 @@ $(function(){
   // sends scene selection to server
   setTimeout( function(){
     $(document).on('click', '.scenes', function(){
-      data = $(this).text();
+      var data = $(this).text();
+      console.log(data);
+      socket.emit('selectScene', data);
+    });
+
+    $(document).on('click', '#overlay', function(){
+      var allScenes = ['earth', 'space'];
+      // , 'deigo', 'night', 'boats'];
+      var randNum = Math.floor(Math.random() * allScenes.length);
+      var data = allScenes[randNum];
       console.log(data);
       socket.emit('selectScene', data);
     });
