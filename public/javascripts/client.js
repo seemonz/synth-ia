@@ -3,6 +3,8 @@ var playerAudio;
 var currentInstrument;
 var synthia;
 var scene;
+var noteArray;
+
 
 $(function(){
   var socket = io();
@@ -54,6 +56,11 @@ $(function(){
     }
   });
 
+  //change Note Array
+  socket.on('changeSynthia', function(data){
+    noteArray = data;
+  });
+
   // sends scene selection to server
   setTimeout( function(){
     $(document).on('click', '.scenes', function(){
@@ -62,6 +69,7 @@ $(function(){
       socket.emit('selectScene', data);
     });
   }, 50);
+
 
   // gets current game state of all notes in queue
   socket.on('currentAudio', function(data){
