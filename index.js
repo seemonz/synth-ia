@@ -60,6 +60,11 @@ io.on('connection', function (socket) {
     delete game[publicId];
   });
 
+  // send modal signal for first player
+  if (playerIdSequence === 1 ) {
+    io.emit('modalRender');
+  }
+
   // first players scene selection
   socket.on('selectScene', function(data){
     currentScene = data;

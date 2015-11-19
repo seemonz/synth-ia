@@ -25,6 +25,11 @@ $(function(){
     }
   });
 
+  // receive scene modal if first player
+  socket.on('modalRender', function(){
+    modalRender();
+  });
+
   // gets scene info
   socket.on('sceneData', function(data){
     console.log(data);
@@ -60,21 +65,12 @@ $(function(){
 
   // sends scene selection to server
   setTimeout( function(){
-    var sceneButtons = $('.scenes');
-    sceneButtons.on('click', function(){
+    $(document).on('click', '.scenes', function(){
       data = $(this).text();
+      console.log(data);
       socket.emit('selectScene', data);
     });
   }, 50);
-
-  // var sceneButtons = $('.scenes');
-  // sceneButtons.on('click', function(){
-  //   alert('sdf');
-  //   data = $(this).text();
-  //   console.lof(data);
-  //   socket.emit('selectScene', data);
-  // });
-
 
   // gets current game state of all notes in queue
   socket.on('currentAudio', function(data){
