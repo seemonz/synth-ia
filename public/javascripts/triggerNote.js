@@ -1,16 +1,11 @@
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 context = new AudioContext();
 
-$(function(){
-  initInstrument('earth-harp');
-  initInstrument('earth-piano');
-  initInstrument('earth-rhode');
-  initInstrument('earth-glock');
-  initInstrument('space-leed');
-  initInstrument('space-bass');
-  initInstrument('space-accordian');
-  initInstrument('space-pad');
-});
+function startBuffer(scene){
+  scene.forEach(function(instrument){
+    initInstrument(instrument);
+  });
+}
 
 function initInstrument(instrument) {
   var files = [
@@ -114,7 +109,7 @@ function startMetronome(start,tempo,noteArray){
     if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
     var diff = (new Date().getTime() - start) - time;
     window.setTimeout(instance, (tempo - diff));
-    if (Object.keys(sounds).length === 8) {
+    if (Object.keys(sounds).length === scene.length) {
       triggerNotes();
       playSynthia(tempo);
     }

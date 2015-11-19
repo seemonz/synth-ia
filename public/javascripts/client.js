@@ -4,6 +4,7 @@ var currentInstrument;
 var synthia;
 var scene;
 var noteArray;
+var mouseCount;
 
 
 $(function(){
@@ -25,9 +26,11 @@ $(function(){
 
   // gets scene info
   socket.on('sceneData', function(data){
-    console.log(data);
     scene = data;
     currentInstrument = data[0];
+
+    // buffer intruments
+    startBuffer(scene);
 
     // set player instrument names
     var playerButtons = $('.player-instruments');
@@ -96,6 +99,15 @@ $(function(){
     socket.emit('synthiaOff', synthia);
   });
 
+  // player mouse tracker
+  $(document).on('mousemove', function(){
+    ++mouseCount;
+    if (mouseCount === 20) {
+      mouseCount = 0;
+      socket.emit('mousePosition', currentX, currentY);
+    }
+  });
+
   // synthia instrument control
   $('#synthia-instruments button').on('click', function(){
     if ($(this).hasClass('focus')) {
@@ -133,6 +145,9 @@ $(function(){
     // the keys are / Z X C V / A S D F / Q W E R /
     var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
     if (keycodes.indexOf(event.keyCode) != -1){
+      if (currentY != prevY) {
+        socket.emit('mousePosition', currentX, currentY);
+      }
       var note = keycodes.indexOf(event.keyCode) + 1;
       if (!playerAudio){
         playerAudio = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }

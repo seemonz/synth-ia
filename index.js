@@ -70,9 +70,16 @@ io.on('connection', function (socket) {
   // first players scene selection
   socket.on('selectScene', function(data){
     currentScene = data;
+    startSynthia();
+    // Sends synthia's notes so first player has access
+    io.emit('synthiaNotes', synthia);
     startTempo(tempo);
     io.emit('sceneData', scene[currentScene]);
-    startSynthia();
+  });
+
+  // receive player mouse movement
+  socket.on('mousePosition', function(dataX, dataY){
+    console.log(dataX + ', ' + dataY);
   });
 
   // detect first player, start music
@@ -141,7 +148,6 @@ io.on('connection', function (socket) {
     playerInputCollection.forEach(function(input){
       game[input.player] = input;
     });
-    console.log(game);
     io.emit('currentAudio', game)
   })
 
