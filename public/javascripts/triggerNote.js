@@ -6,6 +6,11 @@ $(function(){
   initInstrument('earth-piano');
   initInstrument('earth-rhode');
   initInstrument('earth-glock');
+  initInstrument('space-leed');
+  initInstrument('space-bass');
+  initInstrument('space-accordian');
+  initInstrument('space-pad');
+
 });
 
 function initInstrument(instrument) {
@@ -98,7 +103,7 @@ function startMetronome(start,tempo){
     if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
     var diff = (new Date().getTime() - start) - time;
     window.setTimeout(instance, (tempo - diff));
-    if (Object.keys(sounds).length === 4) {
+    if (Object.keys(sounds).length === 8) {
       triggerNotes();
       playSynthia(tempo);
     }

@@ -16,10 +16,33 @@ $(function(){
     }
   });
 
+  // receive scene modal if first player
+  socket.on('modalRender', function(){
+    modalRender();
+  });
+
   // gets scene info
   socket.on('sceneData', function(data){
+    console.log(data);
     scene = data;
     currentInstrument = data[0];
+
+    // set player instrument names
+    var playerButtons = $('.player-instruments');
+    var count = 0;
+    for(var i=0; i<playerButtons.length; i++){
+      var element = playerButtons.eq(i);
+      element.text(data[count]);
+      count += 1;
+    }
+
+    var synthiaButtons = $('.synthia-instruments');
+    var count = 0;
+    for(var i=0; i<synthiaButtons.length; i++){
+      var element = synthiaButtons.eq(i);
+      element.text(data[count]);
+      count += 1;
+    }
   });
 
   // gets tempo from server to keep syncopation
@@ -30,6 +53,15 @@ $(function(){
       init = false;
     }
   });
+
+  // sends scene selection to server
+  setTimeout( function(){
+    $(document).on('click', '.scenes', function(){
+      data = $(this).text();
+      console.log(data);
+      socket.emit('selectScene', data);
+    });
+  }, 50);
 
   // gets current game state of all notes in queue
   socket.on('currentAudio', function(data){
