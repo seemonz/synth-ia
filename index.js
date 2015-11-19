@@ -2,6 +2,7 @@ var express = require('express');
 var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var count = 0;
 
 server.listen(8080);
 app.use(express.static('public'));
@@ -52,6 +53,7 @@ io.on('connection', function (socket) {
 
   // Sends synthia's notes so players have access
   io.emit('synthiaNotes', synthia);
+  console.log(('synthiaNotes', synthia))
 
   // server messages for connection and disconnection
   console.log('player:' + publicId + ' connected, with socket.id of ' + socket.id);
@@ -82,16 +84,18 @@ io.on('connection', function (socket) {
   // detect first player, generate synthia's notes
   function startSynthia() {
     synthia[synthiaRhythms] = randomizeSynthia(tempo * 2, scene[currentScene][0], 0.1);
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 64, scene[currentScene][1], 0.1);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 32, scene[currentScene][1], 0.1);
     synthia[synthiaRhythms] = randomizeSynthia(tempo * 64, scene[currentScene][2], 0.5);
     synthia[synthiaRhythms] = randomizeSynthia(tempo * 128, scene[currentScene][3], 1);
     synthiaInit = false;
-    io.emit('synthiaNotes', synthia);
   }
 
   // Synth-ia starts the tempo all players are syncopated to, where the tempo is set by tempo.
   // Sends play note event, bound by tempo, to all players if a player has played a note
+  var metroCount = 0
+  var noteArray = [1,2,3,4,5,6,7,8];
   function startTempo(tempo) {
+    console.log("START")
     var start = new Date().getTime(),
     time = tempo,
     elapsed = '0.0';
@@ -103,13 +107,31 @@ io.on('connection', function (socket) {
         game[key].sound = ''
       });
       time += tempo;
-
+      if (metroCount === 512) {
+        var newNoteArray = [
+          Math.floor(Math.random() * 11),
+          Math.floor(Math.random() * 11),
+          Math.floor(Math.random() * 11),
+          Math.floor(Math.random() * 11),
+          Math.floor(Math.random() * 11),
+          Math.floor(Math.random() * 11),
+          Math.floor(Math.random() * 11),
+          Math.floor(Math.random() * 11),
+        ]
+        metroCount = 0
+        noteArray = newNoteArray
+        console.log(newNoteArray)
+      }
       elapsed = Math.floor(time / tempo) / 10;
       if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
       var diff = (new Date().getTime() - start) - time;
       // console.log((tempo-diff),new Date().getTime())
       setTimeout(instance, (tempo - diff));
       io.emit('tempo',[new Date().getTime(),tempo]) // send server time to clients' metronome
+      io.emit('changeSynthia', noteArray)
+      console.log(metroCount)
+      metroCount++
+      console.log(noteArray)
     }
     setTimeout(instance, tempo);
   }
@@ -117,7 +139,6 @@ io.on('connection', function (socket) {
   // on player input, stash the info associated with the note played and emit it back to all players
   socket.on('playerInput', function(input){
     game[input.player] = input
-    console.log(game)
     io.emit('currentAudio', game)
   })
 

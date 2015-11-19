@@ -10,28 +10,28 @@ $(function(){
   initInstrument('space-bass');
   initInstrument('space-accordian');
   initInstrument('space-pad');
-
 });
 
 function initInstrument(instrument) {
   var files = [
-    'audio/'+instrument+'/note1.mp3',
-    'audio/'+instrument+'/note2.mp3',
-    'audio/'+instrument+'/note3.mp3',
-    'audio/'+instrument+'/note4.mp3',
-    'audio/'+instrument+'/note5.mp3',
-    'audio/'+instrument+'/note6.mp3',
-    'audio/'+instrument+'/note7.mp3',
-    'audio/'+instrument+'/note8.mp3',
-    'audio/'+instrument+'/note9.mp3',
-    'audio/'+instrument+'/note10.mp3',
-    'audio/'+instrument+'/note11.mp3',
-    'audio/'+instrument+'/note12.mp3'
+        'audio/'+instrument+'/note1.mp3',
+        'audio/'+instrument+'/note2.mp3',
+        'audio/'+instrument+'/note3.mp3',
+        'audio/'+instrument+'/note4.mp3',
+        'audio/'+instrument+'/note5.mp3',
+        'audio/'+instrument+'/note6.mp3',
+        'audio/'+instrument+'/note7.mp3',
+        'audio/'+instrument+'/note8.mp3',
+        'audio/'+instrument+'/note9.mp3',
+        'audio/'+instrument+'/note10.mp3',
+        'audio/'+instrument+'/note11.mp3',
+        'audio/'+instrument+'/note12.mp3'
   ]
   bufferLoader = new BufferLoader(context, files, function(bufferlist){
-    sounds[instrument] = bufferlist;
+    sounds[instrument] = bufferlist
+
   });
-  bufferLoader.load();
+  bufferLoader.load()
 }
 
 var sounds = {}
@@ -56,32 +56,43 @@ compressor.reduction.value = -30;
 compressor.attack.value = 0;
 compressor.release.value = .2;
 
-function triggerNotes() {
+function triggerNotes () {
   if (currentAudio) {
-    for (var player in currentAudio){
-      if (currentAudio[player].sound){
-        playNote(currentAudio[player].sound, currentAudio[player].instrument, currentAudio[player].volume, currentAudio[player].player);
+    // console.log(currentAudio); 
+    Object.keys(currentAudio).forEach(function(key){
+      var player = currentAudio[key]
+      if (player.sound){
+        playNote(player.sound, player.instrument, player.volume, player.player)
       }
-    }
+    })
     playerAudio = null;
   }
 }
-
+var changeCount = 0
+var instrumentcounter = {}
 var rhythmCounter = {};
+
 function playSynthia(tempo){
   for (var key in rhythmCounter) {
     rhythmCounter[key] += tempo;
     if (rhythmCounter[key] >= synthia[key].tempo) {
       rhythmCounter[key] = 0;
-      var randNote = Math.floor(Math.random() * 12);
-
+      var count = instrumentcounter[synthia[key].instrument]
+      count > 7 ? count = 0 : null
+      var note = noteArray[count]
+      count++
+      instrumentcounter[synthia[key].instrument] = count
+      changeCount++
+      if (changeCount === 512) {
+        changeCount = 0;
+      }
       // synthia playNote function
       if (synthia[key].state) {
         var source = context.createBufferSource();
         var gainNode = context.createGain();
-        source.buffer = sounds[synthia[key].instrument][randNote];
+        source.buffer = sounds[synthia[key].instrument][note];
         gainNode.gain.value = synthia[key].volume;
-        source.connect(gainNode);
+        source.connect(gainNode); 
         gainNode.connect(compressor);
         compressor.connect(context.destination);
         source.start(0);
@@ -90,10 +101,10 @@ function playSynthia(tempo){
   }
 }
 
-function startMetronome(start,tempo){
+function startMetronome(start,tempo,noteArray){
   // init synthia's rhythmCounter
   for (var key in synthia) {
-    rhythmCounter[key] = -tempo;
+    rhythmCounter[key] = synthia[key].tempo;
   }
   time = 0,
   elapsed = '0.0';
@@ -112,4 +123,8 @@ function startMetronome(start,tempo){
     // playerLoop = setInterval(startTrail, 25);
   } 
   window.setTimeout(instance, tempo);
+  scene.forEach(function(instrument) {
+    instrumentcounter[instrument] = 0;
+    console.log(instrumentcounter);
+  });
 }
