@@ -5,6 +5,7 @@ var synthia;
 var scene;
 var currentX;
 var currentY;
+var noteArray;
 
 $(function(){
   var socket = io();
@@ -38,6 +39,11 @@ $(function(){
       startMetronome(data[0],data[1]);
       init = false;
     }
+  });
+
+  //change Note Array
+  socket.on('changeSynthia', function(data){
+    noteArray = data;
   });
 
   // gets current game state of all notes in queue
