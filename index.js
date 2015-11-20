@@ -14,15 +14,18 @@ app.get('/', function (req, res) {
 });
 
 // game is object of players in session
-var tempoInit = true;
 var game = {};
+var playerInputCollection = [];
 var playerId = {};
 var playerIdSequence = 0;
 
 var currentScene = '';
 var scene = {
   'earth': ['earth-harp', 'earth-piano', 'earth-rhode', 'earth-glock'],
-  'space': ['space-leed', 'space-bass', 'space-accordian', 'space-pad']
+  'space': ['space-leed', 'space-bass', 'space-accordian', 'space-pad'],
+  'night': ['night-first', 'night-second', 'night-saw', 'night-bass'],
+  'diego': ['diego-guitar4', 'diego-guitar3', 'diego-guitar2', 'diego-guitar1'],
+  'boats': ['boats-highest', 'boats-high', 'boats-low', 'boats-lowest']
 };
 
 // tempo
@@ -53,7 +56,6 @@ io.on('connection', function (socket) {
 
   // Sends synthia's notes so players have access
   io.emit('synthiaNotes', synthia);
-  console.log(('synthiaNotes', synthia))
 
   // server messages for connection and disconnection
   console.log('player:' + publicId + ' connected, with socket.id of ' + socket.id);
@@ -70,36 +72,46 @@ io.on('connection', function (socket) {
   // first players scene selection
   socket.on('selectScene', function(data){
     currentScene = data;
+    startSynthia();
+    // Sends synthia's notes so first player has access
+    io.emit('synthiaNotes', synthia);
     startTempo(tempo);
     io.emit('sceneData', scene[currentScene]);
-    startSynthia();
   });
 
-  // detect first player, start music
-  // if (tempoInit) {
-  //   startTempo(tempo);
-  //   tempoInit = false;
-  // }
+  // receive player mouse movement
+  socket.on('mousePosition', function(dataX, dataY){
+    // console.log(dataX + ', ' + dataY);
+  });
 
   // detect first player, generate synthia's notes
   function startSynthia() {
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 2, scene[currentScene][0], 0.1);
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 32, scene[currentScene][1], 0.1);
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 64, scene[currentScene][2], 0.5);
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 128, scene[currentScene][3], 1);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 2, scene[currentScene][0], 1);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 4, scene[currentScene][1], 1);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 8, scene[currentScene][2], 1);
+    synthia[synthiaRhythms] = randomizeSynthia(tempo * 32, scene[currentScene][3], 1);
     synthiaInit = false;
   }
 
   // Synth-ia starts the tempo all players are syncopated to, where the tempo is set by tempo.
   // Sends play note event, bound by tempo, to all players if a player has played a note
   var metroCount = 0
-  var noteArray = [1,2,3,4,5,6,7,8];
+  var noteArray = [
+          Math.floor(Math.random() * 11),
+          Math.floor(Math.random() * 11),
+          Math.floor(Math.random() * 11),
+          Math.floor(Math.random() * 11),
+          Math.floor(Math.random() * 11),
+          Math.floor(Math.random() * 11),
+          Math.floor(Math.random() * 11),
+          Math.floor(Math.random() * 11),
+        ]
   function startTempo(tempo) {
-    console.log("START")
     var start = new Date().getTime(),
     time = tempo,
     elapsed = '0.0';
     function instance() {
+      playerInputCollection = [];
       for (var key in game){
         key.sound = '';
       }
@@ -107,7 +119,7 @@ io.on('connection', function (socket) {
         game[key].sound = ''
       });
       time += tempo;
-      if (metroCount === 512) {
+      if (metroCount === 128) {
         var newNoteArray = [
           Math.floor(Math.random() * 11),
           Math.floor(Math.random() * 11),
@@ -120,7 +132,7 @@ io.on('connection', function (socket) {
         ]
         metroCount = 0
         noteArray = newNoteArray
-        console.log(newNoteArray)
+        // console.log(newNoteArray)
       }
       elapsed = Math.floor(time / tempo) / 10;
       if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
@@ -136,7 +148,11 @@ io.on('connection', function (socket) {
 
   // on player input, stash the info associated with the note played and emit it back to all players
   socket.on('playerInput', function(input){
-    game[input.player] = input
+    playerInputCollection.push(input);
+    // game[input.player] = input
+    playerInputCollection.forEach(function(input){
+      game[input.player] = input;
+    });
     io.emit('currentAudio', game)
   })
 

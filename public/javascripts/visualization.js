@@ -3,6 +3,8 @@ var playerLoop;
 var mainSVG;
 var currentX;
 var currentY;
+var prevX;
+var prevY;
 
 var maxBarHeight;
 var minBarHeight;
@@ -16,8 +18,8 @@ function startTrail(){
 
 function generateTrail(x, y, height){
   var rect = mainSVG.append("rect");
-  rect.style("fill", "green")
-    .style("stroke", "green")
+  var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+  rect.style("stroke", randomColor)
     .style("stroke-width", 3)
     .attr("width", barWidth)
     .attr("height", height)
@@ -71,11 +73,19 @@ $(function() {
 
   // update current mouse X, Y to pass for visualization
   $(document).on('mousemove', function(e) {
+    prevX = currentX;
+    prevY = currentY;
     currentX = e.pageX - $('#main-frame').offset().left;
     currentY = e.pageY - $('#main-frame').offset().top;
     mainSVG.select('#nyan-cat').attr("y", snappyTransition(currentY) - 50)
       .attr("x", currentX - 50);
+    setCurrentNote(currentY);
   });
+
+  // function mouseMovement() {
+  //   mouseCount = 0;
+  //   console.log(currentX + ', ' + currentY);
+  // }
 
   function setCurrentNote(y) {
     currentNote = Math.round(-1 * (y / (frameHeight / 12) - 12));
@@ -96,7 +106,9 @@ $(function() {
     var noteAreaHeight = (frameHeight / 12);
     for (var i = 0; i <= 12; i++) {
       if (keycodes.indexOf(event.keyCode) === (-1 * (i - 12))) {
+        prevY = currentY;
         currentY = noteAreaHeight / 2 * (2 * i - 1);
+        mouseCount = 20;
         mainSVG.select('#nyan-cat').attr("y", currentY - 50)
       }
     }

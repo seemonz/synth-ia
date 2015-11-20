@@ -4,6 +4,7 @@ var currentInstrument;
 var synthia;
 var scene;
 var noteArray;
+var mouseCount;
 
 
 $(function(){
@@ -25,9 +26,12 @@ $(function(){
 
   // gets scene info
   socket.on('sceneData', function(data){
-    console.log(data);
     scene = data;
-    currentInstrument = data[0];
+    var randNum = Math.floor(Math.random() * data.length);
+    currentInstrument = data[randNum];
+
+    // buffer intruments
+    startBuffer(scene);
 
     // set player instrument names
     var playerButtons = $('.player-instruments');
@@ -37,6 +41,8 @@ $(function(){
       element.text(data[count]);
       count += 1;
     }
+    // set random current instrument element's focus
+    $('.player-instruments:contains('+ currentInstrument +')').addClass('focus');
 
     var synthiaButtons = $('.synthia-instruments');
     var count = 0;
@@ -64,7 +70,16 @@ $(function(){
   // sends scene selection to server
   setTimeout( function(){
     $(document).on('click', '.scenes', function(){
-      data = $(this).text();
+      var data = $(this).text();
+      console.log(data);
+      socket.emit('selectScene', data);
+    });
+
+    $(document).on('click', '#overlay', function(){
+      var allScenes = ['earth', 'space'];
+      // , 'deigo', 'night', 'boats'];
+      var randNum = Math.floor(Math.random() * allScenes.length);
+      var data = allScenes[randNum];
       console.log(data);
       socket.emit('selectScene', data);
     });
@@ -94,6 +109,15 @@ $(function(){
       synthia[key].state = false;
     }
     socket.emit('synthiaOff', synthia);
+  });
+
+  // player mouse tracker
+  $(document).on('mousemove', function(){
+    ++mouseCount;
+    if (mouseCount === 20) {
+      mouseCount = 0;
+      socket.emit('mousePosition', currentX, currentY);
+    }
   });
 
   // synthia instrument control
@@ -133,6 +157,9 @@ $(function(){
     // the keys are / Z X C V / A S D F / Q W E R /
     var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
     if (keycodes.indexOf(event.keyCode) != -1){
+      if (currentY != prevY) {
+        socket.emit('mousePosition', currentX, currentY);
+      }
       var note = keycodes.indexOf(event.keyCode) + 1;
       if (!playerAudio){
         playerAudio = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }

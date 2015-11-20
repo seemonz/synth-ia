@@ -1,16 +1,11 @@
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 context = new AudioContext();
 
-$(function(){
-  initInstrument('earth-harp');
-  initInstrument('earth-piano');
-  initInstrument('earth-rhode');
-  initInstrument('earth-glock');
-  initInstrument('space-leed');
-  initInstrument('space-bass');
-  initInstrument('space-accordian');
-  initInstrument('space-pad');
-});
+function startBuffer(scene){
+  scene.forEach(function(instrument){
+    initInstrument(instrument);
+  });
+}
 
 function initInstrument(instrument) {
   var files = [
@@ -58,7 +53,7 @@ compressor.release.value = .2;
 
 function triggerNotes () {
   if (currentAudio) {
-    // console.log(currentAudio); 
+    // console.log(currentAudio);
     Object.keys(currentAudio).forEach(function(key){
       var player = currentAudio[key]
       if (player.sound){
@@ -92,7 +87,7 @@ function playSynthia(tempo){
         var gainNode = context.createGain();
         source.buffer = sounds[synthia[key].instrument][note];
         gainNode.gain.value = synthia[key].volume;
-        source.connect(gainNode); 
+        source.connect(gainNode);
         gainNode.connect(compressor);
         compressor.connect(context.destination);
         source.start(0);
@@ -114,17 +109,16 @@ function startMetronome(start,tempo,noteArray){
     if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
     var diff = (new Date().getTime() - start) - time;
     window.setTimeout(instance, (tempo - diff));
-    if (Object.keys(sounds).length === 8) {
+    if (Object.keys(sounds).length === scene.length) {
       triggerNotes();
       playSynthia(tempo);
     }
     // requestAnimationFrame(playerLoop)
     // clearInterval(playerLoop);
     // playerLoop = setInterval(startTrail, 25);
-  } 
+  }
   window.setTimeout(instance, tempo);
   scene.forEach(function(instrument) {
     instrumentcounter[instrument] = 0;
-    console.log(instrumentcounter);
   });
 }

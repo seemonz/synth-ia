@@ -320,6 +320,7 @@
 	    currentY = e.pageY - $('#main-frame').offset().top;
 	    mainSVG.select('#nyan-cat').attr("y", snappyTransition(currentY) - 50)
 	      .attr("x", currentX - 50);
+	    setCurrentNote(currentY);
 	  });
 
 	  function setCurrentNote(y) {
@@ -350,6 +351,7 @@
 	  setInterval(startTrail, 25);
 
 	});
+
 
 /***/ },
 /* 4 */
