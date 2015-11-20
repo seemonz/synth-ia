@@ -110,14 +110,30 @@ $(function(){
     }
     socket.emit('synthiaOff', synthia);
   });
-
+  mouseCount = 0;
   // player mouse tracker
-  $(document).on('mousemove', function(){
+  $(document).on('mousemove', function(e){
+    var currentX = e.pageX - $('#main-frame').offset().left;
+    var currentY = e.pageY - $('#main-frame').offset().top;
     ++mouseCount;
-    if (mouseCount === 20) {
+  
+    if (mouseCount === 20){
       mouseCount = 0;
       socket.emit('mousePosition', currentX, currentY);
     }
+  });
+
+  socket.on('otherplayer', function(data){
+    // var otherLoop = 0;
+    // if (otherLoop){
+    //   console.log('cleared')
+    //   clearInterval(OtherLoop);
+    // }
+    // function genTrail(){
+      generateTrail(data[0], data[1], 10);
+    // }
+    // otherLoop = setInterval(genTrail, 25);
+    // console.log(otherLoop);<
   });
 
   // synthia instrument control
