@@ -129,9 +129,7 @@ io.on('connection', function (socket) {
       setTimeout(instance, (tempo - diff));
       io.emit('tempo',[new Date().getTime(),tempo]) // send server time to clients' metronome
       io.emit('changeSynthia', noteArray)
-      console.log(metroCount)
       metroCount++
-      console.log(noteArray)
     }
     setTimeout(instance, tempo);
   }
