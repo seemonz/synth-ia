@@ -18,8 +18,8 @@ function startTrail(){
 
 function generateTrail(x, y, height){
   var rect = mainSVG.append("rect");
-  rect.style("fill", "green")
-    .style("stroke", "green")
+  var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+  rect.style("stroke", randomColor)
     .style("stroke-width", 3)
     .attr("width", barWidth)
     .attr("height", height)
