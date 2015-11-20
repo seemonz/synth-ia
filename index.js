@@ -25,7 +25,8 @@ var scene = {
   'earth': ['earth-harp', 'earth-piano', 'earth-rhode', 'earth-glock'],
   'space': ['space-leed', 'space-bass', 'space-accordian', 'space-pad'],
   'night': ['night-first', 'night-second', 'night-saw', 'night-bass'],
-  'diego': ['diego-guitar1', 'diego-guitar2', 'diego-guitar3', 'diego-guitar4']
+  'diego': ['diego-guitar1', 'diego-guitar2', 'diego-guitar3', 'diego-guitar4'],
+  'boats': ['boats-highest', 'boats-high', 'boats-low', 'boats-lowest']
 };
 
 // tempo
