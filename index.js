@@ -81,31 +81,52 @@ io.on('connection', function (socket) {
 
   // receive player mouse movement
   socket.on('mousePosition', function(dataX, dataY){
-    // console.log(dataX + ', ' + dataY);
+    io.emit('otherplayer', [dataX, dataY]);
+    
   });
 
   // detect first player, generate synthia's notes
   function startSynthia() {
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 2, scene[currentScene][0], 1);
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 4, scene[currentScene][1], 1);
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 8, scene[currentScene][2], 1);
-    synthia[synthiaRhythms] = randomizeSynthia(tempo * 32, scene[currentScene][3], 1);
-    synthiaInit = false;
+    if (currentScene === 'earth') {
+      synthia[synthiaRhythms] = randomizeSynthia(tempo * 2,  scene[currentScene][0], 0.5);
+      synthia[synthiaRhythms] = randomizeSynthia(tempo * 4,  scene[currentScene][1], 1.0);
+      synthia[synthiaRhythms] = randomizeSynthia(tempo * 8,  scene[currentScene][2], 1.0);
+      synthia[synthiaRhythms] = randomizeSynthia(tempo * 32, scene[currentScene][3], 1.0);
+      synthiaInit = false;
+    }
+    if (currentScene === 'boats') {
+      console.log(currentScene)
+      synthia[synthiaRhythms] = randomizeSynthia(tempo * 4,  scene[currentScene][0], 0.8);
+      synthia[synthiaRhythms] = randomizeSynthia(tempo * 8,  scene[currentScene][1], 0.8);
+      synthia[synthiaRhythms] = randomizeSynthia(tempo * 16, scene[currentScene][2], 0.8);
+      synthia[synthiaRhythms] = randomizeSynthia(tempo * 64, scene[currentScene][3], 0.8);
+      synthiaInit = false;
+    }
+    if (currentScene === 'space') {
+      console.log(currentScene)
+      synthia[synthiaRhythms] = randomizeSynthia(tempo,      scene[currentScene][0], 0.2);
+      synthia[synthiaRhythms] = randomizeSynthia(tempo,      scene[currentScene][1], 1.0);
+      synthia[synthiaRhythms] = randomizeSynthia(tempo * 8,  scene[currentScene][2], 0.8);
+      synthia[synthiaRhythms] = randomizeSynthia(tempo * 16, scene[currentScene][3], 0.5);
+      synthiaInit = false;
+    }
+    if (currentScene === 'night') {
+      console.log(currentScene)
+      synthia[synthiaRhythms] = randomizeSynthia(tempo * 32,  scene[currentScene][0], 0.2);
+      synthia[synthiaRhythms] = randomizeSynthia(tempo * 8,   scene[currentScene][1], 0.1);
+      synthia[synthiaRhythms] = randomizeSynthia(tempo * 64,  scene[currentScene][2], 0.09);
+      synthia[synthiaRhythms] = randomizeSynthia(tempo * 128, scene[currentScene][3], 0.1);
+      synthiaInit = false;
+    }
   }
 
   // Synth-ia starts the tempo all players are syncopated to, where the tempo is set by tempo.
   // Sends play note event, bound by tempo, to all players if a player has played a note
   var metroCount = 0
-  var noteArray = [
-          Math.floor(Math.random() * 11),
-          Math.floor(Math.random() * 11),
-          Math.floor(Math.random() * 11),
-          Math.floor(Math.random() * 11),
-          Math.floor(Math.random() * 11),
-          Math.floor(Math.random() * 11),
-          Math.floor(Math.random() * 11),
-          Math.floor(Math.random() * 11),
-        ]
+  var noteArray = []
+  for (var i = 8 - 1; i >= 0; i--) {
+    noteArray.push(Math.floor(Math.random() * 11));
+  };
   function startTempo(tempo) {
     var start = new Date().getTime(),
     time = tempo,
@@ -120,16 +141,10 @@ io.on('connection', function (socket) {
       });
       time += tempo;
       if (metroCount === 128) {
-        var newNoteArray = [
-          Math.floor(Math.random() * 11),
-          Math.floor(Math.random() * 11),
-          Math.floor(Math.random() * 11),
-          Math.floor(Math.random() * 11),
-          Math.floor(Math.random() * 11),
-          Math.floor(Math.random() * 11),
-          Math.floor(Math.random() * 11),
-          Math.floor(Math.random() * 11),
-        ]
+        newNoteArray = []
+        for (var i = 8 - 1; i >= 0; i--) {
+          newNoteArray.push(Math.floor(Math.random() * 11));
+        };
         metroCount = 0
         noteArray = newNoteArray
         // console.log(newNoteArray)

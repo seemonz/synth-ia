@@ -3,6 +3,8 @@ var playerLoop;
 var mainSVG;
 var currentX;
 var currentY;
+var otherplayerX;
+var otherplayerY;
 var prevX;
 var prevY;
 
@@ -20,12 +22,12 @@ function generateTrail(x, y, height){
   var rect = mainSVG.append("rect");
   var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
   rect.style("stroke", randomColor)
-    .style("stroke-width", 3)
-    .attr("width", barWidth)
-    .attr("height", height)
+    .style("stroke-width", 4)
+    .attr("width", 4)
+    .attr("height", 4)
     .attr("x", x)
     .attr("y", y)
-    .attr("ry", 5)
+    // .attr("ry", 5)
     .transition()
     .ease("linear")
     .duration(2000)
@@ -114,6 +116,6 @@ $(function() {
     }
   });
 
-  setInterval(startTrail, 25);
+  setInterval(startTrail, 125);
 
 });
