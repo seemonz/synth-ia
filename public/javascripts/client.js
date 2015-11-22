@@ -116,8 +116,8 @@ $(function(){
     var currentX = e.pageX - $('#main-frame').offset().left;
     var currentY = e.pageY - $('#main-frame').offset().top;
     ++mouseCount;
-  
-    if (mouseCount === 20){
+
+    if (mouseCount === 5){
       mouseCount = 0;
       socket.emit('mousePosition', currentX, currentY);
     }

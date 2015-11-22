@@ -13,6 +13,7 @@ var minBarHeight;
 var barWidth;
 var lowerLimit;
 var upperLimit;
+var numberOfNotes;
 
 function startTrail(){
   generateTrail(currentX, currentY, 10);
@@ -45,6 +46,7 @@ $(function() {
   barWidth = frameHeight * 0.005;
   lowerLimit = frameWidth * 0.6;
   upperLimit = frameWidth * 0.8;
+  numberOfNotes = 12;
 
   mainSVG = d3.select("#main-frame")
     .append("svg")
@@ -74,14 +76,15 @@ $(function() {
     .attr("y", frameHeight * 0.35)
 
   // update current mouse X, Y to pass for visualization
-  $(document).on('mousemove', function(e) {
+  $('#main-frame').on('mousemove', function(e) {
     prevX = currentX;
     prevY = currentY;
     currentX = e.pageX - $('#main-frame').offset().left;
     currentY = e.pageY - $('#main-frame').offset().top;
-    mainSVG.select('#nyan-cat').attr("y", snappyTransition(currentY) - 50)
-      .attr("x", currentX - 50);
+    mainSVG.select('#nyan-cat').attr("y", snappyTransition(Math.min(prevY, frameHeight)) - 50)
+      .attr("x", prevX - 50);
     setCurrentNote(currentY);
+    console.log(currentX + ' x ' + currentY);
   });
 
   // function mouseMovement() {
@@ -89,9 +92,15 @@ $(function() {
   //   console.log(currentX + ', ' + currentY);
   // }
 
-  function setCurrentNote(y) {
-    currentNote = Math.round(-1 * (y / (frameHeight / 12) - 12));
+  function reverseNoteOrder(note){
+    return (-1 * (note - numberOfNotes))
   }
+
+  function setCurrentNote(y) {
+      var spaceBetweenLines = Math.round(frameHeight/numberOfNotes);
+      var aNote = Math.floor(y/spaceBetweenLines);
+      currentNote = reverseNoteOrder(aNote);
+    }
 
   function snappyTransition(y) {
     var noteAreaHeight = (frameHeight / 12);
@@ -116,6 +125,6 @@ $(function() {
     }
   });
 
-  setInterval(startTrail, 125);
+  setInterval(startTrail, 50);
 
 });
