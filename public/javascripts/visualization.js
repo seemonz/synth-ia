@@ -16,6 +16,29 @@ var upperLimit;
 var numberOfNotes;
 
 
+function createNyan(id, x, y ){
+  mainSVG.append("image")
+  .attr("id", "nyan-cat" + id)
+  .attr("xlink:href", "../images/nyan_cat.gif")
+  .attr("height", 100)
+  .attr("width", 100)
+  .attr("x", x)
+  .attr("y", y)
+}
+
+function killNyan(id) {
+  mainSVG.select('image').attr("id", "nyan-cat" + id).remove();
+}
+
+// nyan render function
+function nyans() {
+  console.log('nyans!');
+  for (var key in mice) {
+    mainSVG.select('#nyan-cat' + mice[key].playerId).attr("y", mice[key].currentY - 50)
+        .attr("x",  mice[key].currentX - 50);
+  }
+}
+
 
 $(function() {
 
@@ -44,17 +67,6 @@ $(function() {
       .attr("x2", frameWidth)
       .attr("y2", frameHeight / 12 * i);
   }
-
-  // mouse image
-  var imgs = mainSVG.selectAll("image").data([0]);
-  imgs.enter()
-    .append("svg:image")
-    .attr("id", "nyan-cat")
-    .attr("xlink:href", "../images/nyan_cat.gif")
-    .attr("height", 100)
-    .attr("width", 100)
-    .attr("x", frameWidth * 0.7)
-    .attr("y", frameHeight * 0.35)
 
   // update current mouse X, Y to pass for visualization
   $('#main-frame').on('mousemove', function(e) {

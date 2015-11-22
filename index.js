@@ -46,7 +46,8 @@ io.on('connection', function (socket) {
   var publicId = ++playerIdSequence;
   playerId[publicId] = socket.id;
   game[publicId] = { key: '', instrument: '' }
-
+  //
+  io.emit('createNyan', game)
   // send out player ID to client and current scene
   io.emit('assignPlayerId', { id: publicId });
   // emit current scene if not player 1
@@ -61,7 +62,9 @@ io.on('connection', function (socket) {
   console.log('player:' + publicId + ' connected, with socket.id of ' + socket.id);
   socket.on('disconnect', function(socket) {
     console.log('player:' + publicId + ' disconnected');
+    io.emit('killNyan', game[publicId]);
     delete game[publicId];
+    io.emit('killNyan');
   });
 
   // send modal signal for first player

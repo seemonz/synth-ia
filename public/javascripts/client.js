@@ -54,6 +54,18 @@ $(function(){
     }
   });
 
+  socket.on('createNyan', function(data){
+    for (var key in data) {
+      if (!$('#nyan-cat' + key).length) {
+        createNyan(key, currentX, currentY);
+      }
+    }
+  });
+
+  socket.on('killNyan', function(data){
+    killNyan(data);
+  });
+
   // gets tempo from server to keep syncopation
   var init = true
   socket.on('tempo', function(data){
@@ -127,7 +139,8 @@ $(function(){
 
   socket.on('otherplayer', function(data){
     mice[data.playerId] = data;
-    console.log(mice);
+
+    nyans();
   });
 
   // synthia instrument control
