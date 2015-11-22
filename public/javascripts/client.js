@@ -5,6 +5,7 @@ var synthia;
 var scene;
 var noteArray;
 var mouseCount;
+var mice = {};
 
 
 $(function(){
@@ -110,6 +111,7 @@ $(function(){
     }
     socket.emit('synthiaOff', synthia);
   });
+
   mouseCount = 0;
   // player mouse tracker
   $(document).on('mousemove', function(e){
@@ -119,21 +121,13 @@ $(function(){
 
     if (mouseCount === 5){
       mouseCount = 0;
-      socket.emit('mousePosition', currentX, currentY);
+      socket.emit('mousePosition', { playerId: playerId, currentX: currentX, currentY: currentY });
     }
   });
 
   socket.on('otherplayer', function(data){
-    // var otherLoop = 0;
-    // if (otherLoop){
-    //   console.log('cleared')
-    //   clearInterval(OtherLoop);
-    // }
-    // function genTrail(){
-      generateTrail(data[0], data[1], 10);
-    // }
-    // otherLoop = setInterval(genTrail, 25);
-    // console.log(otherLoop);<
+    mice[data.playerId] = data;
+    console.log(mice);
   });
 
   // synthia instrument control
@@ -173,9 +167,6 @@ $(function(){
     // the keys are / Z X C V / A S D F / Q W E R /
     var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
     if (keycodes.indexOf(event.keyCode) != -1){
-      if (currentY != prevY) {
-        socket.emit('mousePosition', currentX, currentY);
-      }
       var note = keycodes.indexOf(event.keyCode) + 1;
       if (!playerAudio){
         playerAudio = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }

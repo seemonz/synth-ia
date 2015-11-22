@@ -80,9 +80,9 @@ io.on('connection', function (socket) {
   });
 
   // receive player mouse movement
-  socket.on('mousePosition', function(dataX, dataY){
-    io.emit('otherplayer', [dataX, dataY]);
-    
+  socket.on('mousePosition', function(data){
+    io.emit('otherplayer', data);
+
   });
 
   // detect first player, generate synthia's notes
