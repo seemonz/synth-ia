@@ -81,9 +81,10 @@ $(function() {
     prevY = currentY;
     currentX = e.pageX - $('#main-frame').offset().left;
     currentY = e.pageY - $('#main-frame').offset().top;
-    mainSVG.select('#nyan-cat').attr("y", snappyTransition(currentY) - 50)
-      .attr("x", currentX - 50);
+    mainSVG.select('#nyan-cat').attr("y", snappyTransition(Math.min(prevY, frameHeight)) - 50)
+      .attr("x", prevX - 50);
     setCurrentNote(currentY);
+    console.log(currentX + ' x ' + currentY);
   });
 
   // function mouseMovement() {
@@ -124,6 +125,6 @@ $(function() {
     }
   });
 
-  setInterval(startTrail, 125);
+  setInterval(startTrail, 50);
 
 });
