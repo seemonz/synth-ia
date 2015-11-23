@@ -124,16 +124,7 @@ $(function(){
   });
 
   socket.on('otherplayer', function(data){
-    // var otherLoop = 0;
-    // if (otherLoop){
-    //   console.log('cleared')
-    //   clearInterval(OtherLoop);
-    // }
-    // function genTrail(){
-      generateTrail(data[0], data[1], 10);
-    // }
-    // otherLoop = setInterval(genTrail, 25);
-    // console.log(otherLoop);<
+    generateTrail(data[0], data[1], 10);
   });
 
   // synthia instrument control
