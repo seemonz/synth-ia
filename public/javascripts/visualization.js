@@ -3,8 +3,6 @@ var playerLoop;
 var mainSVG;
 var currentX;
 var currentY;
-var otherplayerX;
-var otherplayerY;
 var prevX;
 var prevY;
 
@@ -15,32 +13,56 @@ var lowerLimit;
 var upperLimit;
 var numberOfNotes;
 
-function startTrail(){
-  generateTrail(currentX, currentY, 10);
+
+function createNyan(id, x, y ){
+  mainSVG.append("image")
+  .attr("id", "nyan-cat" + id)
+  .attr("xlink:href", "../images/nyan_cat.gif")
+  .attr("height", 100)
+  .attr("width", 100)
+  .attr("x", x)
+  .attr("y", y)
 }
 
-function generateTrail(x, y, height){
-  var rect = mainSVG.append("rect");
-  var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
-  rect.style("stroke", randomColor)
-    .style("stroke-width", 4)
-    .attr("width", 4)
-    .attr("height", 4)
-    .attr("x", x)
-    .attr("y", y)
-    // .attr("ry", 5)
-    .transition()
-    .ease("linear")
-    .duration(2000)
-    .attr("x", -50)
-    .remove()
+function killNyan(id) {
+  mainSVG.select('image').attr("id", "nyan-cat" + id).remove();
 }
+
+// nyan render function
+function nyans() {
+  console.log('nyans!');
+  for (var key in mice) {
+    mainSVG.select('#nyan-cat' + mice[key].playerId).attr("y", mice[key].currentY - 50)
+        .attr("x",  mice[key].currentX - 50);
+  }
+}
+
+// function startTrail(){
+//   generateTrail(currentX, currentY, 10);
+// }
+
+// function generateTrail(x, y, height){
+//   var rect = mainSVG.append("rect");
+//   var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+//   rect.style("stroke", randomColor)
+//     .style("stroke-width", 4)
+//     .attr("width", 4)
+//     .attr("height", 4)
+//     .attr("x", x)
+//     .attr("y", y)
+//     // .attr("ry", 5)
+//     .transition()
+//     .ease("linear")
+//     .duration(2000)
+//     .attr("x", -50)
+//     .remove()
+// }
 
 $(function() {
 
   var frameWidth = document.getElementById('main-frame').clientWidth;
   var frameHeight = document.getElementById('main-frame').clientHeight;
-  console.log(frameWidth + 'x' + frameHeight)
+  // console.log(frameWidth + 'x' + frameHeight)
   maxBarHeight = frameHeight * 0.25;
   minBarHeight = frameHeight * 0.01;
   barWidth = frameHeight * 0.005;
@@ -64,17 +86,6 @@ $(function() {
       .attr("y2", frameHeight / 12 * i);
   }
 
-  // mouse image
-  var imgs = mainSVG.selectAll("image").data([0]);
-  imgs.enter()
-    .append("svg:image")
-    .attr("id", "nyan-cat")
-    .attr("xlink:href", "../images/nyan_cat.gif")
-    .attr("height", 100)
-    .attr("width", 100)
-    .attr("x", frameWidth * 0.7)
-    .attr("y", frameHeight * 0.35)
-
   // update current mouse X, Y to pass for visualization
   $('#main-frame').on('mousemove', function(e) {
     prevX = currentX;
@@ -84,13 +95,8 @@ $(function() {
     mainSVG.select('#nyan-cat').attr("y", snappyTransition(Math.min(prevY, frameHeight)) - 50)
       .attr("x", prevX - 50);
     setCurrentNote(currentY);
-    console.log(currentX + ' x ' + currentY);
+    // console.log(currentX + ' x ' + currentY);
   });
-
-  // function mouseMovement() {
-  //   mouseCount = 0;
-  //   console.log(currentX + ', ' + currentY);
-  // }
 
   function reverseNoteOrder(note){
     return (-1 * (note - numberOfNotes))
@@ -119,12 +125,11 @@ $(function() {
       if (keycodes.indexOf(event.keyCode) === (-1 * (i - 12))) {
         prevY = currentY;
         currentY = noteAreaHeight / 2 * (2 * i - 1);
-        mouseCount = 20;
         mainSVG.select('#nyan-cat').attr("y", currentY - 50)
       }
     }
   });
 
-  setInterval(startTrail, 50);
+  // setInterval(startTrail, 125);
 
 });
