@@ -6,12 +6,26 @@ var count = 0;
 
 server.listen(8080);
 app.use(express.static('public'));
-app.use(express.static('./bundle.js'));
+// app.use(express.static('./bundle.js'));
 
 
 app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
+  res.sendfile('public/index.html');
 });
+
+app.get('/space', function (req, res) {
+  res.sendfile('public/app.html');
+});
+
+app.get('/earth', function (req, res) {
+  res.sendfile('public/app.html');
+});
+
+app.get('/boats', function (req, res) {
+  res.sendfile('public/app.html');
+});
+
+
 
 // game is object of players in session
 var game = {};
@@ -65,24 +79,23 @@ io.on('connection', function (socket) {
   });
 
   // send modal signal for first player
-  if (playerIdSequence === 1 ) {
-    io.emit('modalRender');
-  }
+
 
   // first players scene selection
-  socket.on('selectScene', function(data){
-    currentScene = data;
-    startSynthia();
-    // Sends synthia's notes so first player has access
-    io.emit('synthiaNotes', synthia);
-    startTempo(tempo);
-    io.emit('sceneData', scene[currentScene]);
+  socket.on('scene', function(data){
+    console.log(data);
+    // currentScene = data;
+    // startSynthia();
+    // // Sends synthia's notes so first player has access
+    // io.emit('synthiaNotes', synthia);
+    // startTempo(tempo);
+    // io.emit('sceneData', scene[currentScene]);
   });
 
   // receive player mouse movement
   socket.on('mousePosition', function(dataX, dataY){
     io.emit('otherplayer', [dataX, dataY]);
-    
+
   });
 
   // detect first player, generate synthia's notes

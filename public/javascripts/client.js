@@ -12,6 +12,10 @@ $(function(){
   var playerId = 0;
   currentInstrument = '';
 
+  // emit scene data
+  var sceneName = (window.location.pathname).slice(1);
+  socket.emit('scene', sceneName);
+
   // receive playerId from server
   socket.on('assignPlayerId', function(data){
     if (playerId === 0){
@@ -19,10 +23,9 @@ $(function(){
     }
   });
 
-  // receive scene modal if first player
-  socket.on('modalRender', function(){
-    modalRender();
-  });
+
+
+
 
   // gets scene info
   socket.on('sceneData', function(data){
@@ -116,7 +119,7 @@ $(function(){
     var currentX = e.pageX - $('#main-frame').offset().left;
     var currentY = e.pageY - $('#main-frame').offset().top;
     ++mouseCount;
-  
+
     if (mouseCount === 20){
       mouseCount = 0;
       socket.emit('mousePosition', currentX, currentY);
