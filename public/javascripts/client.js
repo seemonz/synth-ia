@@ -4,6 +4,7 @@ var currentInstrument;
 var synthia;
 var scene = [];
 var noteArray;
+var rhythmCounter = {};
 var mouseCount;
 
 
@@ -27,7 +28,6 @@ $(function(){
 
   // gets scene info
   socket.on('sceneData', function(data){
-    console.log(data);
     scene = data;
     var randNum = Math.floor(Math.random() * data.length);
     currentInstrument = data[randNum];
@@ -69,25 +69,6 @@ $(function(){
     noteArray = data;
   });
 
-  // sends scene selection to server
-  setTimeout( function(){
-    $(document).on('click', '.scenes', function(){
-      var data = $(this).text();
-      console.log(data);
-      socket.emit('selectScene', data);
-    });
-
-    $(document).on('click', '#overlay', function(){
-      var allScenes = ['earth', 'space'];
-      // , 'deigo', 'night', 'boats'];
-      var randNum = Math.floor(Math.random() * allScenes.length);
-      var data = allScenes[randNum];
-      console.log(data);
-      socket.emit('selectScene', data);
-    });
-  }, 50);
-
-
   // gets current game state of all notes in queue
   socket.on('currentAudio', function(data){
     currentAudio = data;
@@ -95,7 +76,10 @@ $(function(){
 
   // gets synthia's notes when joining
   socket.on('synthiaNotes', function(data){
-    synthia = data;
+    synthia = data
+    for (var key in synthia) {
+      rhythmCounter[key] = synthia[key].tempo;
+    }
   });
 
   // turn synthia on/off
@@ -119,23 +103,14 @@ $(function(){
     var currentY = e.pageY - $('#main-frame').offset().top;
     ++mouseCount;
 
-    if (mouseCount === 20){
+    if (mouseCount === 5){
       mouseCount = 0;
       socket.emit('mousePosition', currentX, currentY);
     }
   });
 
   socket.on('otherplayer', function(data){
-    // var otherLoop = 0;
-    // if (otherLoop){
-    //   console.log('cleared')
-    //   clearInterval(OtherLoop);
-    // }
-    // function genTrail(){
       generateTrail(data[0], data[1], 10);
-    // }
-    // otherLoop = setInterval(genTrail, 25);
-    // console.log(otherLoop);<
   });
 
   // synthia instrument control
@@ -159,15 +134,10 @@ $(function(){
   // mouse position
   $('#main-frame').on('click', function(){
     var note = currentNote;
-    playerAudio = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
+    playerAudio = { scene: sceneName, sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
     socket.emit('playerInput', playerAudio );
   });
 
-  $('body').on('keypress', function(event){
-      if (event.keyCode == 32) {
-        console.log(event.clientX);
-      }
-  });
 
   // 12 notes for 12 keys on the board
   $('body').on('keydown', function(event){
@@ -180,11 +150,11 @@ $(function(){
       }
       var note = keycodes.indexOf(event.keyCode) + 1;
       if (!playerAudio){
-        playerAudio = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
+        playerAudio = { scene: sceneName, sound: note, instrument: currentInstrument, player: playerId, volume: .5 };
         socket.emit('playerInput', playerAudio );
       } else {
         if (playerAudio.sound != note){
-          playerAudio = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
+          playerAudio = { scene: sceneName, sound: note, instrument: currentInstrument, player: playerId, volume: .5 };
           socket.emit('playerInput', playerAudio );
         }
       }

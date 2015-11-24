@@ -43,7 +43,6 @@ var scene = {
   'earth': ['earth-harp', 'earth-piano', 'earth-rhode', 'earth-glock'],
   'space': ['space-leed', 'space-bass', 'space-accordian', 'space-pad'],
   'night': ['night-first', 'night-second', 'night-saw', 'night-bass'],
-  'diego': ['diego-guitar4', 'diego-guitar3', 'diego-guitar2', 'diego-guitar1'],
   'boats': ['boats-highest', 'boats-high', 'boats-low', 'boats-lowest']
 };
 
@@ -106,17 +105,11 @@ io.on('connection', function (socket) {
   var publicId = ++playerIdSequence;
   playerId[publicId] = socket.id;
 
-  // funnel player into scene room
-  socket.on('scene', function(data){
-    var sceneName = data;
-    var test = scene[sceneName];
-    console.log(scene[sceneName]);
-    socket.join(sceneName);
-    // sends scene data for rendering buttons
-    io.to(sceneName).emit('sceneData', scene[sceneName]);
-
-    // sends scene data for rendering synthia
-    io.to(sceneName).emit('synthiaNotes', synthias[sceneName]);
+  // server messages for connection and disconnection
+  console.log('player:' + publicId + ' connected, with socket.id of ' + socket.id);
+  socket.on('disconnect', function(socket) {
+    console.log('player:' + publicId + ' disconnected');
+    delete game[publicId];
   });
 
   if (!startTempoInit) {
@@ -124,7 +117,20 @@ io.on('connection', function (socket) {
     startTempoInit = true;
   }
 
-  game[publicId] = { key: '', instrument: '' }
+  // funnel player into scene room
+  socket.on('scene', function(data){
+    var sceneName = data;
+    var test = scene[sceneName];
+    socket.join(sceneName);
+    // sends scene data for rendering buttons
+    io.to(sceneName).emit('sceneData', scene[sceneName]);
+
+    // sends scene data for rendering synthia
+    io.to(sceneName).emit('synthiaNotes', synthias[sceneName]);
+    io.emit('tempo',[new Date().getTime(),tempo]) // send server time to clients' metronome
+  });
+
+  // game[publicId] = { key: '', instrument: '' }
 
   // send out player ID to client and current scene
   io.emit('assignPlayerId', { id: publicId });
@@ -163,23 +169,11 @@ io.on('connection', function (socket) {
       var diff = (new Date().getTime() - start) - time;
       // console.log((tempo-diff),new Date().getTime())
       setTimeout(instance, (tempo - diff));
-      io.emit('tempo',[new Date().getTime(),tempo]) // send server time to clients' metronome
       io.emit('changeSynthia', noteArray)
       metroCount++
     }
     setTimeout(instance, tempo);
   }
-
-  // Sends synthia's notes so players have access
-  // io.emit('synthiaNotes', synthia);
-
-  // server messages for connection and disconnection
-  console.log('player:' + publicId + ' connected, with socket.id of ' + socket.id);
-  socket.on('disconnect', function(socket) {
-    console.log('player:' + publicId + ' disconnected');
-    delete game[publicId];
-  });
-
 
   // receive player mouse movement
   socket.on('mousePosition', function(dataX, dataY){
@@ -190,11 +184,12 @@ io.on('connection', function (socket) {
   // on player input, stash the info associated with the note played and emit it back to all players
   socket.on('playerInput', function(input){
     playerInputCollection.push(input);
-    // game[input.player] = input
     playerInputCollection.forEach(function(input){
-      game[input.player] = input;
+      var inter = {};
+      inter[input.player] = input
+      game[input.scene] = inter;
     });
-    io.emit('currentAudio', game)
+    io.to(input.scene).emit('currentAudio', game[input.scene]);
   })
 
   // synthia on/off
