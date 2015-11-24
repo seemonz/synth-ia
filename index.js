@@ -45,7 +45,7 @@ function randomizeSynthia(tempo, instrument, volume){
 io.on('connection', function (socket) {
   var publicId = ++playerIdSequence;
   playerId[publicId] = socket.id;
-  game[publicId] = { key: '', instrument: '' }
+  game[publicId] = { sound: '', instrument: '' }
   //
   io.emit('createNyan', game)
   // send out player ID to client and current scene

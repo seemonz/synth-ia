@@ -30,33 +30,32 @@ function killNyan(id) {
 
 // nyan render function
 function nyans() {
-  console.log('nyans!');
   for (var key in mice) {
     mainSVG.select('#nyan-cat' + mice[key].playerId).attr("y", mice[key].currentY - 50)
         .attr("x",  mice[key].currentX - 50);
   }
 }
 
-// function startTrail(){
-//   generateTrail(currentX, currentY, 10);
-// }
+function startTrail(){
+  generateTrail(currentX, currentY, 10);
+}
 
-// function generateTrail(x, y, height){
-//   var rect = mainSVG.append("rect");
-//   var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
-//   rect.style("stroke", randomColor)
-//     .style("stroke-width", 4)
-//     .attr("width", 4)
-//     .attr("height", 4)
-//     .attr("x", x)
-//     .attr("y", y)
-//     // .attr("ry", 5)
-//     .transition()
-//     .ease("linear")
-//     .duration(2000)
-//     .attr("x", -50)
-//     .remove()
-// }
+function generateTrail(x, y, height){
+  var rect = mainSVG.append("rect");
+  var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+  rect.style("stroke", randomColor)
+    .style("stroke-width", 4)
+    .attr("width", 4)
+    .attr("height", 4)
+    .attr("x", x)
+    .attr("y", y)
+    // .attr("ry", 5)
+    .transition()
+    .ease("linear")
+    .duration(2000)
+    .attr("x", -50)
+    .remove()
+}
 
 $(function() {
 
@@ -92,7 +91,7 @@ $(function() {
     prevY = currentY;
     currentX = e.pageX - $('#main-frame').offset().left;
     currentY = e.pageY - $('#main-frame').offset().top;
-    mainSVG.select('#nyan-cat').attr("y", snappyTransition(Math.min(prevY, frameHeight)) - 50)
+    mainSVG.select('#nyan-cat' + playerId).attr("y", snappyTransition(Math.min(currentY, frameHeight)) - 50)
       .attr("x", prevX - 50);
     setCurrentNote(currentY);
     // console.log(currentX + ' x ' + currentY);
@@ -125,11 +124,11 @@ $(function() {
       if (keycodes.indexOf(event.keyCode) === (-1 * (i - 12))) {
         prevY = currentY;
         currentY = noteAreaHeight / 2 * (2 * i - 1);
-        mainSVG.select('#nyan-cat').attr("y", currentY - 50)
+        mainSVG.select('#nyan-cat' + playerId).attr("y", currentY - 50)
       }
     }
   });
 
-  // setInterval(startTrail, 125);
+  setInterval(startTrail, 125);
 
 });

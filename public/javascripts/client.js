@@ -1,3 +1,4 @@
+var playerId = 0;
 var currentAudio;
 var playerAudio;
 var currentInstrument;
@@ -10,7 +11,6 @@ var mice = {};
 
 $(function(){
   var socket = io();
-  var playerId = 0;
   currentInstrument = '';
 
   // receive playerId from server
@@ -180,6 +180,7 @@ $(function(){
     // the keys are / Z X C V / A S D F / Q W E R /
     var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
     if (keycodes.indexOf(event.keyCode) != -1){
+      socket.emit('mousePosition', { playerId: playerId, currentX: currentX, currentY: currentY });
       var note = keycodes.indexOf(event.keyCode) + 1;
       if (!playerAudio){
         playerAudio = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
