@@ -152,7 +152,7 @@ $(function(){
   // mouse position
   $('#main-frame').on('click', function(){
     var note = currentNote;
-    playerAudio = { scene: sceneName, sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
+    playerAudio = { scene: sceneName, sound: note, instrument: currentInstrument, player: playerId, volume: 1 }
     socket.emit('playerInput', playerAudio );
   });
 

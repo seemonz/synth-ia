@@ -78,7 +78,7 @@ function randomizeSynthia(tempo, instrument, volume){
 function startSynthia() {
     currentScene = 'earth';
     synthia['0'] = randomizeSynthia(tempo * 4,  scene[currentScene][0], 0.01);
-    synthia['1'] = randomizeSynthia(tempo * 4,  scene[currentScene][1], .3);
+    synthia['1'] = randomizeSynthia(tempo * 4,  scene[currentScene][1], 0.8);
     synthia['2'] = randomizeSynthia(tempo * 8,  scene[currentScene][2], 1.0);
     synthia['3'] = randomizeSynthia(tempo * 32, scene[currentScene][3], 1.0);
     synthias['earth'] = synthia
@@ -95,8 +95,8 @@ function startSynthia() {
 
     currentScene = 'space';
     synthia['0'] = randomizeSynthia(tempo,      scene[currentScene][0], 0.2);
-    synthia['1'] = randomizeSynthia(tempo,      scene[currentScene][1], 1.0);
-    synthia['2'] = randomizeSynthia(tempo * 8,  scene[currentScene][2], 0.8);
+    synthia['1'] = randomizeSynthia(tempo,      scene[currentScene][1], 0.8);
+    synthia['2'] = randomizeSynthia(tempo * 8,  scene[currentScene][2], 0.6);
     synthia['3'] = randomizeSynthia(tempo * 16, scene[currentScene][3], 0.5);
     synthiaInit = false;
     synthias['space'] = synthia
