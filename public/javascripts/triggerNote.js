@@ -118,7 +118,10 @@ function startMetronome(start,tempo,noteArray){
     // playerLoop = setInterval(startTrail, 25);
   }
   window.setTimeout(instance, tempo);
-  scene.forEach(function(instrument) {
-    instrumentcounter[instrument] = 0;
-  });
+  if (scene.length > 0) {
+    console.log(scene);
+    scene.forEach(function(instrument) {
+      instrumentcounter[instrument] = 0;
+    });
+  }
 }

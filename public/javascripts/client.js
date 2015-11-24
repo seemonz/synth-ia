@@ -2,7 +2,7 @@ var currentAudio;
 var playerAudio;
 var currentInstrument;
 var synthia;
-var scene;
+var scene = [];
 var noteArray;
 var mouseCount;
 
@@ -12,9 +12,10 @@ $(function(){
   var playerId = 0;
   currentInstrument = '';
 
-  // emit scene data
+  // // emit scene data
   var sceneName = (window.location.pathname).slice(1);
   socket.emit('scene', sceneName);
+
 
   // receive playerId from server
   socket.on('assignPlayerId', function(data){
@@ -24,11 +25,9 @@ $(function(){
   });
 
 
-
-
-
   // gets scene info
   socket.on('sceneData', function(data){
+    console.log(data);
     scene = data;
     var randNum = Math.floor(Math.random() * data.length);
     currentInstrument = data[randNum];

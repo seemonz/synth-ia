@@ -2,6 +2,7 @@ var express = require('express');
 var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+
 var count = 0;
 
 server.listen(8080);
@@ -18,6 +19,10 @@ app.get('/space', function (req, res) {
 });
 
 app.get('/earth', function (req, res) {
+  res.sendfile('public/app.html');
+});
+
+app.get('/night', function (req, res) {
   res.sendfile('public/app.html');
 });
 
@@ -49,89 +54,80 @@ var tempo = 125;
 // var synthiaInit = true;
 var synthiaRhythms = 0;
 var synthia = {};
+var synthias = {};
 
 function randomizeSynthia(tempo, instrument, volume){
   synthiaRhythms += 1;
   return { tempo: tempo, instrument: instrument, volume: volume, state: true };
 }
 
+function startSynthia() {
+    currentScene = 'earth';
+    synthia['0'] = randomizeSynthia(tempo * 4,  scene[currentScene][0], 0.01);
+    synthia['1'] = randomizeSynthia(tempo * 4,  scene[currentScene][1], .3);
+    synthia['2'] = randomizeSynthia(tempo * 8,  scene[currentScene][2], 1.0);
+    synthia['3'] = randomizeSynthia(tempo * 32, scene[currentScene][3], 1.0);
+    synthias['earth'] = synthia
+    synthia = {};
+
+    currentScene = 'boats';
+    synthia['0'] = randomizeSynthia(tempo * 4,  scene[currentScene][0], 0.8);
+    synthia['1'] = randomizeSynthia(tempo * 8,  scene[currentScene][1], 0.8);
+    synthia['2'] = randomizeSynthia(tempo * 16, scene[currentScene][2], 0.8);
+    synthia['3'] = randomizeSynthia(tempo * 64, scene[currentScene][3], 0.8);
+    synthiaInit = false;
+    synthias['boats'] = synthia
+    synthia = {};
+
+    currentScene = 'space';
+    synthia['0'] = randomizeSynthia(tempo,      scene[currentScene][0], 0.2);
+    synthia['1'] = randomizeSynthia(tempo,      scene[currentScene][1], 1.0);
+    synthia['2'] = randomizeSynthia(tempo * 8,  scene[currentScene][2], 0.8);
+    synthia['3'] = randomizeSynthia(tempo * 16, scene[currentScene][3], 0.5);
+    synthiaInit = false;
+    synthias['space'] = synthia
+    synthia = {};
+
+    currentScene = 'night';
+    synthia['0'] = randomizeSynthia(tempo * 32,  scene[currentScene][0], 0.2);
+    synthia['1'] = randomizeSynthia(tempo * 8,   scene[currentScene][1], 0.1);
+    synthia['2'] = randomizeSynthia(tempo * 64,  scene[currentScene][2], 0.09);
+    synthia['3'] = randomizeSynthia(tempo * 128, scene[currentScene][3], 0.1);
+    synthiaInit = false;
+    synthias['night'] = synthia
+    synthia = {};
+}
+startSynthia();
+
+var startTempoInit = false;
+
 // socket io
 io.on('connection', function (socket) {
   var publicId = ++playerIdSequence;
   playerId[publicId] = socket.id;
+
+  // funnel player into scene room
+  socket.on('scene', function(data){
+    var sceneName = data;
+    var test = scene[sceneName];
+    console.log(scene[sceneName]);
+    socket.join(sceneName);
+    // sends scene data for rendering buttons
+    io.to(sceneName).emit('sceneData', scene[sceneName]);
+
+    // sends scene data for rendering synthia
+    io.to(sceneName).emit('synthiaNotes', synthias[sceneName]);
+  });
+
+  if (!startTempoInit) {
+    startTempo(tempo);
+    startTempoInit = true;
+  }
+
   game[publicId] = { key: '', instrument: '' }
 
   // send out player ID to client and current scene
   io.emit('assignPlayerId', { id: publicId });
-  // emit current scene if not player 1
-  if (currentScene != '') {
-    io.emit('sceneData', scene[currentScene]);
-  }
-
-  // Sends synthia's notes so players have access
-  io.emit('synthiaNotes', synthia);
-
-  // server messages for connection and disconnection
-  console.log('player:' + publicId + ' connected, with socket.id of ' + socket.id);
-  socket.on('disconnect', function(socket) {
-    console.log('player:' + publicId + ' disconnected');
-    delete game[publicId];
-  });
-
-  // send modal signal for first player
-
-
-  // first players scene selection
-  socket.on('scene', function(data){
-    console.log(data);
-    // currentScene = data;
-    // startSynthia();
-    // // Sends synthia's notes so first player has access
-    // io.emit('synthiaNotes', synthia);
-    // startTempo(tempo);
-    // io.emit('sceneData', scene[currentScene]);
-  });
-
-  // receive player mouse movement
-  socket.on('mousePosition', function(dataX, dataY){
-    io.emit('otherplayer', [dataX, dataY]);
-
-  });
-
-  // detect first player, generate synthia's notes
-  function startSynthia() {
-    if (currentScene === 'earth') {
-      synthia[synthiaRhythms] = randomizeSynthia(tempo * 2,  scene[currentScene][0], 0.5);
-      synthia[synthiaRhythms] = randomizeSynthia(tempo * 4,  scene[currentScene][1], 1.0);
-      synthia[synthiaRhythms] = randomizeSynthia(tempo * 8,  scene[currentScene][2], 1.0);
-      synthia[synthiaRhythms] = randomizeSynthia(tempo * 32, scene[currentScene][3], 1.0);
-      synthiaInit = false;
-    }
-    if (currentScene === 'boats') {
-      console.log(currentScene)
-      synthia[synthiaRhythms] = randomizeSynthia(tempo * 4,  scene[currentScene][0], 0.8);
-      synthia[synthiaRhythms] = randomizeSynthia(tempo * 8,  scene[currentScene][1], 0.8);
-      synthia[synthiaRhythms] = randomizeSynthia(tempo * 16, scene[currentScene][2], 0.8);
-      synthia[synthiaRhythms] = randomizeSynthia(tempo * 64, scene[currentScene][3], 0.8);
-      synthiaInit = false;
-    }
-    if (currentScene === 'space') {
-      console.log(currentScene)
-      synthia[synthiaRhythms] = randomizeSynthia(tempo,      scene[currentScene][0], 0.2);
-      synthia[synthiaRhythms] = randomizeSynthia(tempo,      scene[currentScene][1], 1.0);
-      synthia[synthiaRhythms] = randomizeSynthia(tempo * 8,  scene[currentScene][2], 0.8);
-      synthia[synthiaRhythms] = randomizeSynthia(tempo * 16, scene[currentScene][3], 0.5);
-      synthiaInit = false;
-    }
-    if (currentScene === 'night') {
-      console.log(currentScene)
-      synthia[synthiaRhythms] = randomizeSynthia(tempo * 32,  scene[currentScene][0], 0.2);
-      synthia[synthiaRhythms] = randomizeSynthia(tempo * 8,   scene[currentScene][1], 0.1);
-      synthia[synthiaRhythms] = randomizeSynthia(tempo * 64,  scene[currentScene][2], 0.09);
-      synthia[synthiaRhythms] = randomizeSynthia(tempo * 128, scene[currentScene][3], 0.1);
-      synthiaInit = false;
-    }
-  }
 
   // Synth-ia starts the tempo all players are syncopated to, where the tempo is set by tempo.
   // Sends play note event, bound by tempo, to all players if a player has played a note
@@ -173,6 +169,23 @@ io.on('connection', function (socket) {
     }
     setTimeout(instance, tempo);
   }
+
+  // Sends synthia's notes so players have access
+  // io.emit('synthiaNotes', synthia);
+
+  // server messages for connection and disconnection
+  console.log('player:' + publicId + ' connected, with socket.id of ' + socket.id);
+  socket.on('disconnect', function(socket) {
+    console.log('player:' + publicId + ' disconnected');
+    delete game[publicId];
+  });
+
+
+  // receive player mouse movement
+  socket.on('mousePosition', function(dataX, dataY){
+    io.emit('otherplayer', [dataX, dataY]);
+
+  });
 
   // on player input, stash the info associated with the note played and emit it back to all players
   socket.on('playerInput', function(input){
