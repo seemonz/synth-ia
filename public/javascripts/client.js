@@ -67,6 +67,7 @@ $(function(){
   //change Note Array
   socket.on('changeSynthia', function(data){
     noteArray = data;
+    console.log(noteArray);
   });
 
   // gets current game state of all notes in queue
@@ -87,16 +88,17 @@ $(function(){
     for (var key in synthia) {
       synthia[key].state = true;
     }
-    socket.emit('synthiaOn', synthia);
+    socket.emit('synthiaOn', [sceneName, synthia]);
   });
 
   $('#off').on('click', function(){
     for (var key in synthia) {
       synthia[key].state = false;
     }
-    socket.emit('synthiaOff', synthia);
+    socket.emit('synthiaOff', [sceneName, synthia]);
   });
   mouseCount = 0;
+
   // player mouse tracker
   $(document).on('mousemove', function(e){
     var currentX = e.pageX - $('#main-frame').offset().left;
@@ -105,7 +107,7 @@ $(function(){
 
     if (mouseCount === 5){
       mouseCount = 0;
-      socket.emit('mousePosition', currentX, currentY);
+      socket.emit('mousePosition', { scene: sceneName, playerId: playerId, currentX: currentX, currentY: currentY });
     }
   });
 
@@ -128,7 +130,7 @@ $(function(){
         }
       }
     }
-    socket.emit('synthiaIntrumentControl', synthia);
+    socket.emit('synthiaIntrumentControl', [sceneName, synthia]);
   });
 
   // mouse position

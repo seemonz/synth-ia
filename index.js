@@ -176,8 +176,9 @@ io.on('connection', function (socket) {
   }
 
   // receive player mouse movement
-  socket.on('mousePosition', function(dataX, dataY){
-    io.emit('otherplayer', [dataX, dataY]);
+  socket.on('mousePosition', function(data){
+    
+    io.to(data.scene).emit('otherplayer', data);
 
   });
 
@@ -194,18 +195,18 @@ io.on('connection', function (socket) {
 
   // synthia on/off
   socket.on('synthiaOn', function(data){
-    synthia = data;
-    io.emit('synthiaNotes', synthia);
+    synthias[data[0]] = data[1];
+    io.emit('synthiaNotes', synthias[data[0]]);
   });
   socket.on('synthiaOff', function(data){
-    synthia = data;
-    io.emit('synthiaNotes', synthia);
+    synthias[data[0]] = data[1];
+    io.emit('synthiaNotes', synthias[data[0]]);
   });
 
   // synthia instrument control
   socket.on('synthiaInstrumentControl', function(data){
-    synthia = data;
-    io.emit('synthiaNotes', synthia);
+    synthias[data[0]] = data[1];
+    io.emit('synthiaNotes', synthias[data[0]]);
   });
 
 });
