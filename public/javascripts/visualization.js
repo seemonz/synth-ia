@@ -24,7 +24,7 @@ function createNyan(id, cat, x, y ){
 }
 
 function killNyan(id) {
-  mainSVG.select('image').attr("id", "nyan-cat" + id).remove();
+  mainSVG.select('image[id="nyan-cat' + id + '"]').remove();
 }
 
 // nyan render function

@@ -119,6 +119,7 @@ var startTempoInit = false;
 io.on('connection', function (socket) {
   var publicId = ++playerIdSequence;
   playerId[publicId] = socket.id;
+  console.log(nyanTracker);
 
   io.emit('assignPlayerId', { id: publicId });
 
@@ -127,14 +128,14 @@ io.on('connection', function (socket) {
   socket.on('disconnect', function(socket) {
     console.log('player:' + publicId + ' disconnected');
     for (var key in nyanTracker) {
-      for (var player in key) {
-        if (player == publicId) {
-          io.to(key).emit('killNyan', player);
-          delete key[player];
-        }
-      }
+      delete nyanTracker[key][publicId]
+      io.to(key).emit('killNyan', publicId);
+      console.log('just deleted player' + publicId);
     }
-    delete game[publicId];
+    for (var key in game) {
+      delete game[key][publicId];
+    }
+    console.log(nyanTracker);
   });
 
   if (!startTempoInit) {
@@ -148,6 +149,7 @@ io.on('connection', function (socket) {
     // var inter = {};
     // inter[publicId] = nyanCats[Math.floor(Math.random() * nyanCats.length)];
     nyanTracker[sceneName][publicId] = nyanCats[Math.floor(Math.random() * nyanCats.length)];
+    // console.log(nyanTracker);
 
     socket.join(sceneName);
     // sends scene data for rendering buttons

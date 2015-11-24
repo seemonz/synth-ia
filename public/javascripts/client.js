@@ -65,7 +65,7 @@ $(function(){
   });
 
   socket.on('killNyan', function(data){
-    console.log('killing nyans');
+    console.log('kill nyan for player ' + data);
     killNyan(data);
   });
 
