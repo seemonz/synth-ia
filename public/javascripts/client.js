@@ -1,3 +1,4 @@
+var playerId = 0;
 var currentAudio;
 var playerAudio;
 var currentInstrument;
@@ -6,11 +7,11 @@ var scene = [];
 var noteArray;
 var rhythmCounter = {};
 var mouseCount;
+var mice = {};
 
 
 $(function(){
   var socket = io();
-  var playerId = 0;
   currentInstrument = '';
 
   // // emit scene data
@@ -55,6 +56,19 @@ $(function(){
     }
   });
 
+  socket.on('createNyan', function(data){
+    for (var key in data) {
+      if (!$('#nyan-cat' + key).length) {
+        createNyan(key, data[key], currentX, currentY);
+      }
+    }
+  });
+
+  socket.on('killNyan', function(data){
+    console.log('killing nyans');
+    killNyan(data);
+  });
+
   // gets tempo from server to keep syncopation
   var init = true
   socket.on('tempo', function(data){
@@ -67,7 +81,6 @@ $(function(){
   //change Note Array
   socket.on('changeSynthia', function(data){
     noteArray = data;
-    console.log(noteArray);
   });
 
   // gets current game state of all notes in queue
@@ -97,6 +110,7 @@ $(function(){
     }
     socket.emit('synthiaOff', [sceneName, synthia]);
   });
+
   mouseCount = 0;
 
   // player mouse tracker
@@ -112,7 +126,8 @@ $(function(){
   });
 
   socket.on('otherplayer', function(data){
-      generateTrail(data[0], data[1], 10);
+    mice[data.playerId] = data;
+    nyans();
   });
 
   // synthia instrument control
@@ -147,9 +162,7 @@ $(function(){
     // the keys are / Z X C V / A S D F / Q W E R /
     var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
     if (keycodes.indexOf(event.keyCode) != -1){
-      if (currentY != prevY) {
-        socket.emit('mousePosition', currentX, currentY);
-      }
+      socket.emit('mousePosition', { playerId: playerId, currentX: currentX, currentY: currentY });
       var note = keycodes.indexOf(event.keyCode) + 1;
       if (!playerAudio){
         playerAudio = { scene: sceneName, sound: note, instrument: currentInstrument, player: playerId, volume: .5 };

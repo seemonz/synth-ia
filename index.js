@@ -54,6 +54,21 @@ var tempo = 125;
 var synthiaRhythms = 0;
 var synthia = {};
 var synthias = {};
+var nyanTracker = { earth:{},space:{},boats:{},night:{}};
+
+var nyanCats = [
+  'gb_cat.gif',
+  'grumpy_cat.gif',
+  'j5_cat.gif',
+  'jamaicnyan_cat.gif',
+  'jazz_cat.gif',
+  'mexinyan_cat.gif',
+  'nyan_cat.gif',
+  'nyaninja_cat.gif',
+  'pirate_cat.gif',
+  'technyancolor_cat.gif',
+  'zombie_cat.gif'
+]
 
 function randomizeSynthia(tempo, instrument, volume){
   synthiaRhythms += 1;
@@ -105,10 +120,20 @@ io.on('connection', function (socket) {
   var publicId = ++playerIdSequence;
   playerId[publicId] = socket.id;
 
+  io.emit('assignPlayerId', { id: publicId });
+
   // server messages for connection and disconnection
   console.log('player:' + publicId + ' connected, with socket.id of ' + socket.id);
   socket.on('disconnect', function(socket) {
     console.log('player:' + publicId + ' disconnected');
+    for (var key in nyanTracker) {
+      for (var player in key) {
+        if (player == publicId) {
+          io.to(key).emit('killNyan', player);
+          delete key[player];
+        }
+      }
+    }
     delete game[publicId];
   });
 
@@ -120,7 +145,10 @@ io.on('connection', function (socket) {
   // funnel player into scene room
   socket.on('scene', function(data){
     var sceneName = data;
-    var test = scene[sceneName];
+    // var inter = {};
+    // inter[publicId] = nyanCats[Math.floor(Math.random() * nyanCats.length)];
+    nyanTracker[sceneName][publicId] = nyanCats[Math.floor(Math.random() * nyanCats.length)];
+
     socket.join(sceneName);
     // sends scene data for rendering buttons
     io.to(sceneName).emit('sceneData', scene[sceneName]);
@@ -128,9 +156,15 @@ io.on('connection', function (socket) {
     // sends scene data for rendering synthia
     io.to(sceneName).emit('synthiaNotes', synthias[sceneName]);
     io.emit('tempo',[new Date().getTime(),tempo]) // send server time to clients' metronome
+
+    io.to(sceneName).emit('createNyan', nyanTracker[sceneName]);
   });
 
-  // game[publicId] = { key: '', instrument: '' }
+
+  // receive player mouse movement
+  socket.on('mousePosition', function(data){
+    io.emit('otherplayer', data);
+  });
 
   // send out player ID to client and current scene
   io.emit('assignPlayerId', { id: publicId });
@@ -177,7 +211,7 @@ io.on('connection', function (socket) {
 
   // receive player mouse movement
   socket.on('mousePosition', function(data){
-    
+
     io.to(data.scene).emit('otherplayer', data);
 
   });
