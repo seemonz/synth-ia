@@ -7,6 +7,7 @@
 
   <!-- CSS Styling -->
   <link rel="stylesheet" href="stylesheets/main.css">
+  <link rel="stylesheet" href="stylesheets/night.css">
 
   <!-- JavaScript Libraries -->
   <script type="text/javascript" src="/javascripts/jquery-2.1.4.js"></script>
@@ -21,7 +22,8 @@
   <!-- Visualization -->
   <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
   <script type="text/javascript" src="/javascripts/visualization.js"></script>
-  <script type="text/javascript" src="/javascripts/stars.js"></script>
+<!--   // <script type="text/javascript" src="/javascripts/stars.js"></script> -->
+  <script type="text/javascript" src="/javascripts/night.js"></script>
 
   <!-- Client and Server JS -->
   <script type="text/javascript" src="/javascripts/bufferLoader.js"></script>
@@ -42,7 +44,10 @@
   <div id="main-container">
 
     <div id="visuals">
-      <div id="second-frame"></div>
+      <div id="second-frame">
+        <canvas id="bgCanvas"></canvas>
+      </div>
+   <!--    <div id="second-frame"></div> -->
       <div id="main-frame"></div>
     </div>
 
