@@ -1,20 +1,24 @@
 
-  // bring up modal box
-// function modalRender() {
-//   $('body').append('<div id="overlay"></div>');
-//   $('body').append('<div id="modal"><h1>Choose your Scene!</h1><button class="scenes">earth</button><button class="scenes">space</button><button class="scenes">night</button><button class="scenes">diego</button><button class="scenes">boats</button></div>');
-// }
-  // scene selection close
+
 $(function(){
+// console.log('wtf')
 
 
-  $(document).on('click', '.scenes', function(){
-    $('#modal').remove();
-    $('#overlay').remove();
-  });
+  // controls keyboard visual 
+  var $keys = $(".key")
+  function playKeys(){
+    $keys.each(function(index,element){
+      setTimeout(function(){
+        $($keys[index-1]).removeClass('keydown')
+        $($keys[index]).addClass('keydown')
+      if (index === $keys.length-1){
+        playKeys();
+      }
+      },100 * index);
+    });
+  };
 
-  $(document).on('click', '#overlay', function(){
-    $('#modal').remove();
-    $('#overlay').remove();
-  });
+  playKeys();
 });
+
+
