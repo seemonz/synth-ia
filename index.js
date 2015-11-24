@@ -119,7 +119,6 @@ var startTempoInit = false;
 io.on('connection', function (socket) {
   var publicId = ++playerIdSequence;
   playerId[publicId] = socket.id;
-  console.log(nyanTracker);
 
   io.emit('assignPlayerId', { id: publicId });
 
@@ -130,12 +129,10 @@ io.on('connection', function (socket) {
     for (var key in nyanTracker) {
       delete nyanTracker[key][publicId]
       io.to(key).emit('killNyan', publicId);
-      console.log('just deleted player' + publicId);
     }
     for (var key in game) {
       delete game[key][publicId];
     }
-    console.log(nyanTracker);
   });
 
   if (!startTempoInit) {

@@ -45,14 +45,16 @@ $(function(){
       count += 1;
     }
     // set random current instrument element's focus
-    $('.player-instruments:contains('+ currentInstrument +')').addClass('focus');
+    if (!($('.player-instruments').hasClass('focus'))) {
+      $('.player-instruments:contains('+ currentInstrument +')').addClass('focus');
 
-    var synthiaButtons = $('.synthia-instruments');
-    var count = 0;
-    for(var i=0; i<synthiaButtons.length; i++){
-      var element = synthiaButtons.eq(i);
-      element.text(data[count]);
-      count += 1;
+      var synthiaButtons = $('.synthia-instruments');
+      var count = 0;
+      for(var i=0; i<synthiaButtons.length; i++){
+        var element = synthiaButtons.eq(i);
+        element.text(data[count]);
+        count += 1;
+      }
     }
   });
 
@@ -65,7 +67,6 @@ $(function(){
   });
 
   socket.on('killNyan', function(data){
-    console.log('kill nyan for player ' + data);
     killNyan(data);
   });
 
@@ -158,7 +159,6 @@ $(function(){
 
   // 12 notes for 12 keys on the board
   $('body').on('keydown', function(event){
-    console.log(event.keyCode)
     // the keys are / Z X C V / A S D F / Q W E R /
     var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
     if (keycodes.indexOf(event.keyCode) != -1){
