@@ -1,10 +1,8 @@
-
-
 $(function(){
 // console.log('wtf')
 
 
-  // controls keyboard visual 
+  // controls keyboard visual
   var $keys = $(".key")
   function playKeys(){
     $keys.each(function(index,element){
@@ -20,5 +18,3 @@ $(function(){
 
   playKeys();
 });
-
-

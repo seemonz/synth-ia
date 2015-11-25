@@ -43,7 +43,6 @@ var scene = {
   'earth': ['earth-harp', 'earth-piano', 'earth-rhode', 'earth-glock'],
   'space': ['space-leed', 'space-bass', 'space-accordian', 'space-pad'],
   'night': ['night-first', 'night-second', 'night-saw', 'night-bass'],
-  'diego': ['diego-guitar4', 'diego-guitar3', 'diego-guitar2', 'diego-guitar1'],
   'boats': ['boats-highest', 'boats-high', 'boats-low', 'boats-lowest']
 };
 
@@ -55,6 +54,21 @@ var tempo = 125;
 var synthiaRhythms = 0;
 var synthia = {};
 var synthias = {};
+var nyanTracker = { earth:{},space:{},boats:{},night:{}};
+
+var nyanCats = [
+  'gb_cat.gif',
+  'grumpy_cat.gif',
+  'j5_cat.gif',
+  'jamaicnyan_cat.gif',
+  'jazz_cat.gif',
+  'mexinyan_cat.gif',
+  'nyan_cat.gif',
+  'nyaninja_cat.gif',
+  'pirate_cat.gif',
+  'technyancolor_cat.gif',
+  'zombie_cat.gif'
+]
 
 function randomizeSynthia(tempo, instrument, volume){
   synthiaRhythms += 1;
@@ -64,7 +78,7 @@ function randomizeSynthia(tempo, instrument, volume){
 function startSynthia() {
     currentScene = 'earth';
     synthia['0'] = randomizeSynthia(tempo * 4,  scene[currentScene][0], 0.01);
-    synthia['1'] = randomizeSynthia(tempo * 4,  scene[currentScene][1], .3);
+    synthia['1'] = randomizeSynthia(tempo * 4,  scene[currentScene][1], 0.8);
     synthia['2'] = randomizeSynthia(tempo * 8,  scene[currentScene][2], 1.0);
     synthia['3'] = randomizeSynthia(tempo * 32, scene[currentScene][3], 1.0);
     synthias['earth'] = synthia
@@ -81,8 +95,8 @@ function startSynthia() {
 
     currentScene = 'space';
     synthia['0'] = randomizeSynthia(tempo,      scene[currentScene][0], 0.2);
-    synthia['1'] = randomizeSynthia(tempo,      scene[currentScene][1], 1.0);
-    synthia['2'] = randomizeSynthia(tempo * 8,  scene[currentScene][2], 0.8);
+    synthia['1'] = randomizeSynthia(tempo,      scene[currentScene][1], 0.8);
+    synthia['2'] = randomizeSynthia(tempo * 8,  scene[currentScene][2], 0.6);
     synthia['3'] = randomizeSynthia(tempo * 16, scene[currentScene][3], 0.5);
     synthiaInit = false;
     synthias['space'] = synthia
@@ -106,17 +120,19 @@ io.on('connection', function (socket) {
   var publicId = ++playerIdSequence;
   playerId[publicId] = socket.id;
 
-  // funnel player into scene room
-  socket.on('scene', function(data){
-    var sceneName = data;
-    var test = scene[sceneName];
-    console.log(scene[sceneName]);
-    socket.join(sceneName);
-    // sends scene data for rendering buttons
-    io.to(sceneName).emit('sceneData', scene[sceneName]);
+  io.emit('assignPlayerId', { id: publicId });
 
-    // sends scene data for rendering synthia
-    io.to(sceneName).emit('synthiaNotes', synthias[sceneName]);
+  // server messages for connection and disconnection
+  console.log('player:' + publicId + ' connected, with socket.id of ' + socket.id);
+  socket.on('disconnect', function(socket) {
+    console.log('player:' + publicId + ' disconnected');
+    for (var key in nyanTracker) {
+      delete nyanTracker[key][publicId]
+      io.to(key).emit('killNyan', publicId);
+    }
+    for (var key in game) {
+      delete game[key][publicId];
+    }
   });
 
   if (!startTempoInit) {
@@ -124,7 +140,30 @@ io.on('connection', function (socket) {
     startTempoInit = true;
   }
 
-  game[publicId] = { key: '', instrument: '' }
+  // funnel player into scene room
+  socket.on('scene', function(data){
+    var sceneName = data;
+    // var inter = {};
+    // inter[publicId] = nyanCats[Math.floor(Math.random() * nyanCats.length)];
+    nyanTracker[sceneName][publicId] = nyanCats[Math.floor(Math.random() * nyanCats.length)];
+    // console.log(nyanTracker);
+
+    socket.join(sceneName);
+    // sends scene data for rendering buttons
+    io.to(sceneName).emit('sceneData', scene[sceneName]);
+
+    // sends scene data for rendering synthia
+    io.to(sceneName).emit('synthiaNotes', synthias[sceneName]);
+    io.emit('tempo',[new Date().getTime(),tempo]) // send server time to clients' metronome
+
+    io.to(sceneName).emit('createNyan', nyanTracker[sceneName]);
+  });
+
+
+  // receive player mouse movement
+  socket.on('mousePosition', function(data){
+    io.emit('otherplayer', data);
+  });
 
   // send out player ID to client and current scene
   io.emit('assignPlayerId', { id: publicId });
@@ -163,54 +202,44 @@ io.on('connection', function (socket) {
       var diff = (new Date().getTime() - start) - time;
       // console.log((tempo-diff),new Date().getTime())
       setTimeout(instance, (tempo - diff));
-      io.emit('tempo',[new Date().getTime(),tempo]) // send server time to clients' metronome
       io.emit('changeSynthia', noteArray)
       metroCount++
     }
     setTimeout(instance, tempo);
   }
 
-  // Sends synthia's notes so players have access
-  // io.emit('synthiaNotes', synthia);
-
-  // server messages for connection and disconnection
-  console.log('player:' + publicId + ' connected, with socket.id of ' + socket.id);
-  socket.on('disconnect', function(socket) {
-    console.log('player:' + publicId + ' disconnected');
-    delete game[publicId];
-  });
-
-
   // receive player mouse movement
-  socket.on('mousePosition', function(dataX, dataY){
-    io.emit('otherplayer', [dataX, dataY]);
+  socket.on('mousePosition', function(data){
+
+    io.to(data.scene).emit('otherplayer', data);
 
   });
 
   // on player input, stash the info associated with the note played and emit it back to all players
   socket.on('playerInput', function(input){
     playerInputCollection.push(input);
-    // game[input.player] = input
     playerInputCollection.forEach(function(input){
-      game[input.player] = input;
+      var inter = {};
+      inter[input.player] = input
+      game[input.scene] = inter;
     });
-    io.emit('currentAudio', game)
+    io.to(input.scene).emit('currentAudio', game[input.scene]);
   })
 
   // synthia on/off
   socket.on('synthiaOn', function(data){
-    synthia = data;
-    io.emit('synthiaNotes', synthia);
+    synthias[data[0]] = data[1];
+    io.emit('synthiaNotes', synthias[data[0]]);
   });
   socket.on('synthiaOff', function(data){
-    synthia = data;
-    io.emit('synthiaNotes', synthia);
+    synthias[data[0]] = data[1];
+    io.emit('synthiaNotes', synthias[data[0]]);
   });
 
   // synthia instrument control
   socket.on('synthiaInstrumentControl', function(data){
-    synthia = data;
-    io.emit('synthiaNotes', synthia);
+    synthias[data[0]] = data[1];
+    io.emit('synthiaNotes', synthias[data[0]]);
   });
 
 });

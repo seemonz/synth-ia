@@ -53,7 +53,6 @@ compressor.release.value = .2;
 
 function triggerNotes () {
   if (currentAudio) {
-    // console.log(currentAudio);
     Object.keys(currentAudio).forEach(function(key){
       var player = currentAudio[key]
       if (player.sound){
@@ -63,20 +62,19 @@ function triggerNotes () {
     playerAudio = null;
   }
 }
-var changeCount = 0
-var instrumentcounter = {}
-var rhythmCounter = {};
+var changeCount = 0;
+var instrumentCounter = {};
 
 function playSynthia(tempo){
   for (var key in rhythmCounter) {
     rhythmCounter[key] += tempo;
     if (rhythmCounter[key] >= synthia[key].tempo) {
       rhythmCounter[key] = 0;
-      var count = instrumentcounter[synthia[key].instrument]
+      var count = instrumentCounter[synthia[key].instrument];
       count > 7 ? count = 0 : null
       var note = noteArray[count]
       count++
-      instrumentcounter[synthia[key].instrument] = count
+      instrumentCounter[synthia[key].instrument] = count
       changeCount++
       if (changeCount === 512) {
         changeCount = 0;
@@ -98,9 +96,6 @@ function playSynthia(tempo){
 
 function startMetronome(start,tempo,noteArray){
   // init synthia's rhythmCounter
-  for (var key in synthia) {
-    rhythmCounter[key] = synthia[key].tempo;
-  }
   time = 0,
   elapsed = '0.0';
   function instance() {
@@ -118,10 +113,7 @@ function startMetronome(start,tempo,noteArray){
     // playerLoop = setInterval(startTrail, 25);
   }
   window.setTimeout(instance, tempo);
-  if (scene.length > 0) {
-    console.log(scene);
-    scene.forEach(function(instrument) {
-      instrumentcounter[instrument] = 0;
-    });
-  }
+  scene.forEach(function(instrument) {
+    instrumentCounter[instrument] = 0;
+  });
 }
