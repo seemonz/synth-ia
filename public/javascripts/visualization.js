@@ -16,7 +16,7 @@ var numberOfNotes;
 function strokeIt(){
   var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
   $('svg line').css('stroke-width', .5).css('stroke', '#8C001A').css;
-  
+
 
   setTimeout(function(){ $('svg line').css('stroke-width', .5).css('stroke', 'grey'); }, 125);
   };
@@ -154,7 +154,7 @@ $(function() {
         return maxBarHeight;
       }
     } else if (fadeOutCounter > 0) {
-      return maxBarHeight * Math.pow(0.80, -(fadeOutCounter - 10));
+      return maxBarHeight * Math.pow(0.8, -(fadeOutCounter - 10));
     } else {
       return minBarHeight;
     }
@@ -188,7 +188,7 @@ $(function() {
     if (fadeInCounter < 5) {
       fadeInCounter += 1;
     }
-  }, 31.25);
+  }, 20);
 
 
 

@@ -128,6 +128,7 @@ body {
   border-radius: 10px;
   height: 100%;
   width: 100%;
+  cursor: none;
 }
 
 #second-frame {
@@ -242,17 +243,17 @@ body {
   text-shadow: -1px -1px #656565, 1px 1px #AAA;
   box-shadow: 0 5px 0 #464646, inset 0 2px 2px #a6a6a6, inset 0 -2px 5px #b0b0b0, 0 5px 0px 3px #9c9c9c;
   /* Transition */
-  transition: box-shadow 0.15s, top 0.15s, color 0.1s, text-shadow 0.1s;
+  transition: box-shadow 0.15s, top 0.15s, color 0.3s, text-shadow 0.1s;
 }
 
 #synthia-instruments > button.synthia-instruments.focus {
-  color: #black;
+  color: white;
   top: 4px;
   box-shadow: 0 1px 0 #AAA, inset 0 2px 2px #FFF, inset 0 -2px 5px #CCC, 0 1px 0 1px #CCC;
 }
 
 #synthia-instruments > button.synthia-instruments:hover {
-  color: #575757;
+  color: #cbcbcb;
   transition: color 200ms linear, text-shadow 500ms linear;
 }
 
@@ -271,18 +272,18 @@ button.player-instruments {
   text-shadow: -1px -1px #656565, 1px 1px #AAA;
   box-shadow: 0 5px 0 #464646, inset 0 2px 2px #a6a6a6, inset 0 -2px 5px #b0b0b0, 0 5px 0px 3px #9c9c9c;
   /* Transition */
-  transition: box-shadow 0.15s, top 0.15s, color 0.1s, text-shadow 0.1s;
+  transition: box-shadow 0.15s, top 0.15s, color 0.3s, text-shadow 0.1s;
 }
 
 button.player-instruments.focus {
-  background-color: gray#575757;
-  color: black;
+  background-color: rgb(150, 150, 150);
+  color: white;
   top: 4px;
   box-shadow: 0 1px 0 #AAA, inset 0 2px 2px #FFF, inset 0 -2px 5px #CCC, 0 1px 0 1px #CCC;
 }
 
 button.player-instruments:hover {
-  color: #575757;
+  color: #cbcbcb;
   transition: color 200ms linear, text-shadow 500ms linear;
 }
 
