@@ -18,7 +18,7 @@ $(function(){
     var buttons = $('#instrument-container > button');
     buttons.removeClass('focus');
     el.addClass('focus');
-    currentInstrument = el.text();
+    currentInstrument = scene[0].slice(0, 6) + el.text();
   });
 
   synthiaInstrumentButtons.delegate('button', 'click', function(){

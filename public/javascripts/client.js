@@ -41,20 +41,19 @@ $(function(){
     var count = 0;
     for(var i=0; i<playerButtons.length; i++){
       var element = playerButtons.eq(i);
-      element.text(data[count]);
+      element.text(data[count].slice(6));
       count += 1;
     }
     // set random current instrument element's focus
-    if (!($('.player-instruments').hasClass('focus'))) {
+    // if (!($('.player-instruments').hasClass('focus'))) {
       $('.player-instruments:contains('+ currentInstrument +')').addClass('focus');
-
-      var synthiaButtons = $('.synthia-instruments');
-      var count = 0;
-      for(var i=0; i<synthiaButtons.length; i++){
-        var element = synthiaButtons.eq(i);
-        element.text(data[count]);
-        count += 1;
-      }
+    // }
+    var synthiaButtons = $('.synthia-instruments');
+    var count = 0;
+    for(var i=0; i<synthiaButtons.length; i++){
+      var element = synthiaButtons.eq(i);
+      element.text(data[count].slice(6));
+      count += 1;
     }
   });
 
@@ -135,13 +134,13 @@ $(function(){
   $('#synthia-instruments button').on('click', function(){
     if ($(this).hasClass('focus')) {
       for (var key in synthia) {
-      if ($(this).text() === synthia[key].instrument) {
+      if (sceneName + '-' + $(this).text() === synthia[key].instrument) {
         synthia[key].state = true;
       }
     }
     } else {
       for (var key in synthia) {
-        if ($(this).text() === synthia[key].instrument) {
+        if (sceneName + '-' + $(this).text() === synthia[key].instrument) {
           synthia[key].state = false;
         }
       }
