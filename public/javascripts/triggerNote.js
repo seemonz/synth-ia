@@ -94,7 +94,7 @@ function playSynthia(tempo){
   }
 }
 
-var strokeCount = 0
+// var strokeCount = 0
 function startMetronome(start,tempo,noteArray){
 
   // init synthia's rhythmCounter
@@ -109,13 +109,11 @@ function startMetronome(start,tempo,noteArray){
     if (Object.keys(sounds).length === scene.length) {
       triggerNotes();
       playSynthia(tempo);
-      strokeCount++
-      console.log(strokeCount)
-    if (strokeCount === 4) {
-      console.log('ding')
-      strokeIt();
-      strokeCount = 0
-    }
+      // strokeCount++
+    // if (strokeCount === 4) {
+    //   strokeIt();
+    //   strokeCount = 0
+    // }
      
     }
     // requestAnimationFrame(playerLoop)

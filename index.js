@@ -153,6 +153,7 @@ io.on('connection', function (socket) {
       delete nyanTracker[key][publicId]
       io.to(key).emit('killNyan', publicId);
     }
+    io.emit('killTrail', publicId);
     for (var key in game) {
       delete game[key][publicId];
     }
@@ -179,7 +180,11 @@ io.on('connection', function (socket) {
     io.to(sceneName).emit('synthiaNotes', synthias[sceneName]);
     io.emit('tempo',[new Date().getTime(),tempo]) // send server time to clients' metronome
 
+    // sends scene data for rendering avatars
     io.to(sceneName).emit('createNyan', nyanTracker[sceneName]);
+
+    // sends scene data for rendering trails
+    io.to(sceneName).emit('createTrail', publicId)
   });
 
 
@@ -234,7 +239,7 @@ io.on('connection', function (socket) {
   // receive player mouse movement
   socket.on('mousePosition', function(data){
 
-    io.to(data.scene).emit('otherplayer', data);
+    io.to(data.scene).emit('otherPlayerPositions', data);
 
   });
 
