@@ -130,7 +130,7 @@ body {
   width: 100%;
 }
 
-#second-frame {
+#second-frame{
   position: absolute;
   box-sizing: border-box;
   border: solid gray;
