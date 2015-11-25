@@ -236,9 +236,6 @@ body {
   background-color: gray;
   text-align: center;
   font-size: 16px;
-  /*box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;*/
-
-  /*border-radius: 100%;*/
   position: relative;
   color: black;
   background: rgb(150, 150, 150);
@@ -249,14 +246,7 @@ body {
 }
 
 #synthia-instruments > button.synthia-instruments.focus {
-  /*background-color: gray;
-  transition: background-color 200ms linear, text-shadow 500ms linear;
-  background-image: linear-gradient(#212121, #424242);
-  color: #9E9E9E;
-  outline: 0;*/
-
   color: #black;
-  /*text-shadow: -1px -1px  #dddddd, 1px 1px #585858;*/
   top: 4px;
   box-shadow: 0 1px 0 #AAA, inset 0 2px 2px #FFF, inset 0 -2px 5px #CCC, 0 1px 0 1px #CCC;
 }
@@ -275,8 +265,6 @@ button.player-instruments {
   background-color: gray;
   text-align: center;
   font-size: 16px;
-  /*box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;*/
-
   position: relative;
   color: black;
   background: rgb(150, 150, 150);
@@ -287,14 +275,8 @@ button.player-instruments {
 }
 
 button.player-instruments.focus {
-  /*background-color: gray;
-  transition: background-color 200ms linear, text-shadow 500ms linear;
-  background-image: linear-gradient(#212121, #424242);
-  color: #9E9E9E;
-  outline: 0;*/
   background-color: gray#575757;
   color: black;
-  /*text-shadow: 0 0 5px lightblue, -1px -1px lightblue, 1px 1px #585858;*/
   top: 4px;
   box-shadow: 0 1px 0 #AAA, inset 0 2px 2px #FFF, inset 0 -2px 5px #CCC, 0 1px 0 1px #CCC;
 }
