@@ -8,6 +8,7 @@ var noteArray;
 var rhythmCounter = {};
 var mouseCount;
 var mice = {};
+var trailers = {};
 
 
 $(function(){
@@ -62,11 +63,16 @@ $(function(){
       if (!$('#nyan-cat' + key).length) {
         createNyan(key, data[key], currentX, currentY);
       }
+      if (!trailers.hasOwnProperty(key)){
+        trailers[key] = startInterval(key);
+      }
     }
   });
 
   socket.on('killNyan', function(data){
     killNyan(data);
+    clearInterval(trailers[data]);
+    delete trailers[data];
   });
 
   // gets tempo from server to keep syncopation
@@ -111,21 +117,12 @@ $(function(){
     socket.emit('synthiaOff', [sceneName, synthia]);
   });
 
-  mouseCount = 0;
-
   // player mouse tracker
-  $(document).on('mousemove', function(e){
-    var currentX = e.pageX - $('#main-frame').offset().left;
-    var currentY = e.pageY - $('#main-frame').offset().top;
-    ++mouseCount;
+  setInterval(function(){
+    socket.emit('mousePosition', { scene: sceneName, playerId: playerId, currentX: currentX, currentY: currentY, height: changingHeight });
+  }, 10);
 
-    if (mouseCount === 5){
-      mouseCount = 0;
-      socket.emit('mousePosition', { scene: sceneName, playerId: playerId, currentX: currentX, currentY: currentY });
-    }
-  });
-
-  socket.on('otherplayer', function(data){
+  socket.on('otherPlayerPositions', function(data){
     mice[data.playerId] = data;
     nyans();
   });
@@ -161,14 +158,14 @@ $(function(){
     // the keys are / Z X C V / A S D F / Q W E R /
     var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
     if (keycodes.indexOf(event.keyCode) != -1){
-      socket.emit('mousePosition', { playerId: playerId, currentX: currentX, currentY: currentY });
+      // socket.emit('mousePosition', { scene: sceneName, playerId: playerId, currentX: currentX, currentY: currentY, height: changingHeight });
       var note = keycodes.indexOf(event.keyCode) + 1;
       if (!playerAudio){
-        playerAudio = { scene: sceneName, sound: note, instrument: currentInstrument, player: playerId, volume: .5 };
+        playerAudio = { scene: sceneName, sound: note, instrument: currentInstrument, player: playerId, volume: 1 };
         socket.emit('playerInput', playerAudio );
       } else {
         if (playerAudio.sound != note){
-          playerAudio = { scene: sceneName, sound: note, instrument: currentInstrument, player: playerId, volume: .5 };
+          playerAudio = { scene: sceneName, sound: note, instrument: currentInstrument, player: playerId, volume: 1 };
           socket.emit('playerInput', playerAudio );
         }
       }
