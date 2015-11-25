@@ -28,7 +28,7 @@ outline: none;
 #modal h1{
   margin-bottom: 1px;
   margin-top: 5px;
-} 
+}
 
 /* no selection */
 body {
@@ -168,12 +168,13 @@ body {
   background-color: lightgray;
   font-size: 18px;
   text-align: center;
+  line-height: 180%;
   box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 .name p {
   position: relative;
-  top: 50%;
+  /*top: 50%;*/
 }
 
 .synthia-state {
@@ -229,36 +230,39 @@ body {
 
 #synthia-instruments > button.synthia-instruments {
   width: 20%;
-  height: 5%;
+  height: 10%;
   margin: 10px;
   border-radius: 5px;
   background-color: gray;
   text-align: center;
   font-size: 16px;
+  /*box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;*/
 
-}
-
-#synthia-instruments > button.synthia-instruments {
-  width: 20%;
-  height: 5%;
-  margin: 10px;
-  border-radius: 5px;
-  background-color: gray;
-  text-align: center;
-  font-size: 16px;
-  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+  /*border-radius: 100%;*/
+  position: relative;
+  color: black;
+  background: rgb(150, 150, 150);
+  text-shadow: -1px -1px #656565, 1px 1px #AAA;
+  box-shadow: 0 5px 0 #464646, inset 0 2px 2px #a6a6a6, inset 0 -2px 5px #b0b0b0, 0 5px 0px 3px #9c9c9c;
+  /* Transition */
+  transition: box-shadow 0.15s, top 0.15s, color 0.1s, text-shadow 0.1s;
 }
 
 #synthia-instruments > button.synthia-instruments.focus {
-  background-color: gray;
+  /*background-color: gray;
   transition: background-color 200ms linear, text-shadow 500ms linear;
   background-image: linear-gradient(#212121, #424242);
   color: #9E9E9E;
-  outline: 0;
+  outline: 0;*/
+
+  color: #black;
+  /*text-shadow: -1px -1px  #dddddd, 1px 1px #585858;*/
+  top: 4px;
+  box-shadow: 0 1px 0 #AAA, inset 0 2px 2px #FFF, inset 0 -2px 5px #CCC, 0 1px 0 1px #CCC;
 }
 
 #synthia-instruments > button.synthia-instruments:hover {
-  color: #E0E0E0;
+  color: #575757;
   transition: color 200ms linear, text-shadow 500ms linear;
 }
 
@@ -271,19 +275,32 @@ button.player-instruments {
   background-color: gray;
   text-align: center;
   font-size: 16px;
-  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+  /*box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;*/
+
+  position: relative;
+  color: black;
+  background: rgb(150, 150, 150);
+  text-shadow: -1px -1px #656565, 1px 1px #AAA;
+  box-shadow: 0 5px 0 #464646, inset 0 2px 2px #a6a6a6, inset 0 -2px 5px #b0b0b0, 0 5px 0px 3px #9c9c9c;
+  /* Transition */
+  transition: box-shadow 0.15s, top 0.15s, color 0.1s, text-shadow 0.1s;
 }
 
 button.player-instruments.focus {
-  background-color: gray;
+  /*background-color: gray;
   transition: background-color 200ms linear, text-shadow 500ms linear;
   background-image: linear-gradient(#212121, #424242);
   color: #9E9E9E;
-  outline: 0;
+  outline: 0;*/
+  background-color: gray#575757;
+  color: black;
+  /*text-shadow: 0 0 5px lightblue, -1px -1px lightblue, 1px 1px #585858;*/
+  top: 4px;
+  box-shadow: 0 1px 0 #AAA, inset 0 2px 2px #FFF, inset 0 -2px 5px #CCC, 0 1px 0 1px #CCC;
 }
 
 button.player-instruments:hover {
-  color: #E0E0E0;
+  color: #575757;
   transition: color 200ms linear, text-shadow 500ms linear;
 }
 
@@ -293,7 +310,7 @@ button.player-instruments:hover {
 
 
 
-   
+
 
 
 ​

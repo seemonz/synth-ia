@@ -45,9 +45,9 @@ $(function(){
       count += 1;
     }
     // set random current instrument element's focus
-    // if (!($('.player-instruments').hasClass('focus'))) {
-      $('.player-instruments:contains('+ currentInstrument +')').addClass('focus');
-    // }
+    if (!($('.player-instruments').hasClass('focus'))) {
+      $('.player-instruments:contains('+ currentInstrument.slice(6) +')').addClass('focus');
+    }
     var synthiaButtons = $('.synthia-instruments');
     var count = 0;
     for(var i=0; i<synthiaButtons.length; i++){
@@ -132,7 +132,7 @@ $(function(){
 
   // synthia instrument control
   $('#synthia-instruments button').on('click', function(){
-    if ($(this).hasClass('focus')) {
+    if (!$(this).hasClass('focus')) {
       for (var key in synthia) {
       if (sceneName + '-' + $(this).text() === synthia[key].instrument) {
         synthia[key].state = true;

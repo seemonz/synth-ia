@@ -8,8 +8,16 @@ $(function(){
     var el = $(this);
     var buttons = $('.synthia-state > button');
     buttons.removeClass('focus');
-    $('#synthia-instruments > button').removeClass('focus'); // resets instrument buttons if synthia is turned off
     el.addClass('focus');
+  });
+
+  $('#off').on('click', function(){
+    $('button.synthia-instruments').removeClass('focus');
+  });
+
+  // if you click on turns all synthia buttons on
+  $('#on').on('click', function(){
+    $('button.synthia-instruments').addClass('focus');
   });
 
   // keep current instrument button clicked down
