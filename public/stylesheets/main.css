@@ -53,10 +53,10 @@ body {
   margin-top: 50px;
   background-color: #333333;
   border-radius: 10px;
-  border-top: solid #717171 20px;
+  border-top: solid #858181 20px;
   border-left: solid #717171 20px;
-  border-right: solid #4E4D4D 20px;
-  border-bottom: solid #4E4D4D 20px;
+  border-right: solid #585656 20px;
+  border-bottom: solid #413f3f 20px;
   border: linear-gradient( to left top, #7B7B7B, #4E4D4D);
   box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
@@ -149,10 +149,12 @@ body {
   width: 20%;
   height: 50%;
   margin-bottom: 10%;
-  top: 100px;
+  margin-left: 3%;
+  top: 40px;
 }
 
 #synthia-container {
+  display: inline-block;
   box-sizing: border-box;
   width: 75%;
   height: 20%;
@@ -291,6 +293,31 @@ button.player-instruments:hover {
 .gridlines {
   stroke: 'white';
   stroke-width: 4px;
+}
+
+/*#back {
+  display: inline-block;
+  width: 100px;
+  height: 50px;
+  border-radius: 10px;
+  text-align: center;
+  line-height: 50px;
+}*/
+
+#back {
+  position: absolute;
+  margin-top: 50px;
+  margin-left: 95px;
+  box-sizing: border-box;
+  display: inline-block;
+  width: 100px;
+  height: 50px;
+  border-radius: 5px;
+  background-color: lightgray;
+  font-size: 18px;
+  text-align: center;
+  line-height: 180%;
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 
