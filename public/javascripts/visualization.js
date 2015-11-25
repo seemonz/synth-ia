@@ -44,8 +44,8 @@ function generateTrail(x, y, height){
   var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
   rect.style("stroke", randomColor)
     .style("stroke-width", 4)
-    .attr("width", 4)
-    .attr("height", 4)
+    .attr("width", 2)
+    .attr("height", height)
     .attr("x", x)
     .attr("y", y)
     // .attr("ry", 5)
@@ -67,6 +67,12 @@ $(function() {
   lowerLimit = frameWidth * 0.6;
   upperLimit = frameWidth * 0.8;
   numberOfNotes = 12;
+
+  var down = false;
+  var clickAndReleased = false;
+  var fadeOutCounter = 0;
+  var fadeInCounter = 0;
+  var fadeOut;
 
   mainSVG = d3.select("#main-frame")
     .append("svg")
@@ -124,10 +130,56 @@ $(function() {
         prevY = currentY;
         currentY = noteAreaHeight / 2 * (2 * i - 1);
         mainSVG.select('#nyan-cat' + playerId).attr("y", currentY - 50)
+        // sound wave gen
+        down = true;
+        fadeInCounter = 0;
       }
     }
   });
 
-  setInterval(startTrail, 125);
+  // sound wave gen
+  function setBarHeight() {
+    if (down) {
+      if ((minBarHeight * Math.pow(2.5, fadeInCounter)) < (maxBarHeight)) {
+        return minBarHeight * Math.pow(2.5, fadeInCounter);
+      } else {
+        return maxBarHeight;
+      }
+    } else if (fadeOutCounter > 0) {
+      return maxBarHeight * Math.pow(0.80, -(fadeOutCounter - 10));
+    } else {
+      return minBarHeight;
+    }
+  }
+
+  $('body').on('keyup', function(event) {
+    var keycodes = [90, 88, 67, 86, 65, 83, 68, 70, 81, 87, 69, 82];
+    if (keycodes.indexOf(event.keyCode) != -1) {
+      down = false;
+      clickAndReleased = true;
+      fadeOutCounter = 10;
+    }
+  })
+
+  $(document).on('mousedown', function(e) {
+    down = true;
+    fadeInCounter = 0;
+  });
+
+  $(document).on('mouseup', function(e) {
+    down = false;
+    clickAndReleased = true;
+    fadeOutCounter = 10;
+  });
+
+  setInterval(function(){
+    generateTrail(currentX - 50, currentY - setBarHeight() / 2, setBarHeight());
+    if (fadeOutCounter > 0) {
+      fadeOutCounter -= 1;
+    }
+    if (fadeInCounter < 5) {
+      fadeInCounter += 1;
+    }
+  }, 31.25);
 
 });
