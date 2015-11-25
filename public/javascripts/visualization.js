@@ -13,6 +13,14 @@ var lowerLimit;
 var upperLimit;
 var numberOfNotes;
 
+function strokeIt(){
+  var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+  $('svg line').css('stroke-width', .5).css('stroke', '#8C001A').css;
+  
+
+  setTimeout(function(){ $('svg line').css('stroke-width', .5).css('stroke', 'grey'); }, 125);
+  };
+
 function createNyan(id, cat, x, y ){
   mainSVG.append("image")
   .attr("id", "nyan-cat" + id)
@@ -181,5 +189,7 @@ $(function() {
       fadeInCounter += 1;
     }
   }, 31.25);
+
+
 
 });
