@@ -110,16 +110,11 @@
 	window.AudioContext = window.AudioContext || window.webkitAudioContext;
 	context = new AudioContext();
 
-	$(function(){
-	  initInstrument('earth-harp');
-	  initInstrument('earth-piano');
-	  initInstrument('earth-rhode');
-	  initInstrument('earth-glock');
-	  initInstrument('space-leed');
-	  initInstrument('space-bass');
-	  initInstrument('space-accordian');
-	  initInstrument('space-pad');
-	});
+	function startBuffer(scene){
+	  scene.forEach(function(instrument){
+	    initInstrument(instrument);
+	  });
+	}
 
 	function initInstrument(instrument) {
 	  var files = [
@@ -167,7 +162,7 @@
 
 	function triggerNotes () {
 	  if (currentAudio) {
-	    // console.log(currentAudio); 
+	    // console.log(currentAudio);
 	    Object.keys(currentAudio).forEach(function(key){
 	      var player = currentAudio[key]
 	      if (player.sound){
@@ -201,7 +196,7 @@
 	        var gainNode = context.createGain();
 	        source.buffer = sounds[synthia[key].instrument][note];
 	        gainNode.gain.value = synthia[key].volume;
-	        source.connect(gainNode); 
+	        source.connect(gainNode);
 	        gainNode.connect(compressor);
 	        compressor.connect(context.destination);
 	        source.start(0);
@@ -223,19 +218,21 @@
 	    if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
 	    var diff = (new Date().getTime() - start) - time;
 	    window.setTimeout(instance, (tempo - diff));
-	    if (Object.keys(sounds).length === 8) {
+	    if (Object.keys(sounds).length === scene.length) {
 	      triggerNotes();
 	      playSynthia(tempo);
 	    }
 	    // requestAnimationFrame(playerLoop)
 	    // clearInterval(playerLoop);
 	    // playerLoop = setInterval(startTrail, 25);
-	  } 
+	  }
 	  window.setTimeout(instance, tempo);
-	  scene.forEach(function(instrument) {
-	    instrumentcounter[instrument] = 0;
-	    console.log(instrumentcounter);
-	  });
+	  if (scene.length > 0) {
+	    console.log(scene);
+	    scene.forEach(function(instrument) {
+	      instrumentcounter[instrument] = 0;
+	    });
+	  }
 	}
 
 
@@ -248,6 +245,10 @@
 	var mainSVG;
 	var currentX;
 	var currentY;
+	var otherplayerX;
+	var otherplayerY;
+	var prevX;
+	var prevY;
 
 	var maxBarHeight;
 	var minBarHeight;
@@ -261,14 +262,14 @@
 
 	function generateTrail(x, y, height){
 	  var rect = mainSVG.append("rect");
-	  rect.style("fill", "green")
-	    .style("stroke", "green")
-	    .style("stroke-width", 3)
-	    .attr("width", barWidth)
-	    .attr("height", height)
+	  var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+	  rect.style("stroke", randomColor)
+	    .style("stroke-width", 4)
+	    .attr("width", 4)
+	    .attr("height", 4)
 	    .attr("x", x)
 	    .attr("y", y)
-	    .attr("ry", 5)
+	    // .attr("ry", 5)
 	    .transition()
 	    .ease("linear")
 	    .duration(2000)
@@ -316,12 +317,19 @@
 
 	  // update current mouse X, Y to pass for visualization
 	  $(document).on('mousemove', function(e) {
+	    prevX = currentX;
+	    prevY = currentY;
 	    currentX = e.pageX - $('#main-frame').offset().left;
 	    currentY = e.pageY - $('#main-frame').offset().top;
 	    mainSVG.select('#nyan-cat').attr("y", snappyTransition(currentY) - 50)
 	      .attr("x", currentX - 50);
 	    setCurrentNote(currentY);
 	  });
+
+	  // function mouseMovement() {
+	  //   mouseCount = 0;
+	  //   console.log(currentX + ', ' + currentY);
+	  // }
 
 	  function setCurrentNote(y) {
 	    currentNote = Math.round(-1 * (y / (frameHeight / 12) - 12));
@@ -342,13 +350,15 @@
 	    var noteAreaHeight = (frameHeight / 12);
 	    for (var i = 0; i <= 12; i++) {
 	      if (keycodes.indexOf(event.keyCode) === (-1 * (i - 12))) {
+	        prevY = currentY;
 	        currentY = noteAreaHeight / 2 * (2 * i - 1);
+	        mouseCount = 20;
 	        mainSVG.select('#nyan-cat').attr("y", currentY - 50)
 	      }
 	    }
 	  });
 
-	  setInterval(startTrail, 25);
+	  setInterval(startTrail, 125);
 
 	});
 
@@ -361,14 +371,20 @@
 	var playerAudio;
 	var currentInstrument;
 	var synthia;
-	var scene;
+	var scene = [];
 	var noteArray;
+	var mouseCount;
 
 
 	$(function(){
 	  var socket = io();
 	  var playerId = 0;
 	  currentInstrument = '';
+
+	  // // emit scene data
+	  var sceneName = (window.location.pathname).slice(1);
+	  socket.emit('scene', sceneName);
+
 
 	  // receive playerId from server
 	  socket.on('assignPlayerId', function(data){
@@ -377,16 +393,16 @@
 	    }
 	  });
 
-	  // receive scene modal if first player
-	  socket.on('modalRender', function(){
-	    modalRender();
-	  });
 
 	  // gets scene info
 	  socket.on('sceneData', function(data){
 	    console.log(data);
 	    scene = data;
-	    currentInstrument = data[0];
+	    var randNum = Math.floor(Math.random() * data.length);
+	    currentInstrument = data[randNum];
+
+	    // buffer intruments
+	    startBuffer(scene);
 
 	    // set player instrument names
 	    var playerButtons = $('.player-instruments');
@@ -396,6 +412,8 @@
 	      element.text(data[count]);
 	      count += 1;
 	    }
+	    // set random current instrument element's focus
+	    $('.player-instruments:contains('+ currentInstrument +')').addClass('focus');
 
 	    var synthiaButtons = $('.synthia-instruments');
 	    var count = 0;
@@ -423,7 +441,16 @@
 	  // sends scene selection to server
 	  setTimeout( function(){
 	    $(document).on('click', '.scenes', function(){
-	      data = $(this).text();
+	      var data = $(this).text();
+	      console.log(data);
+	      socket.emit('selectScene', data);
+	    });
+
+	    $(document).on('click', '#overlay', function(){
+	      var allScenes = ['earth', 'space'];
+	      // , 'deigo', 'night', 'boats'];
+	      var randNum = Math.floor(Math.random() * allScenes.length);
+	      var data = allScenes[randNum];
 	      console.log(data);
 	      socket.emit('selectScene', data);
 	    });
@@ -453,6 +480,31 @@
 	      synthia[key].state = false;
 	    }
 	    socket.emit('synthiaOff', synthia);
+	  });
+	  mouseCount = 0;
+	  // player mouse tracker
+	  $(document).on('mousemove', function(e){
+	    var currentX = e.pageX - $('#main-frame').offset().left;
+	    var currentY = e.pageY - $('#main-frame').offset().top;
+	    ++mouseCount;
+
+	    if (mouseCount === 20){
+	      mouseCount = 0;
+	      socket.emit('mousePosition', currentX, currentY);
+	    }
+	  });
+
+	  socket.on('otherplayer', function(data){
+	    // var otherLoop = 0;
+	    // if (otherLoop){
+	    //   console.log('cleared')
+	    //   clearInterval(OtherLoop);
+	    // }
+	    // function genTrail(){
+	      generateTrail(data[0], data[1], 10);
+	    // }
+	    // otherLoop = setInterval(genTrail, 25);
+	    // console.log(otherLoop);<
 	  });
 
 	  // synthia instrument control
@@ -492,6 +544,9 @@
 	    // the keys are / Z X C V / A S D F / Q W E R /
 	    var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
 	    if (keycodes.indexOf(event.keyCode) != -1){
+	      if (currentY != prevY) {
+	        socket.emit('mousePosition', currentX, currentY);
+	      }
 	      var note = keycodes.indexOf(event.keyCode) + 1;
 	      if (!playerAudio){
 	        playerAudio = { sound: note, instrument: currentInstrument, player: playerId, volume: .5 }
@@ -512,18 +567,29 @@
 /***/ function(module, exports) {
 
 	
-	  // bring up modal box
-	function modalRender() {
-	  $('body').append('<div id="overlay"></div>');
-	  $('body').append('<div id="modal"><h1>Choose your Scene!</h1><button class="scenes">earth</button><button class="scenes">space</button><button class="scenes">Deigo</button><button class="scenes">Synth</button></div>');
-	}
-	  // scene selection close
+
 	$(function(){
-	  $(document).on('click', '.scenes', function(){
-	    $('#modal').remove();
-	    $('#overlay').remove();
-	  });
+	// console.log('wtf')
+
+
+	  // controls keyboard visual 
+	  var $keys = $(".key")
+	  function playKeys(){
+	    $keys.each(function(index,element){
+	      setTimeout(function(){
+	        $($keys[index-1]).removeClass('keydown')
+	        $($keys[index]).addClass('keydown')
+	      if (index === $keys.length-1){
+	        playKeys();
+	      }
+	      },100 * index);
+	    });
+	  };
+
+	  playKeys();
 	});
+
+
 
 
 /***/ }

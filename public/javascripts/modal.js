@@ -1,15 +1,20 @@
-
-  // scene selection close
 $(function(){
+// console.log('wtf')
 
 
-  $(document).on('click', '.scenes', function(){
-    $('#modal').remove();
-    $('#overlay').remove();
-  });
+  // controls keyboard visual
+  var $keys = $(".key")
+  function playKeys(){
+    $keys.each(function(index,element){
+      setTimeout(function(){
+        $($keys[index-1]).removeClass('keydown')
+        $($keys[index]).addClass('keydown')
+      if (index === $keys.length-1){
+        playKeys();
+      }
+      },100 * index);
+    });
+  };
 
-  $(document).on('click', '#overlay', function(){
-    $('#modal').remove();
-    $('#overlay').remove();
-  });
+  playKeys();
 });

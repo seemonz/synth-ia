@@ -77,7 +77,7 @@ $(function() {
   for (var i = 1; i < 12; i++) {
     mainSVG.append("line")
       .style("stroke", "gray")
-      .style("stroke-width", 2)
+      .style("stroke-width", 0.5)
       .attr("x1", 0)
       .attr("y1", frameHeight / 12 * i)
       .attr("x2", frameWidth)

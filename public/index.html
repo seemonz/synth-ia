@@ -7,6 +7,8 @@
 
   <!-- CSS Styling -->
   <link rel="stylesheet" href="stylesheets/main.css">
+  <link rel="stylesheet" href="stylesheets/keyboard.css">
+ 
 
   <!-- JavaScript Libraries -->
   <script type="text/javascript" src="/javascripts/jquery-2.1.4.js"></script>
@@ -21,7 +23,7 @@
   <!-- Visualization -->
   <!-- <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script> -->
   <!-- <script type="text/javascript" src="/javascripts/visualization.js"></script> -->
-  <script type="text/javascript" src="/javascripts/stars.js"></script>
+  <!-- // <script type="text/javascript" src="/javascripts/stars.js"></script> -->
 
   <!-- Client and Server JS -->
   <!-- <script type="text/javascript" src="/javascripts/bufferLoader.js"></script> -->
@@ -75,12 +77,39 @@
 
   <div id="overlay"></div>
 
-  <div id="modal"><h1>Choose your Scene!</h1>
-    <button class="scenes"><a href="/earth">earth</a></button>
-    <button class="scenes"><a href="/space">space</a></button>
-    <button class="scenes"><a href="/night">night</a></button>
-    <button class="scenes"><a href="/boats">boats</a></button>
+  <div id="modal">
+    <h1>Choose your Scene!</h1>
+    <button class="scenes" onclick="location.href='/earth'">earth</button> 
+    <button class="scenes" onclick="location.href='/space'">space</button> 
+    <button class="scenes" onclick="location.href='/night'">night</button> 
+    <button class="scenes" onclick="location.href='/boats'">boats</button> 
+    <h1>Press to Play notes</h1>
+    <div id="keyboard">
+      <ul class="cf" id="qwerty">
+        <li><a class="key c9" id="tab"><span></span></a></li>
+        <li><a class="key c81"><span>q</span></a></li>
+        <li><a class="key c87"><span>w</span></a></li>
+        <li><a class="key c69"><span>e</span></a></li>
+        <li><a class="key c82"><span>r</span></a></li>
+      </ul>
+      <ul class="cf" id="asdfg">
+        <li><a href="#" class="key c20 alt" id="caps"><b></b><span></span></a></li>
+        <li><a class="key c65"><span>a</span></a></li>
+        <li><a class="key c83"><span>s</span></a></li>
+        <li><a class="key c68"><span>d</span></a></li>
+        <li><a class="key c70"><span>f</span></a></li>
+      </ul>
+      <ul class="cf" id="zxcvb">
+        <li><a class="key c16 shiftleft"><span></span></a></li>
+        <li><a class="key c90"><span>z</span></a></li>
+        <li><a class="key c88"><span>x</span></a></li>
+        <li><a class="key c67"><span>c</span></a></li>
+        <li><a class="key c86"><span>v</span></a></li>
+        <li><a class="key c9" id="tab"><span></span></a></li>
+      </ul>
+    </div>
   </div>
+
 </body>
 
 </html>
