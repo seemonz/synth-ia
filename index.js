@@ -67,7 +67,30 @@ var nyanCats = [
   'nyaninja_cat.gif',
   'pirate_cat.gif',
   'technyancolor_cat.gif',
-  'zombie_cat.gif'
+  'zombie_cat.gif',
+  'gb_cat.gif',
+  'grumpy_cat.gif',
+  'j5_cat.gif',
+  'jamaicnyan_cat.gif',
+  'jazz_cat.gif',
+  'mexinyan_cat.gif',
+  'nyan_cat.gif',
+  'nyaninja_cat.gif',
+  'pirate_cat.gif',
+  'technyancolor_cat.gif',
+  'zombie_cat.gif',
+  'gb_cat.gif',
+  'grumpy_cat.gif',
+  'j5_cat.gif',
+  'jamaicnyan_cat.gif',
+  'jazz_cat.gif',
+  'mexinyan_cat.gif',
+  'nyan_cat.gif',
+  'nyaninja_cat.gif',
+  'pirate_cat.gif',
+  'technyancolor_cat.gif',
+  'zombie_cat.gif',
+  'rainicorn.gif'
 ]
 
 function randomizeSynthia(tempo, instrument, volume){
