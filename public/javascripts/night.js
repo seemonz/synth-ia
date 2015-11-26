@@ -35,7 +35,7 @@ if (visualBg === "night"){
 
         this.terrain.width = width;
         this.terrain.height = height;
-        this.fillStyle = options.fillStyle || "#191D4C";
+        this.fillStyle = options.fillStyle || "#23275c";
         this.mHeight = options.mHeight || height;
 
         // generate
@@ -65,7 +65,7 @@ if (visualBg === "night"){
         // draw the terrain
         this.terCtx.clearRect(0, 0, width, height);
         this.terCtx.fillStyle = this.fillStyle;
-        
+
         if (new Date().getTime() > this.lastScroll + this.scrollDelay) {
             this.lastScroll = new Date().getTime();
             this.points.push(this.points.shift());
@@ -85,35 +85,6 @@ if (visualBg === "night"){
         this.terCtx.lineTo(0, this.points[0]);
         this.terCtx.fill();
     }
-
-
-    // Second canvas used for the stars
-    // bgCtx.fillStyle = '#05004c';
-    // bgCtx.fillRect(0, 0, width, height);
-
-    // stars
-    // function Star(options) {
-    //     this.size = Math.random() * 2;
-    //     this.speed = Math.random() * .05;
-    //     this.x = options.x;
-    //     this.y = options.y;
-    // }
-
-    // Star.prototype.reset = function () {
-    //     this.size = Math.random() * 2;
-    //     this.speed = Math.random() * .05;
-    //     this.x = width;
-    //     this.y = Math.random() * height;
-    // }
-
-    // Star.prototype.update = function () {
-    //     this.x -= this.speed;
-    //     if (this.x < 0) {
-    //         this.reset();
-    //     } else {
-    //         bgCtx.fillRect(this.x, this.y, this.size, this.size);
-    //     }
-    // }
 
     function ShootingStar() {
         this.reset();
@@ -165,8 +136,8 @@ if (visualBg === "night"){
       entities.push(new ShootingStar());
     }
     entities.push(new Terrain({mHeight : (height/2)-120}));
-    entities.push(new Terrain({displacement : 120, scrollDelay : 50, fillStyle : "rgb(17,20,40)", mHeight : (height/2)-60}));
-    entities.push(new Terrain({displacement : 100, scrollDelay : 20, fillStyle : "rgb(10,10,5)", mHeight : height/2}));
+    entities.push(new Terrain({displacement : 120, scrollDelay : 50, fillStyle : "rgb(25, 30, 60)", mHeight : (height/2)-60}));
+    entities.push(new Terrain({displacement : 100, scrollDelay : 20, fillStyle : "rgb(27, 19, 38)", mHeight : height/2}));
 
     //animate background
     function animate() {
