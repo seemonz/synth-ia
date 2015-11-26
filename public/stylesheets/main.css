@@ -121,6 +121,19 @@ body {
 .img-scenes {
   display: inline-block;
   position: relative;
+  height: 100px;
+  width: 150px;
+  margin: 10px;
+}
+
+.img-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: solid #505050 4px;
+  border-radius: 10px;
 }
 
 .img-scenes p {
@@ -136,8 +149,8 @@ body {
   height: 100px;
   width: 150px;
   border-radius: 10px;
-  margin: 10px;
-  border: solid #505050 4px;
+  /*margin: 10px;*/
+  /*border: solid #505050 4px;*/
 }
 
 .img-scenes:hover p {

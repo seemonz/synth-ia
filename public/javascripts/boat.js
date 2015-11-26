@@ -1,92 +1,75 @@
 var visualBg = window.location.pathname.slice(1);
 if (visualBg === "boats"){
-    $(function() {
-        'use strict';
-        var onloadDo;
-        onloadDo = function () {
-            var addPath, addPoints, animatePath, canvas, i, j, n, opacity, path, paths, ref, view;
-            $('#second-frame').append("<div id='boat-frame'><canvas id='canvas'></canvas><img id='lighthouse' src='images/lighthouse.png' alt='lighthouse'/></div>");
-            canvas = document.getElementById('canvas');
-            paper.setup(canvas);
-            view = paper.project.view;
-            paths = new paper.Group();
-            addPoints = function (path, quantity) {
-                var i, j, ref, x, y;
-                path.add(view.bounds.bottomLeft);
-                for (i = j = -1, ref = quantity + 1; j <= ref; i = j += 1) {
-                    if (window.CP.shouldStopExecution(1)) {
-                        break;
-                    }
-                    x = view.viewSize.width / quantity * i;
-                    y = view.viewSize.height / 1.618;
-                    path.add(new paper.Point(x, y));
+
+    $(function(){
+        var div = document.getElementById('second-frame');
+        var canvas = document.createElement('canvas');
+        var w = canvas.width = document.getElementById('second-frame').clientWidth;
+        var h = canvas.height = document.getElementById('second-frame').clientHeight;
+        var ctx = canvas.getContext('2d');
+        var img = new Image();
+
+        // initialization
+        function Init() {
+            $('#second-frame').append("<div id='boat-frame'></div>")
+            $('#boat-frame').append(canvas);
+            Update();
+        }
+       
+        // main loop
+        function Update() {
+            var backGrd = ctx.createLinearGradient(0, canvas.height, 0, 0);
+
+            // light blue
+            backGrd.addColorStop(0, '#f2c5bd');   
+            backGrd.addColorStop(1, '#945986');
+            ctx.fillStyle = backGrd;
+            ctx.fillRect(0, 0, w, h);
+
+            var timeCur = new Date().getTime();
+            var maxLayers = Math.floor(h / 150) + 1;
+            var waveLayer = -1;
+            var offset = 200;
+            var offsetInc = 30;
+
+            while (waveLayer < maxLayers) {
+                var timeDivider = (8 - (5 * waveLayer / maxLayers));
+                var timeMod = timeCur / timeDivider;
+                var ampMod = 32 + 12 * waveLayer;
+                var ampMult = 8 + waveLayer * 4;
+
+                var grd = ctx.createLinearGradient(0, offset, 0, offset + offsetInc * 2);
+                grd.addColorStop(0, '#80e0d0'); //'rgba(255,255,208,0.2)');
+                grd.addColorStop(0.5, '#40d8d4'); //'rgba(255,208,208,0)');
+                grd.addColorStop(1, '#40d4d0');
+
+
+                ctx.beginPath();
+                for (var i = 0; i < w; i += 0.5) {
+                  var timeUse = (timeMod + i) / ampMod;
+                  var amp = ampMult * Math.sin(timeUse);
+                  var height = 4 * Math.cos((timeMod) / 48);
+                  var yPoint = amp - height + offset;
+                  var xPoint = i;
+                  ctx.lineTo(xPoint, yPoint);
                 }
-                window.CP.exitedLoop(1);
-                return path.add(view.bounds.bottomRight);
-            };
-            addPath = function (quantity, color, opacity) {
-                var path;
-                path = new paper.Path();
-                path.fillColor = color;
-                path.opacity = opacity;
-                addPoints(path, quantity);
-                path.smooth();
-                return path;
-            };
-            animatePath = function (path, event, index) {
-                var i, j, len, ref, results, segment, sin;
-                ref = path.segments;
-                results = [];
-                for (i = j = 0, len = ref.length; j < len; i = ++j) {
-                    if (window.CP.shouldStopExecution(2)) {
-                        break;
-                    }
-                    segment = ref[i];
-                    if (i > 0 && i < path.segments.length - 1) {
-                        sin = Math.sin(event.time * 3 + i - index);
-                          // var position = $('#lighthouse').position();
-                          // if (position.left > 720 || position.left < -50){
-                          //   $('#lighthouse').css("visibility", "hidden")
-                          // } else{
-                          //   $('#lighthouse').css("visibility", "visible");
-                          // }
-                          // console.log(position.left);
-                        results.push(segment.point.y = sin * 15 + view.viewSize.height / 1.618 + index * 15);
-                    } else {
-                        results.push(void 0);
-                    }
-                }
-                window.CP.exitedLoop(2);
-                return results;
-            };
-            n = 8;
-            opacity = 1 / (n / 2);
-            for (i = j = 1, ref = n; j <= ref; i = j += 1) {
-                if (window.CP.shouldStopExecution(3)) {
-                    break;
-                }
-                path = addPath(8 - i, '#21f8f6', i * opacity);
-                path.position.y += 25 * i;
-                paths.addChild(path);
+
+                ctx.lineTo(w, h + offset );
+                ctx.lineTo(0, h + offset);
+                ctx.lineTo(0, offset);
+
+                ctx.closePath();
+                ctx.fillStyle = grd;
+
+                ctx.fill();
+
+                waveLayer++;
+                offsetInc = 30 + 10 * Math.pow(waveLayer, 2);
+                offset += offsetInc;
             }
-            window.CP.exitedLoop(3);
-            view.onFrame = function (event) {
-                var k, len, ref1, results;
-                ref1 = paths.children;
-                results = [];
-                for (i = k = 0, len = ref1.length; k < len; i = ++k) {
-                    if (window.CP.shouldStopExecution(4)) {
-                        break;
-                    }
-                    path = ref1[i];
-                    results.push(animatePath(path, event, i));
-                }
-                window.CP.exitedLoop(4);
-                return results;
-            };
-            view.draw();
-            return null;
-        };
-        window.onload = onloadDo;
-    }.call(this));
+
+          requestAnimationFrame(Update);
+        }
+        Init();
+    });
 }
