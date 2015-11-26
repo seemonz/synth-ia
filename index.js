@@ -90,7 +90,8 @@ var nyanCats = [
   'pirate_cat.gif',
   'technyancolor_cat.gif',
   'zombie_cat.gif',
-  'rainicorn.gif'
+  'rainicorn.gif',
+  'leekspin.gif'
 ]
 
 function randomizeSynthia(tempo, instrument, volume){
@@ -100,10 +101,10 @@ function randomizeSynthia(tempo, instrument, volume){
 
 function startSynthia() {
     currentScene = 'earth';
-    synthia['0'] = randomizeSynthia(tempo * 4,  scene[currentScene][0], 0.01);
-    synthia['1'] = randomizeSynthia(tempo * 4,  scene[currentScene][1], 0.8);
-    synthia['2'] = randomizeSynthia(tempo * 8,  scene[currentScene][2], 1.0);
-    synthia['3'] = randomizeSynthia(tempo * 32, scene[currentScene][3], 1.0);
+    synthia['0'] = randomizeSynthia(tempo * 4,  scene[currentScene][0], 0.2);
+    synthia['1'] = randomizeSynthia(tempo * 8,  scene[currentScene][1], 0.3);
+    synthia['2'] = randomizeSynthia(tempo * 16,  scene[currentScene][2], 0.5);
+    synthia['3'] = randomizeSynthia(tempo * 32, scene[currentScene][3], 0.3);
     synthias['earth'] = synthia
     synthia = {};
 
@@ -118,18 +119,18 @@ function startSynthia() {
 
     currentScene = 'space';
     synthia['0'] = randomizeSynthia(tempo,      scene[currentScene][0], 0.2);
-    synthia['1'] = randomizeSynthia(tempo,      scene[currentScene][1], 0.8);
-    synthia['2'] = randomizeSynthia(tempo * 8,  scene[currentScene][2], 0.6);
-    synthia['3'] = randomizeSynthia(tempo * 16, scene[currentScene][3], 0.5);
+    synthia['1'] = randomizeSynthia(tempo,      scene[currentScene][1], 0.6);
+    synthia['2'] = randomizeSynthia(tempo * 32,  scene[currentScene][2], 0.2);
+    synthia['3'] = randomizeSynthia(tempo * 16, scene[currentScene][3], 0.3);
     synthiaInit = false;
     synthias['space'] = synthia
     synthia = {};
 
     currentScene = 'night';
-    synthia['0'] = randomizeSynthia(tempo * 32,  scene[currentScene][0], 0.2);
-    synthia['1'] = randomizeSynthia(tempo * 8,   scene[currentScene][1], 0.1);
-    synthia['2'] = randomizeSynthia(tempo * 64,  scene[currentScene][2], 0.09);
-    synthia['3'] = randomizeSynthia(tempo * 128, scene[currentScene][3], 0.1);
+    synthia['0'] = randomizeSynthia(tempo * 128,  scene[currentScene][0], 0.4);
+    synthia['1'] = randomizeSynthia(tempo * 2,   scene[currentScene][1], 0.5);
+    synthia['2'] = randomizeSynthia(tempo * 64,  scene[currentScene][2], 0.3);
+    synthia['3'] = randomizeSynthia(tempo * 128, scene[currentScene][3], 0.4);
     synthiaInit = false;
     synthias['night'] = synthia
     synthia = {};
