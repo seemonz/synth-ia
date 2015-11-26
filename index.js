@@ -9,7 +9,6 @@ server.listen(8080);
 app.use(express.static('public'));
 // app.use(express.static('./bundle.js'));
 
-
 app.get('/', function (req, res) {
   res.sendfile('public/index.html');
 });
@@ -30,10 +29,13 @@ app.get('/boats', function (req, res) {
   res.sendfile('public/app.html');
 });
 
-
-
 // game is object of players in session
-var game = {};
+var game = {
+  'earth': {},
+  'space': {},
+  'night': {},
+  'boats': {}
+};
 var playerInputCollection = [];
 var playerId = {};
 var playerIdSequence = 0;
@@ -43,7 +45,7 @@ var scene = {
   'earth': ['earth-harp', 'earth-piano', 'earth-rhode', 'earth-glock'],
   'space': ['space-leed', 'space-bass', 'space-accordian', 'space-pad'],
   'night': ['night-first', 'night-second', 'night-saw', 'night-bass'],
-  'boats': ['boats-highest', 'boats-high', 'boats-low', 'boats-lowest']
+  'boats': ['boats-tenor', 'boats-high', 'boats-low', 'boats-bass']
 };
 
 // tempo
@@ -210,11 +212,12 @@ io.on('connection', function (socket) {
     elapsed = '0.0';
     function instance() {
       playerInputCollection = [];
-      for (var key in game){
-        key.sound = '';
-      }
-      Object.keys(game).forEach(function(key){
-        game[key].sound = ''
+      Object.keys(game).forEach(function(scene){
+        for (var player in scene){
+          if (game[scene].hasOwnProperty(player)){
+            game[scene][player].sound = '';
+          }
+        }
       });
       time += tempo;
       if (metroCount === 128) {
@@ -239,36 +242,32 @@ io.on('connection', function (socket) {
 
   // receive player mouse movement
   socket.on('mousePosition', function(data){
-
     io.to(data.scene).emit('otherPlayerPositions', data);
-
   });
 
   // on player input, stash the info associated with the note played and emit it back to all players
   socket.on('playerInput', function(input){
     playerInputCollection.push(input);
     playerInputCollection.forEach(function(input){
-      var inter = {};
-      inter[input.player] = input
-      game[input.scene] = inter;
+      game[input.scene][input.player] = input;
     });
     io.to(input.scene).emit('currentAudio', game[input.scene]);
-  })
+  });
 
   // synthia on/off
   socket.on('synthiaOn', function(data){
     synthias[data[0]] = data[1];
-    io.emit('synthiaNotes', synthias[data[0]]);
+    io.to(data[0]).emit('synthiaNotes', synthias[data[0]]);
   });
   socket.on('synthiaOff', function(data){
     synthias[data[0]] = data[1];
-    io.emit('synthiaNotes', synthias[data[0]]);
+    io.to(data[0]).emit('synthiaNotes', synthias[data[0]]);
   });
 
   // synthia instrument control
   socket.on('synthiaInstrumentControl', function(data){
     synthias[data[0]] = data[1];
-    io.emit('synthiaNotes', synthias[data[0]]);
+    io.to(data[0]).emit('synthiaNotes', synthias[data[0]]);
   });
 
 });

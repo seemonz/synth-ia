@@ -44,6 +44,15 @@ body {
   background: radial-gradient(ellipse,  #000000 0%,#263238 100%);
 }
 
+#sig {
+  position: relative;
+  width: 1000px;
+  margin: 0 auto;
+  margin-top: 5px;
+  color: #13191c;
+  text-align: right;
+}
+
 #main-container {
   box-sizing: border-box;
   width: 1000px;
@@ -76,8 +85,8 @@ body {
 #modal {
     position:absolute;
     box-sizing: border-box;
-    top: 40%;
-    left: 45%;
+    top: 33%;
+    left: 43%;
     margin-top: -200px;
     margin-left: -300px;
     width: 800px;
@@ -205,7 +214,7 @@ body {
   width: 100%;
 ​}
 
-/* player controler */
+/* player controller */
 
 #instrument-box {
   display: inline-block;
@@ -293,7 +302,6 @@ body {
   width: 16%;
   z-index: 2;
 }
-
 
 #on {
   display: inline-block;
@@ -396,7 +404,6 @@ button.player-instruments:hover {
   transition: color 200ms linear, text-shadow 500ms linear;
 }
 
-
 .gridlines {
   stroke: 'white';
   stroke-width: 4px;
@@ -417,7 +424,6 @@ button.player-instruments:hover {
   line-height: 180%;
   box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
-
 
 #mouse {
   margin-left: 50px;
@@ -458,8 +464,6 @@ button.player-instruments:hover {
   border: 2px solid #fff;
   -webkit-border-radius: 8px;
           border-radius: 8px;
-
-
 }
 
 .wheel
@@ -467,8 +471,6 @@ button.player-instruments:hover {
   -webkit-animation: mouse-wheel 0.6s linear infinite;
   -moz-animation: mouse-wheel 0.6s linear infinite;
 }
-
-
 
 @-webkit-keyframes mouse-wheel
 {
@@ -496,12 +498,7 @@ button.player-instruments:hover {
   100% { top: 1px;}
 }
 
-#sig {
-  bottom: 0px;
-  right: 0;
-  color: #13191c;
-  float: right;
-}
+
 
 
 

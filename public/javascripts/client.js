@@ -27,7 +27,6 @@ $(function(){
     }
   });
 
-
   // gets scene info
   socket.on('sceneData', function(data){
     scene = data;
@@ -97,10 +96,38 @@ $(function(){
   // gets synthia's notes when joining
   socket.on('synthiaNotes', function(data){
     synthia = data
-    for (var key in synthia) {
-      rhythmCounter[key] = synthia[key].tempo;
+    if (Object.keys(rhythmCounter).length === 0) {
+      for (var key in synthia) {
+        rhythmCounter[key] = synthia[key].tempo;
+      }
     }
+    if (isSynthiaOn(data)){
+      $('.synthia-state > button').removeClass('focus');
+      $('#on').addClass('focus');
+    } else {
+      $('.synthia-state > button').removeClass('focus');
+      $('#off').addClass('focus');
+    }
+    hasSynthiaInstrumentsOn(data);
   });
+
+  function isSynthiaOn(synthia){
+    for (var key in synthia){
+      if (!synthia[key].state){
+        return false;
+      }
+      return true;
+    }
+  }
+
+  function hasSynthiaInstrumentsOn(synthia){
+    $('button.synthia-instruments').removeClass('focus');
+    for (var key in synthia){
+      if (synthia[key].state){
+        $('button.synthia-instruments:contains('+ synthia[key].instrument.slice(6) +')').addClass('focus');
+      }
+    }
+  }
 
   // turn synthia on/off
   $('#on').on('click', function(){
@@ -142,7 +169,7 @@ $(function(){
         }
       }
     }
-    socket.emit('synthiaIntrumentControl', [sceneName, synthia]);
+    socket.emit('synthiaInstrumentControl', [sceneName, synthia]);
   });
 
   // mouse position
@@ -151,7 +178,6 @@ $(function(){
     playerAudio = { scene: sceneName, sound: note, instrument: currentInstrument, player: playerId, volume: 1 }
     socket.emit('playerInput', playerAudio );
   });
-
 
   // 12 notes for 12 keys on the board
   $('body').on('keydown', function(event){
