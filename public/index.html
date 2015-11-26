@@ -8,7 +8,7 @@
   <!-- CSS Styling -->
   <link rel="stylesheet" href="stylesheets/main.css">
   <link rel="stylesheet" href="stylesheets/keyboard.css">
- 
+
 
   <!-- JavaScript Libraries -->
   <script type="text/javascript" src="/javascripts/jquery-2.1.4.js"></script>
@@ -79,28 +79,10 @@
 
   <div id="modal">
 
-    <h1>Choose your Scene!</h1>
-      <div class="image-row">
-        <span><img src='/images/earth.gif' alt='earth'><span>
-        <span><img src='/images/space.gif' alt='space'></span>
-        <span><img src='/images/night.gif' alt='night'></span>
-        <span><img src='/images/boat.gif' alt='boat'></span>
-      </div>
+      <h1 id="synthia-header">SYNTH-IA</h1>
 
-<!--       <div class="text-row">
-        <span>Earth<span>
-        <span>Space</span>
-        <span>Night</span>
-        <span>Boat</span>
-      </div>
-
-      <button class="scenes" onclick="location.href='/earth'">earth</button>
-      <button class="scenes" onclick="location.href='/space'">space</button>
-      <button class="scenes" onclick="location.href='/night'">night</button>
-      <button class="scenes" onclick="location.href='/boats'">boats</button> -->
-      
-    <h1>Press to Play notes</h1>
     <div id="keyboard">
+      <h1>Press to Play</h1>
       <ul class="cf" id="qwerty">
         <li><a class="key c9" id="tab"><span></span></a></li>
         <li><a class="key c81"><span>q</span></a></li>
@@ -124,6 +106,19 @@
         <li><a class="key c9" id="tab"><span></span></a></li>
       </ul>
     </div>
+
+    <div class="image-row">
+      <h1>Scenes</h1>
+      <img src='/images/earth.gif' alt='earth'>
+      <img src='/images/space.gif' alt='space'>
+      <img src='/images/night.gif' alt='night'>
+      <img src='/images/boat.gif' alt='boat'>
+    </div>
+
+    <div id="mouse">
+      <h1>Mouse</h1>
+    </div>
+
   </div>
 
 </body>
