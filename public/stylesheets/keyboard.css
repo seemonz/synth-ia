@@ -19,9 +19,13 @@
 }
 
 #keyboard {
-  margin-top: 50px;
+  margin-top: 35px;
   width: 300px;
   display: inline-block;
+}
+
+#keyboard h1 {
+  margin-bottom: 15px;
 }
 
 .key{

@@ -96,7 +96,7 @@ var nyanCats = [
 
 function randomizeSynthia(tempo, instrument, volume){
   synthiaRhythms += 1;
-  return { tempo: tempo, instrument: instrument, volume: volume, state: true };
+  return { tempo: tempo, instrument: instrument, volume: volume, state: false };
 }
 
 function startSynthia() {
