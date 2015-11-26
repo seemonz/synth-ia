@@ -19,6 +19,7 @@
 }
 
 #keyboard {
+  margin-top: 50px;
   width: 300px;
   display: inline-block;
 }

@@ -31,7 +31,7 @@
   <script type="text/javascript" src="/javascripts/night.js"></script>
   <script type="text/javascript" src="/javascripts/earth.js"></script>
   <script type="text/javascript" src="/javascripts/boat.js"></script>
-  
+
 
   <!-- Client and Server JS -->
   <script type="text/javascript" src="/javascripts/bufferLoader.js"></script>
@@ -55,16 +55,24 @@
       <div id='second-frame'></div>
       <div id="main-frame"></div>
     </div>
-
-    <div id="instrument-container">
-      <button class="player-instruments" class="name"></button>
-      <button class="player-instruments" class="name"></button>
-      <button class="player-instruments" class="name"></button>
-      <button class="player-instruments" class="name"></button>
+    <div id="instrument-box">
+      <div id="voice">Instruments</div>
+      <div id="instrument-container">
+        <button class="player-instruments" class="name"></button>
+        <button class="player-instruments" class="name"></button>
+        <button class="player-instruments" class="name"></button>
+        <button class="player-instruments" class="name"></button>
+      </div>
     </div>
+
     <div id="synthia-container">
 
       <div class="name">Synth-ia</div>
+
+      <div class="synthia-state">
+        <button id="on" class="focus">ON</button>
+        <button id="off">OFF</button>
+      </div>
 
       <div id="synthia-instruments">
         <button class="synthia-instruments focus" class="name"></button>
@@ -73,15 +81,11 @@
         <button class="synthia-instruments focus" class="name"></button>
       </div>
 
-      <div class="synthia-state">
-        <button id="on" class="focus">ON</button>
-        <button id="off">OFF</button>
-      </div>
-
+      <div id="controller-style1"></div>
     </div>
-    <!-- <div id="back"> -->
-      <button id="back" onclick="location.href='/'">Scenes</button>
-    <!-- </div> -->
+
+    <button id="back" onclick="location.href='/'">Scenes</button>
+
 
   </div>
 

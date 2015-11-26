@@ -49,15 +49,23 @@
       <div id="main-frame"></div>
     </div>
 
-    <div id="instrument-container">
-      <button class="player-instruments" class="name"></button>
-      <button class="player-instruments" class="name"></button>
-      <button class="player-instruments" class="name"></button>
-      <button class="player-instruments" class="name"></button>
+    <div id="instrument-box">
+      <div id="voice">Voice</div>
+      <div id="instrument-container">
+        <button class="player-instruments" class="name"></button>
+        <button class="player-instruments" class="name"></button>
+        <button class="player-instruments" class="name"></button>
+        <button class="player-instruments" class="name"></button>
+      </div>
     </div>
     <div id="synthia-container">
 
       <div class="name">Synth-ia</div>
+
+      <div class="synthia-state">
+        <button id="on">ON</button>
+        <button id="off">OFF</button>
+      </div>
 
       <div id="synthia-instruments">
         <button class="synthia-instruments" class="name"></button>
@@ -66,12 +74,10 @@
         <button class="synthia-instruments" class="name"></button>
       </div>
 
-      <div class="synthia-state">
-        <button id="on">ON</button>
-        <button id="off">OFF</button>
-      </div>
-
+      <div id="controller-style1"></div>
     </div>
+
+    <button id="back" onclick="location.href='/'">Scenes</button>
 
   </div>
 
@@ -79,10 +85,10 @@
 
   <div id="modal">
 
-      <h1 id="synthia-header">SYNTH-IA</h1>
+      <h1 id="synthia-header">Synth-ia</h1>
 
     <div id="keyboard">
-      <h1>Press to Play</h1>
+      <h1>How to Play</h1>
       <ul class="cf" id="qwerty">
         <li><a class="key c9" id="tab"><span></span></a></li>
         <li><a class="key c81"><span>q</span></a></li>
@@ -108,11 +114,24 @@
     </div>
 
     <div class="image-row">
-      <h1>Scenes</h1>
-      <img src='/images/earth.gif' alt='earth'>
-      <img src='/images/space.gif' alt='space'>
-      <img src='/images/night.gif' alt='night'>
-      <img src='/images/boat.gif' alt='boat'>
+      <h1>Choose A Scene</h1>
+      <div class="img-scenes">
+        <img src='/images/earth.gif' alt='earth' onclick="location.href='/earth'">
+        <p>earth</p>
+      </div>
+      <div class="img-scenes">
+        <img src='/images/space.gif' alt='space' onclick="location.href='/space'">
+        <p >space</p>
+      </div>
+      <div class="img-scenes">
+        <img src='/images/night.gif' alt='night' onclick="location.href='/night'">
+        <p>night</p>
+      </div>
+      <div class="img-scenes">
+        <img src='/images/boat.gif' alt='boat' onclick="location.href='/boats'">
+        <p>boats</p>
+      </div>
+
     </div>
 
     <div id="mouse">

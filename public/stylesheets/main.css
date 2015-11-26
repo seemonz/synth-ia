@@ -76,18 +76,19 @@ body {
 #modal {
     position:absolute;
     box-sizing: border-box;
-    top: 50%;
+    top: 40%;
     left: 45%;
     margin-top: -200px;
     margin-left: -300px;
     width: 800px;
-    height: 500px;
+    height: 600px;
     background: gray;
     border-radius:14px;
     padding-left: 50px;
     padding-right: 50px;
     padding-bottom: 50px;
     padding-top: 20px;
+    border: solid #5a5a5b  10px;
 }
 
 #modal button.scenes {
@@ -112,7 +113,23 @@ body {
 .image-row {
   display:inline-block;
   float: right;
-  width: 350px;
+  width: 380px;
+  margin-top: 80px;
+  text-align: center;
+}
+
+.img-scenes {
+  display: inline-block;
+  position: relative;
+}
+
+.img-scenes p {
+  position: absolute;
+  font-size: 30px;
+  top: 12px;
+  left: 42px;
+  display: none;
+  pointer-events: none;
 }
 
 .image-row img {
@@ -120,13 +137,24 @@ body {
   width: 150px;
   border-radius: 10px;
   margin: 10px;
+  border: solid #505050 4px;
+}
+
+.img-scenes:hover p {
+  display: block;
+}
+
+.img-scenes:hover img {
+  opacity: 0.5;
 }
 
 #synthia-header {
   text-align: center;
+  width: 680px;
   font-size: 50px;
-  background-color: white;
+  background-color: lightgray;
   border-radius: 10px;
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
 
 /* visualization */
@@ -165,24 +193,64 @@ body {
 ​}
 
 /* player controler */
-#instrument-container {
+
+#instrument-box {
   display: inline-block;
   box-sizing: border-box;
   position: absolute;
   width: 20%;
   height: 50%;
+  margin-left: 20px;
   margin-bottom: 10%;
-  margin-left: 3%;
+  top: 50px;
+}
+
+#instrument-container {
+  display: inline-block;
+  box-sizing: border-box;
   top: 40px;
+  margin-top: 10px;
+  margin-left: 15%;
+}
+
+#voice {
+  box-sizing: border-box;
+  display: inline-block;
+  width: 150px;
+  background-color: lightgray;
+  font-size: 18px;
+  text-align: center;
+  line-height: 180%;
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+  z-index: 2;
+  border-radius: 5px;
 }
 
 #synthia-container {
   display: inline-block;
   box-sizing: border-box;
+  position: relative;
   width: 75%;
   height: 20%;
-  margin-left: 3%;
+  margin-left: 5%;
   margin-top: 1%;
+  z-index: 0;
+}
+
+#controller-style1 {
+  position: absolute;
+  top: 17px;
+  left: 35px;
+  width: 615px;
+  height: 75px;
+  z-index: -1;
+  border-radius: 5px;
+  border-right: solid #525252 2px;
+  border-bottom: solid #3c3a3a 2px;
+  border-left: solid #949494 2px;
+  border-top: solid #8e8a8a 2px;
+  box-shadow:
+    inset 0 0 0 2px #646665,
 }
 
 .name {
@@ -196,6 +264,7 @@ body {
   text-align: center;
   line-height: 180%;
   box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+  z-index: 2;
 }
 
 .name p {
@@ -209,6 +278,7 @@ body {
   margin-top: 1%;
   margin-left: 2%;
   width: 16%;
+  z-index: 2;
 }
 
 
@@ -248,10 +318,9 @@ body {
 }
 
 #synthia-instruments {
-  display: inline-block;
+  display: block;
   width: 70%;
-  margin-left: 5%;
-  top: 10px;
+  margin-left: 13%;
 }
 
 #synthia-instruments > button.synthia-instruments {
@@ -286,7 +355,9 @@ body {
 button.player-instruments {
   width: 160px;
   height: 60px;
-  margin: 10px;
+  /*margin: 10px;*/
+  margin-top: 10px;
+  margin-bottom: 10px;
   border-radius: 5px;
   background-color: gray;
   text-align: center;
@@ -329,8 +400,8 @@ button.player-instruments:hover {
 
 #back {
   position: absolute;
-  margin-top: 50px;
-  margin-left: 95px;
+  margin-top: 40px;
+  margin-left: 60px;
   box-sizing: border-box;
   display: inline-block;
   width: 100px;
