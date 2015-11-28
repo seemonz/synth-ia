@@ -40,6 +40,7 @@ function playNote(note, instrument, volume, player) {
   gainNode.connect(compressor);
   compressor.connect(context.destination);
   source.start(0);
+  console.log(currentAudio[player].sound)
   currentAudio[player].sound = ""
 }
 
