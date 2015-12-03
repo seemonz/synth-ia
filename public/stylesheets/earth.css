@@ -1,0 +1,12 @@
+#earth-frame {
+  width: 100%;
+  height: 100%;
+}
+
+#earth-frame > canvas {
+  background: linear-gradient( hsl(200, 50%, 80%) 0%, hsl(200, 30%, 95%) 75%);
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+

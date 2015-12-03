@@ -1,20 +1,24 @@
+var playerId = 0;
+var currentAudio;
+var playerAudio;
+var currentInstrument;
+var synthia;
+var scene = [];
+var noteArray;
+var rhythmCounter = {};
+var mouseCount;
+var mice = {};
+var trailers = {};
+
+
 $(function(){
   var socket = io();
-  var playerId = 0;
+  currentInstrument = '';
 
-  // currentPlayers current intrument
-  var currentInstrument = 'space-bass';
+  // // emit scene data
+  var sceneName = (window.location.pathname).slice(1);
+  socket.emit('scene', sceneName);
 
-  function getRandomNote(){
-    return Math.floor(Math.random() * 11) + 1;
-  }
-
-  // function playNote(x, y, instrument){}
-  // function playNote(randomNote, instrument){
-  //   play{instrument}(randomNote);
-  // use switch? instrument === piano1
-  // playPiano1(randomNote);
-  // }
 
   // receive playerId from server
   socket.on('assignPlayerId', function(data){
@@ -23,102 +27,174 @@ $(function(){
     }
   });
 
-  // gets tempo from server to keep syncopation
-  socket.on('tempo', function(){
+  // gets scene info
+  socket.on('sceneData', function(data){
+    scene = data;
+    var randNum = Math.floor(Math.random() * data.length);
+    currentInstrument = data[randNum];
 
+    // buffer intruments
+    startBuffer(scene);
+
+    // set player instrument names
+    var playerButtons = $('.player-instruments');
+    var count = 0;
+    for(var i=0; i<playerButtons.length; i++){
+      var element = playerButtons.eq(i);
+      element.text(data[count].slice(6));
+      count += 1;
+    }
+    // set random current instrument element's focus
+    if (!($('.player-instruments').hasClass('focus'))) {
+      $('.player-instruments:contains('+ currentInstrument.slice(6) +')').addClass('focus');
+    }
+    var synthiaButtons = $('.synthia-instruments');
+    var count = 0;
+    for(var i=0; i<synthiaButtons.length; i++){
+      var element = synthiaButtons.eq(i);
+      element.text(data[count].slice(6));
+      count += 1;
+    }
   });
 
-  // plays rhythm 1
-  socket.on('rhythm1', function(){
-    triggerNote(1, 'drumkit');
-  });
-
-  // plays rhythm 2
-  socket.on('rhythm2', function(){
-    triggerNote(2, 'drumkit');
-  });
-
-  var currentKey = 1;
-
-  $('.notes').on('mouseover', function(){
-    currentKey = $(this).data('key');
-  });
-
-  // instrument change
-  $('.instruments').on('click', function(){
-    currentInstrument = $(this).data('instrument');
-  });
-
-
-  // note trigger on spacebar
-  $('body').on('keydown', function(event){
-      if (event.keyCode == 32) {
-        socket.emit('playedNote', { note: currentKey, id: playerId, instrument: currentInstrument, volume: 0.5 });
-        console.log(currentNote);
+  socket.on('createNyan', function(data){
+    for (var key in data) {
+      if (!$('#nyan-cat' + key).length) {
+        createNyan(key, data[key], currentX, currentY);
       }
+      if (!trailers.hasOwnProperty(key)){
+        trailers[key] = startInterval(key);
+      }
+    }
   });
 
-  // 12 notes for 12 keys o the board
+  socket.on('killNyan', function(data){
+    killNyan(data);
+    clearInterval(trailers[data]);
+    delete trailers[data];
+  });
+
+  // gets tempo from server to keep syncopation
+  var init = true
+  socket.on('tempo', function(data){
+    if (init) {
+      startMetronome(data[0],data[1]);
+      init = false;
+    }
+  });
+
+  //change Note Array
+  socket.on('changeSynthia', function(data){
+    noteArray = data;
+  });
+
+  // gets current game state of all notes in queue
+  socket.on('currentAudio', function(data){
+    currentAudio = data;
+  });
+
+  // gets synthia's notes when joining
+  socket.on('synthiaNotes', function(data){
+    synthia = data
+    if (Object.keys(rhythmCounter).length === 0) {
+      for (var key in synthia) {
+        rhythmCounter[key] = synthia[key].tempo;
+      }
+    }
+    if (isSynthiaOn(data)){
+      $('.synthia-state > button').removeClass('focus');
+      $('#on').addClass('focus');
+    } else {
+      $('.synthia-state > button').removeClass('focus');
+      $('#off').addClass('focus');
+    }
+    hasSynthiaInstrumentsOn(data);
+  });
+
+  function isSynthiaOn(synthia){
+    for (var key in synthia){
+      if (!synthia[key].state){
+        return false;
+      }
+      return true;
+    }
+  }
+
+  function hasSynthiaInstrumentsOn(synthia){
+    $('button.synthia-instruments').removeClass('focus');
+    for (var key in synthia){
+      if (synthia[key].state){
+        $('button.synthia-instruments:contains('+ synthia[key].instrument.slice(6) +')').addClass('focus');
+      }
+    }
+  }
+
+  // turn synthia on/off
+  $('#on').on('click', function(){
+    for (var key in synthia) {
+      synthia[key].state = true;
+    }
+    socket.emit('synthiaOn', [sceneName, synthia]);
+  });
+
+  $('#off').on('click', function(){
+    for (var key in synthia) {
+      synthia[key].state = false;
+    }
+    socket.emit('synthiaOff', [sceneName, synthia]);
+  });
+
+  // player mouse tracker
+  setInterval(function(){
+    socket.emit('mousePosition', { scene: sceneName, playerId: playerId, currentX: currentX, currentY: currentY, height: changingHeight });
+  }, 10);
+
+  socket.on('otherPlayerPositions', function(data){
+    mice[data.playerId] = data;
+    nyans();
+  });
+
+  // synthia instrument control
+  $('#synthia-instruments button').on('click', function(){
+    if (!$(this).hasClass('focus')) {
+      for (var key in synthia) {
+      if (sceneName + '-' + $(this).text() === synthia[key].instrument) {
+        synthia[key].state = true;
+      }
+    }
+    } else {
+      for (var key in synthia) {
+        if (sceneName + '-' + $(this).text() === synthia[key].instrument) {
+          synthia[key].state = false;
+        }
+      }
+    }
+    socket.emit('synthiaInstrumentControl', [sceneName, synthia]);
+  });
+
+  // mouse position
+  $('#main-frame').on('click', function(){
+    var note = currentNote;
+    playerAudio = { scene: sceneName, sound: note, instrument: currentInstrument, player: playerId, volume: 1 }
+    socket.emit('playerInput', playerAudio );
+  });
+
+  // 12 notes for 12 keys on the board
   $('body').on('keydown', function(event){
-    // Q
-    if (event.keyCode == 81) {
-      socket.emit('playedNote', { note: 12, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // W
-    if (event.keyCode == 87) {
-      socket.emit('playedNote', { note: 11, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // E
-    if (event.keyCode == 69) {
-      socket.emit('playedNote', { note: 10, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // R
-    if (event.keyCode == 82) {
-      socket.emit('playedNote', { note: 9, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // A
-    if (event.keyCode == 65) {
-      socket.emit('playedNote', { note: 8, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // S
-    if (event.keyCode == 83) {
-      socket.emit('playedNote', { note: 7, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // D
-    if (event.keyCode == 68) {
-      socket.emit('playedNote', { note: 6, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // F
-    if (event.keyCode == 70) {
-      socket.emit('playedNote', { note: 5, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // Z
-    if (event.keyCode == 90) {
-      socket.emit('playedNote', { note: 4, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // X
-    if (event.keyCode == 88) {
-      socket.emit('playedNote', { note: 3, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // C
-    if (event.keyCode == 67) {
-      socket.emit('playedNote', { note: 2, id: playerId, instrument: currentInstrument, volume: 0.5 });
-    }
-    // V
-    if (event.keyCode == 86) {
-      socket.emit('playedNote', { note: 1, id: playerId, instrument: currentInstrument, volume: 0.5 });
+    // the keys are / Z X C V / A S D F / Q W E R /
+    var keycodes = [90,88,67,86,65,83,68,70,81,87,69,82];
+    if (keycodes.indexOf(event.keyCode) != -1){
+      // socket.emit('mousePosition', { scene: sceneName, playerId: playerId, currentX: currentX, currentY: currentY, height: changingHeight });
+      var note = keycodes.indexOf(event.keyCode) + 1;
+      if (!playerAudio){
+        playerAudio = { scene: sceneName, sound: note, instrument: currentInstrument, player: playerId, volume: 1 };
+        socket.emit('playerInput', playerAudio );
+      } else {
+        if (playerAudio.sound != note){
+          playerAudio = { scene: sceneName, sound: note, instrument: currentInstrument, player: playerId, volume: 1 };
+          socket.emit('playerInput', playerAudio );
+        }
+      }
     }
   });
-
-  // get notes from server for all players to play on next beat
-  socket.on('notesPerTempo', function(data){
-    for (var player in data){
-      triggerNote(data[player].note, data[player].instrument, data[player].volume);
-    }
-  });
-
-  socket.on('rhythmPerTempo', function(data){
-    triggerNote(data.note, data.instrument, data.volume);
-  });
-
 });

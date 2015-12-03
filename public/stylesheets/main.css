@@ -1,10 +1,505 @@
+/** {
+  cursor: none;
+}*/
+
+
+/* page layout */
+/** {
+  border: solid white 1px;
+}*/
+
+/* fonts */
+body {
+  font-family: 'Audiowide', cursive;
+}
+
+button {
+  font-family: 'Audiowide', cursive;
+}
+
+button {
+background  : none;
+cursor  : pointer;
+margin      : 0px;
+padding     : 0px;
+outline: none;
+}
+
+#modal h1{
+  margin-bottom: 1px;
+  margin-top: 5px;
+}
+
+/* no selection */
+body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+body {
+  background: radial-gradient(ellipse,  #000000 0%,#263238 100%);
+}
+
+#sig {
+  position: relative;
+  width: 1000px;
+  margin: 0 auto;
+  margin-top: 5px;
+  color: #13191c;
+  text-align: right;
+}
+
+#main-container {
+  box-sizing: border-box;
+  width: 1000px;
+  height: 600px;
+  position: relative;
+  margin: 0 auto;
+  margin-top: 50px;
+  background-color: #333333;
+  border-radius: 10px;
+  border-top: solid #858181 20px;
+  border-left: solid #717171 20px;
+  border-right: solid #585656 20px;
+  border-bottom: solid #413f3f 20px;
+  border: linear-gradient( to left top, #7B7B7B, #4E4D4D);
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+}
+
+/* modal */
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+
+#modal {
+    position:absolute;
+    box-sizing: border-box;
+    top: 33%;
+    left: 43%;
+    margin-top: -200px;
+    margin-left: -300px;
+    width: 800px;
+    height: 600px;
+    background: gray;
+    border-radius:14px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    padding-top: 20px;
+    border: solid #5a5a5b  10px;
+}
+
+#modal button.scenes {
+  width: 100%;
+  height: 50px;
+  margin: 10px;
+  border-radius: 5px;
+  background-color: gray;
+  text-align: center;
+  font-size: 16px;
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+}
+
+#modal button.scenes:active {
+  background-color: gray;
+  transition: background-color 200ms linear, text-shadow 500ms linear;
+  background-image: linear-gradient(#212121, #424242);
+  color: #9E9E9E;
+  outline: 0;
+}
+
+.image-row {
+  display:inline-block;
+  float: right;
+  width: 380px;
+  margin-top: 80px;
+  text-align: center;
+}
+
+.img-scenes {
+  display: inline-block;
+  position: relative;
+  height: 100px;
+  width: 150px;
+  margin: 10px;
+}
+
+.img-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: solid #505050 4px;
+  border-radius: 10px;
+}
+
+.img-scenes p {
+  position: absolute;
+  font-size: 30px;
+  top: 12px;
+  left: 42px;
+  display: none;
+  pointer-events: none;
+}
+
+.image-row img {
+  height: 100px;
+  width: 150px;
+  border-radius: 10px;
+  /*margin: 10px;*/
+  /*border: solid #505050 4px;*/
+}
+
+.img-scenes:hover p {
+  display: block;
+}
+
+.img-scenes:hover img {
+  opacity: 0.5;
+}
+
+#synthia-header {
+  text-align: center;
+  width: 680px;
+  font-size: 50px;
+  background-color: lightgray;
+  border-radius: 10px;
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+}
 
 /* visualization */
-#main-frame{
-  border: solid red;
-  height: 500px;
-  width: 1150px;
-  top: 50px;
-  position: absolute;
-  left: 50px;
+#visuals {
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  border: solid gray;
+  border-radius: 10px;
+  background-color: black;
+  height: 70%;
+  width: 70%;
+  margin-top: 5%;
+  margin-left: 5%;
+  box-shadow:  inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
 }
+
+#main-frame {
+  position: absolute;
+  box-sizing: border-box;
+  border: solid gray;
+  border-radius: 10px;
+  height: 100%;
+  width: 100%;
+  cursor: none;
+}
+
+#second-frame{
+  position: absolute;
+  box-sizing: border-box;
+  border: solid gray;
+  border-radius: 10px;
+  background-color: black;
+  height: 100%;
+  width: 100%;
+​}
+
+/* player controller */
+
+#instrument-box {
+  display: inline-block;
+  box-sizing: border-box;
+  position: absolute;
+  width: 20%;
+  height: 50%;
+  margin-left: 20px;
+  margin-bottom: 10%;
+  top: 50px;
+}
+
+#instrument-container {
+  display: inline-block;
+  box-sizing: border-box;
+  top: 40px;
+  margin-top: 10px;
+  margin-left: 15%;
+}
+
+#voice {
+  box-sizing: border-box;
+  display: inline-block;
+  width: 150px;
+  background-color: lightgray;
+  font-size: 18px;
+  text-align: center;
+  line-height: 180%;
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+  z-index: 2;
+  border-radius: 5px;
+}
+
+#synthia-container {
+  display: inline-block;
+  box-sizing: border-box;
+  position: relative;
+  width: 75%;
+  height: 20%;
+  margin-left: 5%;
+  margin-top: 1%;
+  z-index: 0;
+}
+
+#controller-style1 {
+  position: absolute;
+  top: 17px;
+  left: 35px;
+  width: 615px;
+  height: 75px;
+  z-index: -1;
+  border-radius: 5px;
+  border-right: solid #7a7979 2px;
+  border-bottom: solid #706f6f  2px;
+  border-left: solid #525252 2px;
+  border-top: solid #504e4e 2px;
+  box-shadow:
+    inset 0 0 0 2px #646665,
+}
+
+.name {
+  box-sizing: border-box;
+  display: inline-block;
+  width: 20%;
+  height: 30%;
+  border-radius: 5px;
+  background-color: lightgray;
+  font-size: 18px;
+  text-align: center;
+  line-height: 180%;
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+  z-index: 2;
+}
+
+.name p {
+  position: relative;
+  /*top: 50%;*/
+}
+
+.synthia-state {
+  box-sizing: border-box;
+  display: inline-block;
+  margin-top: 1%;
+  margin-left: 2%;
+  width: 16%;
+  z-index: 2;
+}
+
+#on {
+  display: inline-block;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  background-color: lightgray;
+  width: 45%;
+  height: 15%;
+  text-align: center;
+  box-shadow:  inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+}
+
+#off {
+  display: inline-block;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-color: lightgray;
+  width: 45%;
+  height: 15%;
+  text-align: center;
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+}
+
+.synthia-state > button.focus {
+  background-color: gray;
+  transition: background-color 200ms linear, text-shadow 500ms linear;
+  background-image: linear-gradient(#212121, #424242);
+  color: #9E9E9E;
+  outline: 0;
+}
+
+.synthia-state > button:hover {
+  color: #E0E0E0;
+  transition: color 200ms linear, text-shadow 500ms linear;
+}
+
+#synthia-instruments {
+  display: block;
+  width: 70%;
+  margin-left: 13%;
+}
+
+#synthia-instruments > button.synthia-instruments {
+  width: 20%;
+  height: 10%;
+  margin: 10px;
+  border-radius: 5px;
+  background-color: gray;
+  text-align: center;
+  font-size: 16px;
+  position: relative;
+  color: black;
+  background: rgb(150, 150, 150);
+  text-shadow: -1px -1px #656565, 1px 1px #AAA;
+  box-shadow: 0 5px 0 #464646, inset 0 2px 2px #a6a6a6, inset 0 -2px 5px #b0b0b0, 0 5px 0px 3px #9c9c9c;
+  /* Transition */
+  transition: box-shadow 0.15s, top 0.15s, color 0.3s, text-shadow 0.1s;
+}
+
+#synthia-instruments > button.synthia-instruments.focus {
+  color: white;
+  top: 4px;
+  box-shadow: 0 1px 0 #AAA, inset 0 2px 2px #FFF, inset 0 -2px 5px #CCC, 0 1px 0 1px #CCC;
+}
+
+#synthia-instruments > button.synthia-instruments:hover {
+  color: #cbcbcb;
+  transition: color 200ms linear, text-shadow 500ms linear;
+}
+
+/* player instrument buttons */
+button.player-instruments {
+  width: 160px;
+  height: 60px;
+  /*margin: 10px;*/
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background-color: gray;
+  text-align: center;
+  font-size: 16px;
+  position: relative;
+  color: black;
+  background: rgb(150, 150, 150);
+  text-shadow: -1px -1px #656565, 1px 1px #AAA;
+  box-shadow: 0 5px 0 #464646, inset 0 2px 2px #a6a6a6, inset 0 -2px 5px #b0b0b0, 0 5px 0px 3px #9c9c9c;
+  /* Transition */
+  transition: box-shadow 0.15s, top 0.15s, color 0.3s, text-shadow 0.1s;
+}
+
+button.player-instruments.focus {
+  background-color: rgb(150, 150, 150);
+  color: white;
+  top: 4px;
+  box-shadow: 0 1px 0 #AAA, inset 0 2px 2px #FFF, inset 0 -2px 5px #CCC, 0 1px 0 1px #CCC;
+}
+
+button.player-instruments:hover {
+  color: #cbcbcb;
+  transition: color 200ms linear, text-shadow 500ms linear;
+}
+
+.gridlines {
+  stroke: 'white';
+  stroke-width: 4px;
+}
+
+#back {
+  position: absolute;
+  margin-top: 40px;
+  margin-left: 60px;
+  box-sizing: border-box;
+  display: inline-block;
+  width: 100px;
+  height: 50px;
+  border-radius: 5px;
+  background-color: lightgray;
+  font-size: 18px;
+  text-align: center;
+  line-height: 180%;
+  box-shadow: inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+}
+
+#mouse {
+  margin-left: 50px;
+  margin-top: 10px;
+}
+
+.mouse {
+  height: 136px;
+  width: 77px;
+  border-radius: 56px;
+  transform: none;
+  border: 3px solid black;
+  top: 170px;
+  margin-left: 19px;
+  margin-top: 15px;
+}
+
+.divider {
+  height: 40px;
+  width: 3px;
+  display: block;
+  margin: -16px auto;
+  background: black;
+  position: relative;
+}
+
+.wheel {
+  height: 5px;
+  width: 3px;
+  display: block;
+  margin-left: 18px;
+  margin-top: 14px;
+  background: white;
+  position: relative;
+
+  height: 4px;
+  width: 4px;
+  border: 2px solid #fff;
+  -webkit-border-radius: 8px;
+          border-radius: 8px;
+}
+
+.wheel
+{
+  -webkit-animation: mouse-wheel 0.6s linear infinite;
+  -moz-animation: mouse-wheel 0.6s linear infinite;
+}
+
+@-webkit-keyframes mouse-wheel
+{
+   0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(6px);
+    -ms-transform: translateY(6px);
+    transform: translateY(6px);
+  }
+}
+
+@-moz-keyframes mouse-wheel
+{
+  0% { top: 1px; }
+  25% { top: 2px; }
+  50% { top: 3px;}
+  75% { top: 2px;}
+  100% { top: 1px;}
+}
+
+
+
+
+
+​
