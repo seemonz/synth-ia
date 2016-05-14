@@ -5,7 +5,7 @@ var io = require('socket.io')(server);
 
 var count = 0;
 
-server.listen(8080);
+server.listen(process.env.PORT || 8080);
 app.use(express.static('public'));
 // app.use(express.static('./bundle.js'));
 
